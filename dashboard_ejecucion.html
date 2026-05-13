@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejecución Presupuestaria — Cabildo Insular de La Palma</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#F0F2F5;color:#1a1a2e;font-size:14px}
+    /* HEADER */
+    .header{background:linear-gradient(135deg,#1B3A6B 0%,#2C5F9E 100%);color:white;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+    .header-left{display:flex;align-items:center;gap:14px}
+    .header-logo{width:42px;height:42px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#1B3A6B;font-size:15px;flex-shrink:0}
+    .header-title h1{font-size:16px;font-weight:700}
+    .header-title p{font-size:11px;opacity:0.85;margin-top:2px}
+    .header-right{display:flex;align-items:center;gap:14px}
+    .header-meta{text-align:right;font-size:11px;opacity:0.9;line-height:1.7}
+    .btn-edit{background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:background 0.2s;white-space:nowrap}
+    .btn-edit:hover{background:rgba(255,255,255,0.28)}
+    /* BREADCRUMB */
+    .breadcrumb{background:white;border-bottom:2px solid #E8ECEF;padding:8px 24px;display:flex;align-items:center;gap:6px;font-size:13px}
+    .bc-item{cursor:pointer;color:#2C5F9E;font-weight:500}
+    .bc-item:hover{text-decoration:underline}
+    .bc-item.active{color:#1a1a2e;cursor:default;font-weight:600}
+    .bc-sep{color:#999}
+    /* TABS */
+    .view-tabs{background:white;padding:0 24px;border-bottom:1px solid #E8ECEF;display:flex;gap:4px}
+    .tab-btn{padding:10px 18px;border:none;background:none;font-size:13px;font-weight:500;color:#666;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s}
+    .tab-btn:hover{color:#2C5F9E}
+    .tab-btn.active{color:#2C5F9E;border-bottom-color:#2C5F9E}
+    /* CONTENT */
+    .content{padding:18px 24px;max-width:1600px;margin:0 auto}
+    /* KPI */
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+    @media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+    .kpi-card{background:white;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.08);border-left:4px solid #ccc}
+    .kpi-card.blue{border-left-color:#2C5F9E}
+    .kpi-card.green{border-left-color:#2E7D32}
+    .kpi-card.orange{border-left-color:#E65100}
+    .kpi-card.purple{border-left-color:#6A1B9A}
+    .kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:#666;margin-bottom:5px}
+    .kpi-value{font-size:21px;font-weight:700;color:#1a1a2e}
+    .kpi-sub{font-size:11px;color:#888;margin-top:5px}
+    .kpi-bar{height:3px;background:#eee;border-radius:2px;margin-top:7px}
+    .kpi-fill{height:3px;border-radius:2px}
+    /* GRID */
+    .main-grid{display:grid;grid-template-columns:400px 1fr;gap:14px;margin-bottom:18px}
+    @media(max-width:1100px){.main-grid{grid-template-columns:1fr}}
+    .panel{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);overflow:hidden}
+    .panel-hdr{padding:12px 16px;border-bottom:1px solid #EEF0F3;display:flex;align-items:center;justify-content:space-between}
+    .panel-title{font-size:13px;font-weight:700}
+    .panel-sub{font-size:11px;color:#888;margin-top:1px}
+    .panel-body{padding:14px 16px}
+    /* TABLE */
+    .data-table{width:100%;border-collapse:collapse;font-size:12.5px}
+    .data-table thead th{background:#F7F8FA;padding:9px 10px;text-align:left;font-weight:600;color:#555;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #E8ECEF;white-space:nowrap;cursor:pointer}
+    .data-table thead th:hover{background:#EEF2F7}
+    .data-table thead th.sorted-asc::after{content:' ▲';font-size:8px}
+    .data-table thead th.sorted-desc::after{content:' ▼';font-size:8px}
+    .data-table thead th.num{text-align:right}
+    .data-table tbody tr{border-bottom:1px solid #F0F2F5;cursor:pointer;transition:background 0.15s}
+    .data-table tbody tr:hover{background:#EEF4FF}
+    .data-table tbody tr.total-row{background:#1B3A6B;color:white;font-weight:700;cursor:default}
+    .data-table tbody tr.total-row:hover{background:#1B3A6B}
+    .data-table tbody tr.cap-row{cursor:default}
+    .data-table td{padding:8px 10px}
+    .data-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+    .badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:600}
+    .badge-high{background:#E8F5E9;color:#2E7D32}
+    .badge-mid{background:#FFF8E1;color:#E65100}
+    .badge-low{background:#FDECEA;color:#C62828}
+    .prog-bar{height:5px;background:#EEE;border-radius:3px;min-width:70px}
+    .prog-fill{height:5px;border-radius:3px}
+    /* AREA HEADER */
+    .area-hdr{background:linear-gradient(135deg,#2C5F9E,#1B3A6B);color:white;border-radius:10px;padding:18px 22px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+    .area-name{font-size:17px;font-weight:700}
+    .area-period{font-size:11px;opacity:0.8;margin-top:3px}
+    .area-pct{text-align:right}
+    .big-pct{font-size:36px;font-weight:900;line-height:1}
+    .pct-label{font-size:11px;opacity:0.8}
+    /* NOTA PENDIENTE */
+    .nota-tag{font-size:10px;color:#888;font-style:italic}
+    .data-note{font-size:11px;color:#999;text-align:right;padding:6px 12px 8px}
+    /* MODAL */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+    .modal-box{background:white;border-radius:12px;width:100%;max-width:1100px;box-shadow:0 8px 32px rgba(0,0,0,0.22);display:flex;flex-direction:column;max-height:90vh}
+    .modal-header{padding:16px 20px;border-bottom:1px solid #E8ECEF;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    .modal-header h2{font-size:15px;font-weight:700;color:#1B3A6B}
+    .modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#666;line-height:1;padding:0 4px}
+    .modal-meta{padding:12px 20px;background:#F7F8FA;border-bottom:1px solid #E8ECEF;display:flex;gap:20px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+    .modal-meta label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#555}
+    .modal-meta input{border:1px solid #D0D5DD;border-radius:5px;padding:5px 8px;font-size:12px;width:130px}
+    .modal-info{padding:8px 20px;background:#EFF6FF;border-bottom:1px solid #DBEAFE;font-size:11px;color:#1e40af;flex-shrink:0}
+    .modal-scroll{overflow-y:auto;flex:1}
+    .modal-footer{padding:12px 20px;border-top:1px solid #E8ECEF;flex-shrink:0}
+    .semanal-box{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+    .semanal-title{font-size:12px;font-weight:700;color:#166534;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+    .semanal-inputs{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+    .semanal-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px}
+    .semanal-field label{font-size:11px;font-weight:600;color:#166534}
+    .semanal-file-btn{display:flex;align-items:center;gap:6px;background:white;border:1.5px dashed #86efac;border-radius:6px;padding:7px 12px;cursor:pointer;font-size:12px;color:#166534;font-weight:500;transition:all 0.15s;white-space:nowrap}
+    .semanal-file-btn:hover{background:#f0fdf4;border-color:#4ade80}
+    .semanal-file-btn.has-file{border-style:solid;border-color:#22c55e;background:#f0fdf4}
+    .semanal-file-name{font-size:10px;color:#166534;opacity:0.8;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .btn-semanal{background:#166534;color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+    .btn-semanal:hover{background:#15803d}
+    .btn-semanal:disabled{background:#86efac;cursor:not-allowed}
+    .footer-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    /* EDIT TABLE */
+    .edit-table{width:100%;border-collapse:collapse;font-size:12px}
+    .edit-table thead th{background:#F0F4F8;padding:8px 10px;text-align:left;font-weight:600;color:#444;font-size:10.5px;text-transform:uppercase;letter-spacing:0.4px;border-bottom:2px solid #D0D5DD;white-space:nowrap;position:sticky;top:0}
+    .edit-table thead th.num{text-align:right}
+    .edit-table tbody tr{border-bottom:1px solid #F0F2F5}
+    .edit-table tbody tr:hover{background:#FAFBFF}
+    .edit-table td{padding:6px 10px;vertical-align:middle}
+    .edit-table td.ed-name{font-weight:600;white-space:nowrap;min-width:180px;max-width:220px}
+    .edit-table td.ed-nota{font-size:10px;color:#888;font-style:italic}
+    .ed-input{width:130px;border:1px solid #D0D5DD;border-radius:4px;padding:4px 7px;font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+    .ed-input:focus{outline:none;border-color:#2C5F9E;box-shadow:0 0 0 2px rgba(44,95,158,0.15)}
+    .ed-input.updated{background:#EFF6FF;border-color:#93C5FD}
+    /* BUTTONS */
+    .btn-primary{background:#1B3A6B;color:white;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer}
+    .btn-primary:hover{background:#2C5F9E}
+    .btn-secondary{background:white;color:#444;border:1px solid #D0D5DD;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:500;cursor:pointer}
+    .btn-secondary:hover{background:#F7F8FA}
+    .btn-danger{background:#FEE2E2;color:#C62828;border:1px solid #FECACA;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:500;cursor:pointer}
+    /* MISC */
+    .hidden{display:none!important}
+    .footer{text-align:center;padding:14px;color:#aaa;font-size:11px;border-top:1px solid #E8ECEF;margin-top:8px}
+    .chart-wrap{position:relative}
+    .empty-caps{padding:24px;text-align:center;color:#999;font-size:12px}
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">CP</div>
+    <div class="header-title">
+      <h1>Ejecución Presupuestaria</h1>
+      <p>Excmo. Cabildo Insular de La Palma</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-meta" id="headerMeta"></div>
+    <button class="btn-edit" onclick="openEditor()">✏ Actualizar Datos</button>
+  </div>
+</div>
+
+<!-- ===== EDITOR MODAL ===== -->
+<div id="editorModal" class="modal-backdrop hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Actualizar Datos de Ejecución Semanal</h2>
+      <button class="modal-close" onclick="closeEditor()">✕</button>
+    </div>
+    <div class="modal-meta">
+      <label>Fecha de los datos:
+        <input type="date" id="edFecha">
+      </label>
+      <label>Periodo:
+        <input type="text" id="edPeriodo" placeholder="2026" style="width:80px">
+      </label>
+      <span style="font-size:11px;color:#888">Los valores en <strong>Actual (Crédito)</strong> y <strong>O (Ejecutado)</strong> son los más importantes cada semana.</span>
+    </div>
+    <div class="modal-info">
+      💡 Introduce los importes en euros sin puntos de miles (ej: <strong>292641592.55</strong>). Acepta tanto punto como coma como separador decimal. Deja en 0 los campos que aún no tengas. Usa <em>Exportar</em> para guardar una copia y <em>Importar</em> para cargar datos guardados.
+    </div>
+    <div class="modal-scroll">
+      <table class="edit-table">
+        <thead>
+          <tr>
+            <th>Área</th>
+            <th>Fuente / Programas</th>
+            <th class="num">Inicial (€)</th>
+            <th class="num">Modificación (€)</th>
+            <th class="num">Actual / Crédito (€)</th>
+            <th class="num">A – Autorizado (€)</th>
+            <th class="num">D – Comprometido (€)</th>
+            <th class="num">O – Ejecutado (€)</th>
+          </tr>
+        </thead>
+        <tbody id="editorBody"></tbody>
+        <tfoot id="editorFoot" style="background:#F0F4F8;font-weight:700;font-size:12px;position:sticky;bottom:0">
+          <tr>
+            <td colspan="2" style="padding:8px 10px;color:#1B3A6B">TOTAL CABILDO</td>
+            <td class="num" style="padding:8px 10px"><input id="edTotalI"  class="ed-input" style="background:#E8F0FE;width:140px"></td>
+            <td class="num" style="padding:8px 10px"><input id="edTotalM"  class="ed-input" style="background:#E8F0FE;width:140px"></td>
+            <td class="num" style="padding:8px 10px"><input id="edTotalAc" class="ed-input" style="background:#E8F0FE;width:140px"></td>
+            <td class="num" style="padding:8px 10px"><input id="edTotalA"  class="ed-input" style="background:#E8F0FE;width:140px"></td>
+            <td class="num" style="padding:8px 10px"><input id="edTotalD"  class="ed-input" style="background:#E8F0FE;width:140px"></td>
+            <td class="num" style="padding:8px 10px"><input id="edTotalO"  class="ed-input" style="background:#E8F0FE;width:140px"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <!-- SECCIÓN SEMANAL -->
+      <div class="semanal-box">
+        <div class="semanal-title">📅 Importación semanal — sube ambos archivos y actualiza con un clic</div>
+        <div class="semanal-inputs">
+          <div class="semanal-field">
+            <label>📊 Excel GEMA (.xlsx)</label>
+            <label class="semanal-file-btn" id="lblXls" onclick="document.getElementById('xlsInput').click()">
+              Seleccionar archivo Excel
+            </label>
+            <input type="file" id="xlsInput" accept=".xlsx,.xls" style="display:none" onchange="marcarArchivo('xlsInput','lblXls',this)">
+            <span class="semanal-file-name" id="nmXls"></span>
+          </div>
+          <div class="semanal-field">
+            <label>📄 PDF TGEM (.pdf)</label>
+            <label class="semanal-file-btn" id="lblPdf" onclick="document.getElementById('pdfInput').click()">
+              Seleccionar archivo PDF
+            </label>
+            <input type="file" id="pdfInput" accept=".pdf" style="display:none" onchange="marcarArchivo('pdfInput','lblPdf',this)">
+            <span class="semanal-file-name" id="nmPdf"></span>
+          </div>
+          <button class="btn-semanal" id="btnAmbos" onclick="importarAmbos()">📥 Importar</button>
+        </div>
+      </div>
+      <!-- ACCIONES SECUNDARIAS -->
+      <div class="footer-row">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-secondary" onclick="exportarDatos()">⬇ Exportar JSON</button>
+          <label class="btn-secondary" style="cursor:pointer">
+            ⬆ Importar JSON
+            <input type="file" accept=".json" style="display:none" onchange="importarDatos(this)">
+          </label>
+          <button class="btn-danger" onclick="confirmarReset()">↺ Restaurar datos PDF</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-secondary" onclick="closeEditor()">Cancelar</button>
+          <button class="btn-primary" onclick="guardarDatos()">✓ Guardar y Actualizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NAV ===== -->
+<div class="breadcrumb" id="breadcrumb">
+  <span class="bc-item active" onclick="nav(0)">Total Cabildo</span>
+</div>
+
+<div id="viewTabs" class="view-tabs">
+  <button class="tab-btn active" onclick="switchTab('areas')"     id="tabAreas">📊 Por Área</button>
+  <button class="tab-btn"        onclick="switchTab('capitulos')" id="tabCaps">📋 Por Capítulo Económico</button>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="content">
+
+  <!-- NIVEL 0: TOTAL -->
+  <div id="view-total">
+    <div class="kpi-grid" id="kpiTotal"></div>
+
+    <!-- TAB: ÁREAS -->
+    <div id="tabContentAreas">
+      <div class="main-grid">
+        <div class="panel">
+          <div class="panel-hdr">
+            <div><div class="panel-title">% Ejecución por Área</div><div class="panel-sub">Obligaciones / Crédito Actual</div></div>
+          </div>
+          <div class="panel-body">
+            <div class="chart-wrap" style="height:460px"><canvas id="chartAreas"></canvas></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-hdr">
+            <div><div class="panel-title">Tabla de Ejecución por Área</div><div class="panel-sub">Clic en un área para ver detalle por capítulos</div></div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table" id="tableAreas">
+              <thead><tr>
+                <th onclick="sortTbl('tableAreas',0)">Área</th>
+                <th class="num" onclick="sortTbl('tableAreas',1)">Inicial</th>
+                <th class="num" onclick="sortTbl('tableAreas',2)">Modif.</th>
+                <th class="num" onclick="sortTbl('tableAreas',3)">Actual</th>
+                <th class="num" onclick="sortTbl('tableAreas',4)">A</th>
+                <th class="num" onclick="sortTbl('tableAreas',5)">D</th>
+                <th class="num" onclick="sortTbl('tableAreas',6)">O (Ejecutado)</th>
+                <th onclick="sortTbl('tableAreas',7)">% Ejec.</th>
+                <th></th>
+              </tr></thead>
+              <tbody id="tbodyAreas"></tbody>
+            </table>
+          </div>
+          <div class="data-note" id="fuenteAreas"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: CAPÍTULOS -->
+    <div id="tabContentCaps" class="hidden">
+      <div class="main-grid">
+        <div class="panel">
+          <div class="panel-hdr">
+            <div><div class="panel-title">% Ejecución por Capítulo</div><div class="panel-sub">Obligaciones / Crédito Total</div></div>
+          </div>
+          <div class="panel-body">
+            <div class="chart-wrap" style="height:300px"><canvas id="chartCaps"></canvas></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-hdr">
+            <div><div class="panel-title">Tabla por Capítulo Económico</div></div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead><tr>
+                <th>Capítulo</th>
+                <th class="num">Crédito Total</th>
+                <th class="num">Autorizado (A)</th>
+                <th class="num">Ejecutado (O)</th>
+                <th>% Ejec.</th>
+              </tr></thead>
+              <tbody id="tbodyCaps"></tbody>
+            </table>
+          </div>
+          <div class="data-note" id="fuenteCaps"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NIVEL 1: ÁREA -->
+  <div id="view-area" class="hidden">
+    <div class="area-hdr" id="areaHdr"></div>
+    <div class="kpi-grid" id="kpiArea"></div>
+    <div class="main-grid">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div><div class="panel-title">% Ejecución por Capítulo</div></div>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap" style="height:260px"><canvas id="chartAreaCaps"></canvas></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <div><div class="panel-title">Detalle por Capítulo</div><div class="panel-sub">Clic para ver partidas del capítulo</div></div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr>
+              <th>Capítulo</th>
+              <th class="num">Actual</th>
+              <th class="num">Autorizado (A)</th>
+              <th class="num">Ejecutado (O)</th>
+              <th>% Ejec.</th>
+              <th></th>
+            </tr></thead>
+            <tbody id="tbodyAreaCaps"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NIVEL 2: CAPÍTULO -->
+  <div id="view-cap" class="hidden">
+    <div class="area-hdr" id="capHdr"></div>
+    <div class="panel">
+      <div class="panel-hdr">
+        <div><div class="panel-title">Partidas Presupuestarias</div><div class="panel-sub">Detalle de líneas del capítulo</div></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead><tr>
+            <th>Código</th><th>Descripción</th>
+            <th class="num">Inicial</th><th class="num">Modif.</th><th class="num">Actual</th>
+            <th class="num">A</th><th class="num">D</th><th class="num">O (Ejecutado)</th><th>% Ejec.</th>
+          </tr></thead>
+          <tbody id="tbodyPartidas"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="footer" id="footerTxt"></div>
+
+<script>
+// ================================================================
+//  DATOS BASE (PDF TGEM_0115 — 11/05/2026)
+//  Actual y O son exactos del PDF. Inicial, M, A, D: actualiza semanalmente.
+// ================================================================
+const DATOS_PDF = {
+  config: { fecha:"11/05/2026", periodo:"2026", fuente:"TGEM_0115 — Estado de Ejecución del Presupuesto de Gastos" },
+  total: { i:208090000, m:84551592.55, ac:292641592.55, a:131425872.70, d:125829495.95, o:35793693.58 },
+  areas: [
+    { id:1,  n:"Acción Social y Dependencia",    nota:"Progs. 230+231+233",
+      i:0, m:0, ac:67269949.71, a:0, d:0, o:2202159.74,
+      caps:[] },
+    { id:2,  n:"Infraestructuras y Carreteras",  nota:"Progs. 453+459",
+      i:0, m:0, ac:46298591.67, a:0, d:0, o:11017344.66,
+      caps:[] },
+    { id:3,  n:"Personal y Otros",               nota:"Cap.1 personal distribuido + progs. sin asignar",
+      i:0, m:0, ac:51458189.58, a:0, d:0, o:4321866.37,
+      caps:[] },
+    { id:4,  n:"Medio Ambiente",                 nota:"Progs. 162+170+172",
+      i:0, m:0, ac:29590323.03, a:0, d:0, o:3212945.70,
+      caps:[] },
+    { id:5,  n:"Urbanismo y Vivienda",           nota:"Progs. 151+152",
+      i:0, m:0, ac:19406149.13, a:0, d:0, o:371214.50,
+      caps:[] },
+    { id:6,  n:"Formación y Empleo",             nota:"Prog. 241",
+      i:0, m:0, ac:15092582.98, a:0, d:0, o:1678598.65,
+      caps:[] },
+    { id:7,  n:"Turismo",                        nota:"Prog. 432",
+      i:0, m:0, ac:10826112.51, a:0, d:0, o:1863401.46,
+      caps:[] },
+    { id:8,  n:"Hospital",                       nota:"Prog. 312",
+      i:0, m:0, ac:8878545.53,  a:0, d:0, o:2142457.23,
+      caps:[] },
+    { id:9,  n:"Residencia Pensionistas",        nota:"Prog. 235",
+      i:0, m:0, ac:7773730.09,  a:0, d:0, o:1655726.68,
+      caps:[] },
+    { id:10, n:"Transporte",                     nota:"Prog. 441",
+      i:0, m:0, ac:7745412.62,  a:0, d:0, o:2121066.55,
+      caps:[] },
+    { id:11, n:"Educación y Cultura",            nota:"Prog. 328",
+      i:0, m:0, ac:5472490.45,  a:0, d:0, o:1865984.40,
+      caps:[] },
+    { id:12, n:"Deportes",                       nota:"Prog. 341",
+      i:0, m:0, ac:5020891.24,  a:0, d:0, o:162113.57,
+      caps:[] },
+    { id:13, n:"Agricultura",                    nota:"Prog. 410",
+      i:0, m:0, ac:4021286.54,  a:0, d:0, o:775704.58,
+      caps:[] },
+    { id:14, n:"Administración General",         nota:"Prog. 920",
+      i:0, m:0, ac:3849594.08,  a:0, d:0, o:723784.83,
+      caps:[] },
+    { id:15, n:"Transformación Digital",         nota:"Prog. 491",
+      i:0, m:0, ac:2874530.53,  a:0, d:0, o:299591.54,
+      caps:[] },
+    { id:16, n:"Órganos de Gobierno",            nota:"Prog. 912",
+      i:0, m:0, ac:2704234.87,  a:0, d:0, o:842488.63,
+      caps:[] },
+    { id:17, n:"Deuda Pública",                  nota:"Prog. 011",
+      i:0, m:0, ac:2054285.00,  a:0, d:0, o:52152.89,
+      caps:[] },
+    { id:18, n:"Seguridad y Protec. Civil",      nota:"Progs. 135+136",
+      i:0, m:0, ac:1301507.73,  a:0, d:0, o:384825.41,
+      caps:[] },
+    { id:19, n:"Artesanía",                      nota:"Prog. 426",
+      i:0, m:0, ac:1003185.26,  a:0, d:0, o:100266.19,
+      caps:[] }
+  ],
+  caps_globales: [
+    {cod:"Cap. 1", nm:"Gastos de Personal",                      ac:0, a:0, o:0},
+    {cod:"Cap. 2", nm:"Gastos Corrientes en Bienes y Servicios", ac:0, a:0, o:0},
+    {cod:"Cap. 3", nm:"Gastos Financieros",                      ac:0, a:0, o:0},
+    {cod:"Cap. 4", nm:"Transferencias Corrientes",               ac:0, a:0, o:0},
+    {cod:"Cap. 5", nm:"Fondo de Contingencia",                   ac:0, a:0, o:0},
+    {cod:"Cap. 6", nm:"Inversiones Reales",                      ac:0, a:0, o:0},
+    {cod:"Cap. 7", nm:"Transferencias de Capital",               ac:0, a:0, o:0},
+    {cod:"Cap. 8", nm:"Activos Financieros",                     ac:0, a:0, o:0},
+    {cod:"Cap. 9", nm:"Pasivos Financieros",                     ac:0, a:0, o:0}
+  ]
+};
+
+// Estado mutable (se actualiza con el editor)
+let CONFIG = JSON.parse(JSON.stringify(DATOS_PDF.config));
+let TOTAL  = JSON.parse(JSON.stringify(DATOS_PDF.total));
+let AREAS  = JSON.parse(JSON.stringify(DATOS_PDF.areas));
+let CAPS_G = JSON.parse(JSON.stringify(DATOS_PDF.caps_globales));
+
+// ================================================================
+//  TABLA DE MAPEO PROGRAMA → ÁREA ORGANIZATIVA
+//  Clave = código de programa (3 dígitos), valor = nombre de área en AREAS
+// ================================================================
+const PROG_AREA = {
+  "011":"Deuda Pública",
+  "135":"Seguridad y Protec. Civil","136":"Seguridad y Protec. Civil",
+  "151":"Urbanismo y Vivienda","152":"Urbanismo y Vivienda",
+  "162":"Medio Ambiente","170":"Medio Ambiente","172":"Medio Ambiente","179":"Medio Ambiente",
+  "230":"Acción Social y Dependencia","231":"Acción Social y Dependencia",
+  "232":"Acción Social y Dependencia","233":"Acción Social y Dependencia",
+  "235":"Residencia Pensionistas",
+  "241":"Formación y Empleo","242":"Formación y Empleo",
+  "312":"Hospital",
+  "321":"Educación y Cultura","322":"Educación y Cultura",
+  "323":"Educación y Cultura","324":"Educación y Cultura",
+  "325":"Educación y Cultura","326":"Educación y Cultura",
+  "327":"Educación y Cultura","328":"Educación y Cultura","329":"Educación y Cultura",
+  "331":"Educación y Cultura","332":"Educación y Cultura","333":"Educación y Cultura",
+  "334":"Educación y Cultura","337":"Educación y Cultura",
+  "341":"Deportes","342":"Deportes","343":"Deportes",
+  "410":"Agricultura","411":"Agricultura","412":"Agricultura","413":"Agricultura",
+  "414":"Agricultura","415":"Agricultura","416":"Agricultura",
+  "421":"Artesanía","422":"Artesanía","423":"Artesanía","424":"Artesanía",
+  "425":"Artesanía","426":"Artesanía","427":"Artesanía","428":"Artesanía",
+  "431":"Turismo","432":"Turismo","433":"Turismo",
+  "441":"Transporte","442":"Transporte","443":"Transporte",
+  "451":"Infraestructuras y Carreteras","452":"Infraestructuras y Carreteras",
+  "453":"Infraestructuras y Carreteras","454":"Infraestructuras y Carreteras",
+  "455":"Infraestructuras y Carreteras","456":"Infraestructuras y Carreteras",
+  "457":"Infraestructuras y Carreteras","458":"Infraestructuras y Carreteras",
+  "459":"Infraestructuras y Carreteras",
+  "491":"Transformación Digital","492":"Transformación Digital","493":"Transformación Digital",
+  "911":"Órganos de Gobierno","912":"Órganos de Gobierno","913":"Órganos de Gobierno",
+  "920":"Administración General","921":"Administración General","922":"Administración General",
+  "923":"Administración General","924":"Administración General","925":"Administración General",
+  "926":"Administración General","927":"Administración General","929":"Administración General"
+};
+
+const CAP_NM = {
+  "1":"Gastos de Personal",
+  "2":"Gastos Corrientes en Bienes y Servicios",
+  "3":"Gastos Financieros",
+  "4":"Transferencias Corrientes",
+  "5":"Fondo de Contingencia",
+  "6":"Inversiones Reales",
+  "7":"Transferencias de Capital",
+  "8":"Activos Financieros",
+  "9":"Pasivos Financieros"
+};
+
+// ================================================================
+//  UTILIDADES
+// ================================================================
+const EUR  = n => new Intl.NumberFormat("es-ES",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
+const EURK = n => {
+  if(Math.abs(n)>=1e6) return (n/1e6).toFixed(2).replace(".",",")+" M€";
+  if(Math.abs(n)>=1e3) return Math.round(n/1e3)+" K€";
+  return EUR(n)+" €";
+};
+const DASH = n => n===0 ? "—" : EUR(n);
+const PCT  = (o,ac) => !ac?0:Math.round(o/ac*10000)/100;
+const COLOR= p => p>=60?"#2E7D32":p>=30?"#E65100":"#C62828";
+const BADGE= p => p>=60?"badge-high":p>=30?"badge-mid":"badge-low";
+const BAR  = p => `<div class="prog-bar"><div class="prog-fill" style="width:${Math.min(p,100)}%;background:${COLOR(p)}"></div></div>`;
+const BSP  = p => `<span class="badge ${BADGE(p)}">${p.toFixed(1)}%</span>`;
+
+function parseNum(s){
+  s=String(s).trim().replace(/\s/g,"");
+  if(s===""||s==="—")return 0;
+  if(s.includes(",")&&s.includes(".")){
+    const li=s.lastIndexOf(","),lp=s.lastIndexOf(".");
+    if(li>lp) return parseFloat(s.replace(/\./g,"").replace(",","."));
+    return parseFloat(s.replace(/,/g,""));
+  }
+  if(s.includes(",")) return parseFloat(s.replace(",","."));
+  return parseFloat(s)||0;
+}
+
+// ================================================================
+//  ESTADO NAV
+// ================================================================
+let curArea=null, curCap=null, activeTab="areas", sortState={};
+
+function nav(lvl){
+  ["view-total","view-area","view-cap"].forEach((id,i)=>document.getElementById(id).classList.toggle("hidden",i!==lvl));
+  if(lvl===0){curArea=null;curCap=null;document.getElementById("viewTabs").classList.remove("hidden")}
+  if(lvl===1){curCap=null;document.getElementById("viewTabs").classList.add("hidden")}
+  if(lvl===2) document.getElementById("viewTabs").classList.add("hidden");
+  updateBC();
+}
+function updateBC(){
+  let h=`<span class="bc-item ${!curArea?'active':''}" onclick="nav(0)">Total Cabildo</span>`;
+  if(curArea) h+=`<span class="bc-sep">›</span><span class="bc-item ${!curCap?'active':''}" onclick="nav(1)">${curArea.n}</span>`;
+  if(curCap)  h+=`<span class="bc-sep">›</span><span class="bc-item active">${curCap.cod} — ${curCap.nm}</span>`;
+  document.getElementById("breadcrumb").innerHTML=h;
+}
+function switchTab(tab){
+  activeTab=tab;
+  document.getElementById("tabContentAreas").classList.toggle("hidden",tab!=="areas");
+  document.getElementById("tabContentCaps").classList.toggle("hidden",tab!=="capitulos");
+  document.getElementById("tabAreas").classList.toggle("active",tab==="areas");
+  document.getElementById("tabCaps").classList.toggle("active",tab==="capitulos");
+}
+
+// ================================================================
+//  KPI
+// ================================================================
+function renderKPI(id,cards){
+  document.getElementById(id).innerHTML=cards.map(c=>`
+    <div class="kpi-card ${c.cl}">
+      <div class="kpi-label">${c.label}</div>
+      <div class="kpi-value">${c.val}</div>
+      <div class="kpi-sub">${c.sub||""}</div>
+      ${c.pct!=null?`<div class="kpi-bar"><div class="kpi-fill" style="width:${Math.min(c.pct,100)}%;background:${COLOR(c.pct)}"></div></div>`:""}
+    </div>`).join("");
+}
+
+// ================================================================
+//  CHARTS
+// ================================================================
+const charts={};
+function mkChart(id,cfg){
+  if(charts[id]) charts[id].destroy();
+  charts[id]=new Chart(document.getElementById(id),cfg);
+}
+
+// ================================================================
+//  RENDER TOTAL
+// ================================================================
+function renderTotal(){
+  const t=TOTAL, ac=t.ac;
+  const pct=PCT(t.o,ac);
+  document.getElementById("headerMeta").innerHTML=
+    `Periodo: ${CONFIG.periodo} &nbsp;|&nbsp; Datos al <strong>${CONFIG.fecha}</strong>`;
+  document.getElementById("fuenteAreas").textContent=`Fuente: ${CONFIG.fuente} — ${CONFIG.fecha}`;
+  document.getElementById("fuenteCaps").textContent=`Fuente: ${CONFIG.fuente} — ${CONFIG.fecha}`;
+  document.getElementById("footerTxt").textContent=
+    `Excmo. Cabildo Insular de La Palma · Ejecución Presupuestaria ${CONFIG.periodo} · Datos al ${CONFIG.fecha}`;
+
+  renderKPI("kpiTotal",[
+    {cl:"blue",   label:"Crédito Total (Actual)",        val:EURK(ac),       sub:`Inicial: ${EURK(t.i||0)} | Modif.: +${EURK(t.m||0)}`},
+    {cl:"green",  label:"Obligaciones Reconocidas (O)",  val:EURK(t.o),      sub:`Autorizado (A): ${t.a?EURK(t.a):"—"}`},
+    {cl:"orange", label:"Pendiente de Ejecutar",         val:EURK(ac-t.o),   sub:`Sin comprometer: ${t.a?EURK(ac-t.a):"—"}`},
+    {cl:"purple", label:"% Ejecución (O/Crédito)",       val:pct.toFixed(2)+"%", sub:`D/Crédito: ${t.d?PCT(t.d,ac).toFixed(1)+"%":"—"}`, pct:pct}
+  ]);
+
+  // Tabla áreas
+  const sorted=[...AREAS].sort((a,b)=>PCT(b.o,b.ac)-PCT(a.o,a.ac));
+  document.getElementById("tbodyAreas").innerHTML=
+    sorted.map(a=>{
+      const p=PCT(a.o,a.ac);
+      return `<tr onclick="drillArea(${a.id})">
+        <td><strong>${a.n}</strong><div class="nota-tag">${a.nota||""}</div></td>
+        <td class="num">${DASH(a.i)}</td>
+        <td class="num">${DASH(a.m)}</td>
+        <td class="num">${EUR(a.ac)}</td>
+        <td class="num">${DASH(a.a)}</td>
+        <td class="num">${DASH(a.d)}</td>
+        <td class="num"><strong>${EUR(a.o)}</strong></td>
+        <td style="min-width:120px"><div style="display:flex;align-items:center;gap:6px">${BAR(p)} ${BSP(p)}</div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr>`;
+    }).join("")+
+    `<tr class="total-row">
+      <td><strong>CABILDO TOTAL</strong></td>
+      <td class="num">${DASH(t.i)}</td>
+      <td class="num">${DASH(t.m)}</td>
+      <td class="num">${EUR(ac)}</td>
+      <td class="num">${t.a?EUR(t.a):"—"}</td>
+      <td class="num">${t.d?EUR(t.d):"—"}</td>
+      <td class="num">${EUR(t.o)}</td>
+      <td colspan="2"><strong>${pct.toFixed(2)}%</strong></td>
+    </tr>`;
+
+  // Gráfica áreas
+  const asSorted=[...AREAS].sort((a,b)=>PCT(a.o,a.ac)-PCT(b.o,b.ac));
+  mkChart("chartAreas",{
+    type:"bar",
+    data:{
+      labels:asSorted.map(a=>a.n.length>34?a.n.slice(0,32)+"…":a.n),
+      datasets:[
+        {label:"% Ejecutado (O)",    data:asSorted.map(a=>PCT(a.o,a.ac)),  backgroundColor:asSorted.map(a=>COLOR(PCT(a.o,a.ac))), borderRadius:3, barPercentage:0.72},
+        {label:"% Comprometido (D)", data:asSorted.map(a=>PCT(a.d,a.ac)),  backgroundColor:"rgba(44,95,158,0.18)", borderRadius:3, barPercentage:0.72}
+      ]
+    },
+    options:{
+      indexAxis:"y",responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{size:11},boxWidth:12}},
+        tooltip:{callbacks:{label:ctx=>{
+          const a=asSorted[ctx.dataIndex];
+          return ctx.datasetIndex===0?` Ejecutado: ${ctx.parsed.x.toFixed(1)}% (${EURK(a.o)})`:` Comprometido: ${ctx.parsed.x.toFixed(1)}% (${EURK(a.d)})`;
+        }}}},
+      scales:{x:{max:100,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#F0F2F5"}},
+              y:{ticks:{font:{size:10}},grid:{display:false}}}
+    }
+  });
+
+  // Capítulos globales
+  const cg=CAPS_G.filter(c=>c.ac>0||c.o>0);
+  if(cg.length===0){
+    document.getElementById("tbodyCaps").innerHTML=
+      `<tr><td colspan="5" style="padding:20px;text-align:center;color:#999;font-style:italic">Sin datos por capítulo — actualiza mediante el botón "Actualizar Datos"</td></tr>`;
+    if(charts["chartCaps"]) charts["chartCaps"].destroy();
+  } else {
+    document.getElementById("tbodyCaps").innerHTML=
+      cg.map(c=>{const pc=PCT(c.o,c.ac);return`<tr class="cap-row">
+        <td><strong>${c.cod}</strong> — ${c.nm}</td>
+        <td class="num">${EUR(c.ac)}</td>
+        <td class="num">${DASH(c.a)}</td>
+        <td class="num"><strong>${EUR(c.o)}</strong></td>
+        <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px">${BAR(pc)} ${BSP(pc)}</div></td>
+      </tr>`;}).join("");
+    const pcts=cg.map(c=>PCT(c.o,c.ac));
+    mkChart("chartCaps",{
+      type:"bar",
+      data:{labels:cg.map(c=>c.cod),datasets:[{label:"% Ejecución",data:pcts,backgroundColor:pcts.map(p=>COLOR(p)),borderRadius:5,barPercentage:0.65}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y.toFixed(1)}%`}}},
+        scales:{y:{max:100,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#F0F2F5"}},x:{grid:{display:false},ticks:{font:{size:11}}}}
+      }
+    });
+  }
+}
+
+// ================================================================
+//  RENDER ÁREA
+// ================================================================
+function drillArea(id){
+  curArea=AREAS.find(a=>a.id===id);
+  if(!curArea) return;
+  const a=curArea, p=PCT(a.o,a.ac);
+  document.getElementById("areaHdr").innerHTML=`
+    <div>
+      <div class="area-name">${a.n}</div>
+      <div class="area-period">Datos al ${CONFIG.fecha} · ${a.nota||""}</div>
+    </div>
+    <div class="area-pct"><div class="big-pct">${p.toFixed(1)}%</div><div class="pct-label">% Ejecución O/Crédito</div></div>`;
+  renderKPI("kpiArea",[
+    {cl:"blue",   label:"Crédito Actual",        val:EURK(a.ac),       sub:`Inicial: ${DASH(a.i)} | Modif.: ${DASH(a.m)}`},
+    {cl:"green",  label:"Obligaciones (O)",       val:EURK(a.o),        sub:`Disposiciones (D): ${a.d?EURK(a.d):"—"}`},
+    {cl:"orange", label:"Pendiente de Ejecutar",  val:EURK(a.ac-a.o),   sub:`No comprometido: ${a.a?EURK(a.ac-a.a):"—"}`},
+    {cl:"purple", label:"% Ejecución",            val:p.toFixed(2)+"%", sub:`A: ${a.a?PCT(a.a,a.ac).toFixed(1)+"%":"—"} | D: ${a.d?PCT(a.d,a.ac).toFixed(1)+"%":"—"}`, pct:p}
+  ]);
+
+  const caps=a.caps||[];
+  if(caps.length===0){
+    document.getElementById("tbodyAreaCaps").innerHTML=
+      `<tr><td colspan="6" class="empty-caps">Sin desglose por capítulos disponible.<br>Añade los datos de capítulos desde el editor de datos.</td></tr>`;
+    if(charts["chartAreaCaps"]) charts["chartAreaCaps"].destroy();
+  } else {
+    document.getElementById("tbodyAreaCaps").innerHTML=caps.map((c,i)=>{
+      const pc=PCT(c.o,c.ac);
+      return `<tr onclick="drillCap(${i})">
+        <td><strong>${c.cod}</strong><div style="font-size:11px;color:#666">${c.nm}</div></td>
+        <td class="num">${EUR(c.ac)}</td>
+        <td class="num">${DASH(c.a)}</td>
+        <td class="num"><strong>${EUR(c.o)}</strong></td>
+        <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px">${BAR(pc)} ${BSP(pc)}</div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr>`;
+    }).join("");
+    const pcts=caps.map(c=>PCT(c.o,c.ac));
+    const pctsA=caps.map(c=>PCT(c.a||0,c.ac));
+    mkChart("chartAreaCaps",{
+      type:"bar",
+      data:{labels:caps.map(c=>c.cod),datasets:[
+        {label:"% Ejecutado (O)", data:pcts, backgroundColor:pcts.map(p=>COLOR(p)), borderRadius:5, barPercentage:0.65},
+        {label:"% Autorizado (A)", data:pctsA, backgroundColor:"rgba(44,95,158,0.2)", borderRadius:5, barPercentage:0.65}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{font:{size:11},boxWidth:12}},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%`}}},
+        scales:{y:{max:100,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#F0F2F5"}},x:{grid:{display:false}}}
+      }
+    });
+  }
+  nav(1);
+}
+
+// ================================================================
+//  RENDER CAPÍTULO
+// ================================================================
+function drillCap(idx){
+  if(!curArea) return;
+  curCap=curArea.caps[idx];
+  const c=curCap, a=curArea, pc=PCT(c.o,c.ac);
+  document.getElementById("capHdr").innerHTML=`
+    <div>
+      <div class="area-name">${c.cod} — ${c.nm}</div>
+      <div class="area-period">${a.n} · Datos al ${CONFIG.fecha}</div>
+    </div>
+    <div class="area-pct"><div class="big-pct">${pc.toFixed(1)}%</div><div class="pct-label">% Ejecución</div></div>`;
+  const partidas=c.partidas||[];
+  document.getElementById("tbodyPartidas").innerHTML=partidas.length?
+    partidas.map(p=>{const pp=PCT(p.o,p.ac);return`<tr class="cap-row">
+      <td style="font-family:monospace;font-size:12px"><strong>${p.cod}</strong></td>
+      <td style="max-width:320px">${p.nm}</td>
+      <td class="num">${DASH(p.i)}</td>
+      <td class="num">${DASH(p.m)}</td>
+      <td class="num">${EUR(p.ac)}</td>
+      <td class="num">${DASH(p.a)}</td>
+      <td class="num">${DASH(p.d)}</td>
+      <td class="num"><strong>${EUR(p.o)}</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px">${BAR(pp)} ${BSP(pp)}</div></td>
+    </tr>`}).join(""):
+    `<tr><td colspan="9" class="empty-caps">Sin partidas — importa el Excel de GEMA para ver el desglose.</td></tr>`;
+  nav(2);
+}
+
+// ================================================================
+//  ORDENACIÓN
+// ================================================================
+function sortTbl(tbId,col){
+  const tb=document.getElementById(tbId);
+  const rows=[...tb.querySelectorAll("tbody tr:not(.total-row)")];
+  const th=tb.querySelectorAll("thead th")[col];
+  const asc=th.classList.contains("sorted-asc");
+  tb.querySelectorAll("thead th").forEach(h=>{h.classList.remove("sorted-asc","sorted-desc")});
+  th.classList.add(asc?"sorted-desc":"sorted-asc");
+  rows.sort((a,b)=>{
+    const va=a.cells[col]?.innerText||"", vb=b.cells[col]?.innerText||"";
+    const na=parseFloat(va.replace(/[^\d,.-]/g,"").replace(",","."))||0;
+    const nb=parseFloat(vb.replace(/[^\d,.-]/g,"").replace(",","."))||0;
+    if(!isNaN(na)&&!isNaN(nb)) return asc?nb-na:na-nb;
+    return asc?vb.localeCompare(va):va.localeCompare(vb);
+  });
+  const tbody=tb.querySelector("tbody");
+  rows.forEach(r=>tbody.appendChild(r));
+  const tot=tb.querySelector("tbody .total-row");
+  if(tot) tbody.appendChild(tot);
+}
+
+// ================================================================
+//  EDITOR
+// ================================================================
+function openEditor(){
+  // Fecha
+  const parts=CONFIG.fecha.split("/");
+  if(parts.length===3) document.getElementById("edFecha").value=`${parts[2]}-${parts[1].padStart(2,"0")}-${parts[0].padStart(2,"0")}`;
+  document.getElementById("edPeriodo").value=CONFIG.periodo;
+
+  // Total row
+  document.getElementById("edTotalI").value=TOTAL.i||0;
+  document.getElementById("edTotalM").value=TOTAL.m||0;
+  document.getElementById("edTotalAc").value=TOTAL.ac||0;
+  document.getElementById("edTotalA").value=TOTAL.a||0;
+  document.getElementById("edTotalD").value=TOTAL.d||0;
+  document.getElementById("edTotalO").value=TOTAL.o||0;
+
+  // Area rows
+  document.getElementById("editorBody").innerHTML=AREAS.map(a=>`
+    <tr>
+      <td class="ed-name">${a.n}</td>
+      <td class="ed-nota">${a.nota||""}</td>
+      <td><input class="ed-input" data-id="${a.id}" data-f="i"  value="${a.i}"  title="Crédito inicial"></td>
+      <td><input class="ed-input" data-id="${a.id}" data-f="m"  value="${a.m}"  title="Modificación"></td>
+      <td><input class="ed-input" data-id="${a.id}" data-f="ac" value="${a.ac}" title="Crédito actual = Inicial + Modificación"></td>
+      <td><input class="ed-input" data-id="${a.id}" data-f="a"  value="${a.a}"  title="Autorizaciones"></td>
+      <td><input class="ed-input" data-id="${a.id}" data-f="d"  value="${a.d}"  title="Disposiciones"></td>
+      <td><input class="ed-input" data-id="${a.id}" data-f="o"  value="${a.o}"  title="Obligaciones reconocidas"></td>
+    </tr>`).join("");
+
+  // Mark zeros visually
+  document.querySelectorAll(".ed-input").forEach(inp=>{
+    if(parseFloat(inp.value)===0) inp.style.color="#bbb";
+    inp.addEventListener("input",()=>{ inp.style.color=""; inp.classList.add("updated"); });
+  });
+
+  document.getElementById("editorModal").classList.remove("hidden");
+}
+
+function closeEditor(){
+  document.getElementById("editorModal").classList.add("hidden");
+}
+
+function guardarDatos(){
+  // Fecha
+  const fv=document.getElementById("edFecha").value;
+  if(fv){const d=new Date(fv);CONFIG.fecha=`${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`}
+  CONFIG.periodo=document.getElementById("edPeriodo").value||CONFIG.periodo;
+
+  // Total
+  TOTAL.i =parseNum(document.getElementById("edTotalI").value);
+  TOTAL.m =parseNum(document.getElementById("edTotalM").value);
+  TOTAL.ac=parseNum(document.getElementById("edTotalAc").value);
+  TOTAL.a =parseNum(document.getElementById("edTotalA").value);
+  TOTAL.d =parseNum(document.getElementById("edTotalD").value);
+  TOTAL.o =parseNum(document.getElementById("edTotalO").value);
+
+  // Areas
+  document.querySelectorAll("#editorBody .ed-input").forEach(inp=>{
+    const id=parseInt(inp.dataset.id), f=inp.dataset.f;
+    const area=AREAS.find(a=>a.id===id);
+    if(area) area[f]=parseNum(inp.value);
+  });
+
+  closeEditor();
+  renderTotal();
+  if(curArea){
+    const updated=AREAS.find(a=>a.id===curArea.id);
+    if(updated){curArea=updated;drillArea(curArea.id)}
+  }
+}
+
+function exportarDatos(){
+  const data={config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=`ejecucion_cabildo_${CONFIG.fecha.replace(/\//g,"-")}.json`; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function importarDatos(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.areas)   AREAS =data.areas;
+      if(data.config)  Object.assign(CONFIG,data.config);
+      if(data.total)   Object.assign(TOTAL,data.total);
+      if(data.caps_globales) CAPS_G=data.caps_globales;
+      closeEditor();
+      renderTotal();
+      alert("✓ Datos importados correctamente para el periodo "+CONFIG.fecha);
+    } catch(err){alert("Error al importar el archivo JSON: "+err.message)}
+  };
+  reader.readAsText(file);
+  input.value="";
+}
+
+// Configura el worker de PDF.js
+if(typeof pdfjsLib!=="undefined")
+  pdfjsLib.GlobalWorkerOptions.workerSrc=
+    "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+
+// ----------------------------------------------------------------
+//  IMPORTACIÓN SEMANAL COMBINADA (Excel + PDF)
+// ----------------------------------------------------------------
+function marcarArchivo(inputId, lblId, input){
+  const f=input.files[0];
+  const lbl=document.getElementById(lblId);
+  const nm=document.getElementById(inputId==="xlsInput"?"nmXls":"nmPdf");
+  if(f){
+    lbl.classList.add("has-file");
+    lbl.textContent="✓ "+f.name.slice(0,28);
+    if(nm) nm.textContent=f.name;
+  } else {
+    lbl.classList.remove("has-file");
+    lbl.textContent=inputId==="xlsInput"?"Seleccionar archivo Excel":"Seleccionar archivo PDF";
+    if(nm) nm.textContent="";
+  }
+}
+
+async function importarAmbos(){
+  const xlsFile=document.getElementById("xlsInput").files[0];
+  const pdfFile=document.getElementById("pdfInput").files[0];
+  if(!xlsFile&&!pdfFile){ alert("Selecciona al menos un archivo."); return; }
+
+  const btn=document.getElementById("btnAmbos");
+  btn.disabled=true; btn.textContent="⏳ Procesando...";
+
+  try{
+    let excelInfo=null, pdfInfo=null;
+
+    // 1. Procesar Excel
+    if(xlsFile) excelInfo=await procesarXLS(xlsFile);
+
+    // 2. Procesar PDF (extrae fecha, periodo y totales)
+    if(pdfFile) pdfInfo=await procesarPDF(pdfFile);
+
+    if(!excelInfo&&!pdfInfo){ alert("No se pudo procesar ningún archivo."); return; }
+
+    // 3. Determinar fecha y totales definitivos
+    const fecha   =(pdfInfo?.fecha)  ||(excelInfo?.fecha)  ||CONFIG.fecha;
+    const periodo =(pdfInfo?.periodo)||(excelInfo?.periodo)||CONFIG.periodo;
+    // PDF tiene prioridad en totales; si falla, usar suma del Excel
+    const tot=(pdfInfo?.total)||(excelInfo?.total);
+
+    // 4. Confirmación
+    let msg="✓ Procesado correctamente:\n\n";
+    if(excelInfo) msg+=`  Excel: ${excelInfo.lineas} aplicaciones → ${excelInfo.areas} áreas actualizadas\n`;
+    if(pdfInfo)   msg+=`  PDF: fecha ${pdfInfo.fecha||"detectada"}, periodo ${pdfInfo.periodo||""}\n`;
+    if(tot)       msg+=`\n  Total Crédito: ${EURK(tot.ac)}\n  Ejecutado (O): ${EURK(tot.o)} — ${PCT(tot.o,tot.ac).toFixed(2)}%`;
+    msg+="\n\n¿Aplicar al dashboard?";
+
+    if(!confirm(msg)){ btn.disabled=false; btn.textContent="📥 Importar"; return; }
+
+    // 5. Aplicar
+    if(tot) Object.assign(TOTAL,tot);
+    if(fecha)   CONFIG.fecha=fecha;
+    if(periodo) CONFIG.periodo=periodo;
+    closeEditor();
+    renderTotal();
+
+  }catch(err){
+    alert("Error durante la importación:\n"+err.message);
+    console.error(err);
+  }finally{
+    btn.disabled=false; btn.textContent="📥 Importar";
+    document.getElementById("xlsInput").value="";
+    document.getElementById("pdfInput").value="";
+    ["lblXls","lblPdf"].forEach(id=>{
+      const l=document.getElementById(id);
+      l.classList.remove("has-file");
+      l.textContent=id==="lblXls"?"Seleccionar archivo Excel":"Seleccionar archivo PDF";
+    });
+    document.getElementById("nmXls").textContent="";
+    document.getElementById("nmPdf").textContent="";
+  }
+}
+
+// Procesa el Excel: actualiza AREAS.caps y devuelve resumen + totales calculados
+async function procesarXLS(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array"});
+        // Elegir hoja
+        const kw=["partida","inicial","modif","actual","oblig"];
+        let ws=null,wsName=""; let best=-1;
+        for(const name of wb.SheetNames){
+          const raw=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:""});
+          const flat=raw.slice(0,25).flat().map(c=>norm(c));
+          const sc=kw.filter(k=>flat.some(c=>c.includes(k))).length;
+          if(sc>best){best=sc;ws=wb.Sheets[name];wsName=name;}
+        }
+        const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+        // Fecha/periodo del Excel
+        let fechaXls="",periodoXls="";
+        for(let i=0;i<15;i++){
+          const txt=(rows[i]||[]).join(" ");
+          const mF=txt.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+          const mP=txt.match(/\b(20\d{2})\b/);
+          if(mF&&!fechaXls) fechaXls=`${String(mF[1]).padStart(2,"0")}/${String(mF[2]).padStart(2,"0")}/${mF[3]}`;
+          if(mP&&!periodoXls) periodoXls=mP[1];
+        }
+        // Cabecera y columnas
+        let hdr=-1,col={cod:1,desc:2,i:4,m:5,ac:7,a:9,d:11,o:13};
+        for(let i=0;i<rows.length;i++){
+          const rn=rows[i].map(c=>norm(c));
+          if(rn.some(c=>c.includes("codigo")||c.includes("partida"))&&rn.some(c=>c==="inicial"||c.includes("inicial"))){
+            hdr=i;
+            const mapped={};
+            rn.forEach((c,j)=>{
+              if(mapped.cod===undefined&&(c.includes("codigo")||c.includes("partida"))) mapped.cod=j;
+              if(mapped.desc===undefined&&c.includes("descrip")) mapped.desc=j;
+              if(mapped.i===undefined&&c==="inicial") mapped.i=j;
+              if(mapped.m===undefined&&c.includes("modif")&&!c.includes("inc")) mapped.m=j;
+              if(mapped.ac===undefined&&(c==="actual"||c==="credito disponible")) mapped.ac=j;
+              if(mapped.a===undefined&&c==="a") mapped.a=j;
+              if(mapped.d===undefined&&c==="d") mapped.d=j;
+              if(mapped.o===undefined&&c==="o") mapped.o=j;
+            });
+            Object.assign(col,mapped);
+            break;
+          }
+        }
+        // Leer filas
+        const areaMap={};
+        let lineas=0;
+        const totCalc={i:0,m:0,ac:0,a:0,d:0,o:0};
+        for(let i=(hdr>=0?hdr+1:0);i<rows.length;i++){
+          const row=rows[i];
+          const codRaw=String(row[col.cod]||"").trim();
+          if(!/^\d{2,4}\/\d+$/.test(codRaw)) continue;
+          const slash=codRaw.indexOf("/");
+          const prog=codRaw.slice(0,slash).padStart(3,"0");
+          const econ=codRaw.slice(slash+1);
+          const cap=econ[0];
+          const areaNm=PROG_AREA[prog]||("Prog."+prog);
+          if(!areaMap[areaNm]) areaMap[areaNm]={};
+          if(!areaMap[areaNm][cap]) areaMap[areaNm][cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
+          const g=areaMap[areaNm][cap];
+          const v={cod:codRaw,nm:String(row[col.desc]||"").trim(),
+            i:xlsN(row[col.i]),m:xlsN(row[col.m]),ac:xlsN(row[col.ac]),
+            a:xlsN(row[col.a]),d:xlsN(row[col.d]),o:xlsN(row[col.o])};
+          if(v.ac===0&&(v.i>0||v.m>0)) v.ac=v.i+v.m;
+          g.i+=v.i;g.m+=v.m;g.ac+=v.ac;g.a+=v.a;g.d+=v.d;g.o+=v.o;
+          totCalc.i+=v.i;totCalc.m+=v.m;totCalc.ac+=v.ac;
+          totCalc.a+=v.a;totCalc.d+=v.d;totCalc.o+=v.o;
+          g.partidas.push(v);
+          lineas++;
+        }
+        if(lineas===0){reject(new Error("No se encontraron aplicaciones con formato PPP/ECCCCC en la hoja \""+wsName+"\"")); return;}
+        // Poblar AREAS.caps
+        let areasOk=0;
+        AREAS.forEach(area=>{
+          const cm=areaMap[area.n]; if(!cm) return;
+          area.caps=Object.entries(cm).sort(([a],[b])=>a.localeCompare(b))
+            .map(([d,dt])=>({cod:"Cap. "+d,nm:CAP_NM[d]||"Cap."+d,
+              i:dt.i,m:dt.m,ac:dt.ac,a:dt.a,d:dt.d,o:dt.o,
+              partidas:dt.partidas.sort((a,b)=>b.ac-a.ac)}));
+          areasOk++;
+        });
+        resolve({lineas,areas:areasOk,fecha:fechaXls,periodo:periodoXls,total:totCalc});
+      }catch(err){reject(err);}
+    };
+    reader.onerror=()=>reject(new Error("No se pudo leer el Excel"));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+// Procesa el PDF: extrae fecha, periodo y totales del resumen
+async function procesarPDF(file){
+  try{
+    if(typeof pdfjsLib==="undefined") return null;
+    const buf=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
+    let fecha="",periodo="",total=null;
+    const MESES={enero:1,febrero:2,marzo:3,abril:4,mayo:5,junio:6,
+                 julio:7,agosto:8,septiembre:9,octubre:10,noviembre:11,diciembre:12};
+
+    // Leer primera página para fecha
+    const p1=await pdf.getPage(1);
+    const t1=(await p1.getTextContent()).items.map(x=>x.str).join(" ");
+    const mEs=t1.match(/(\d{1,2})\s+de\s+(\w+)\s+de[l]?\s+(\d{4})/i);
+    const mNum=t1.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    const mPer=t1.match(/\b(20\d{2})\b/);
+    if(mEs){ const mes=MESES[mEs[2].toLowerCase()]||1;
+      fecha=`${String(mEs[1]).padStart(2,"0")}/${String(mes).padStart(2,"0")}/${mEs[3]}`;
+      periodo=mEs[3]; }
+    else if(mNum){ fecha=`${String(mNum[1]).padStart(2,"0")}/${String(mNum[2]).padStart(2,"0")}/${mNum[3]}`;
+      periodo=mNum[3]; }
+    if(mPer&&!periodo) periodo=mPer[1];
+
+    // Leer últimas páginas para el total general
+    const parseES=s=>parseFloat(String(s).replace(/\./g,"").replace(",","."))||0;
+    for(let p=pdf.numPages;p>=Math.max(1,pdf.numPages-4);p--){
+      const page=await pdf.getPage(p);
+      const items=(await page.getTextContent()).items;
+      const txt=items.map(x=>x.str).join(" ");
+      if(!/total/i.test(txt)) continue;
+      // Buscar secuencia de 6+ números en formato español después de "Total"
+      const nums=(txt.match(/[\d.]+,\d{2}/g)||[]).map(parseES).filter(n=>n>0);
+      // El total general de un presupuesto ~300M tiene valores >1M para crédito
+      // Intentar identificar el grupo correcto de 6 números consecutivos grandes
+      for(let i=0;i<=nums.length-6;i++){
+        const [ni,nm,nac,na,nd,no]=nums.slice(i,i+6);
+        // Validar: Actual ≈ Inicial+Modif, O < A < Actual
+        if(nac>0&&Math.abs(nac-(ni+nm))<nac*0.05&&no<=na&&na<=nac){
+          total={i:ni,m:nm,ac:nac,a:na,d:nd,o:no};
+          break;
+        }
+      }
+      if(total) break;
+    }
+    return {fecha,periodo,total};
+  }catch(err){
+    console.warn("PDF no procesado:",err.message);
+    return null;
+  }
+}
+
+// Normaliza texto para comparar sin tildes/mayúsculas
+function norm(s){ return String(s).toLowerCase().trim().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+
+// Convierte celda Excel a número — admite formato español 1.234.567,89
+function xlsN(v){
+  if(typeof v==="number") return v;
+  let s=String(v).trim().replace(/[€\s%]/g,"");
+  if(!s||s==="-"||s==="—") return 0;
+  if(s.includes(",")&&s.includes(".")) return parseFloat(s.replace(/\./g,"").replace(",","."))||0;
+  if(s.includes(",")) return parseFloat(s.replace(",","."))||0;
+  return parseFloat(s)||0;
+}
+
+let _xlsPrev=null;
+
+function importarExcel(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array"});
+
+      // 1. Elegir la hoja con más palabras clave de presupuesto
+      let ws=null, wsName="";
+      const kw=["partida","inicial","modif","actual","oblig","credito","ejecucion"];
+      let best=-1;
+      for(const name of wb.SheetNames){
+        const raw=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:""});
+        const flat=raw.slice(0,25).flat().map(c=>norm(c));
+        const sc=kw.filter(k=>flat.some(c=>c.includes(k))).length;
+        if(sc>best){best=sc;ws=wb.Sheets[name];wsName=name;}
+      }
+
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+
+      // 2. Extraer fecha y periodo de las primeras filas
+      let fechaXls="", periodoXls="";
+      for(let i=0;i<15;i++){
+        const txt=(rows[i]||[]).join(" ");
+        const mF=txt.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+        const mP=txt.match(/\b(20\d{2})\b/);
+        if(mF&&!fechaXls) fechaXls=`${String(mF[1]).padStart(2,"0")}/${String(mF[2]).padStart(2,"0")}/${mF[3]}`;
+        if(mP&&!periodoXls) periodoXls=mP[1];
+      }
+
+      // 3. Localizar fila de cabecera buscando "Código" / "Partida" / "Inicial"
+      //    Columnas GEMA estándar (posiciones por defecto si no se detectan):
+      //    0=Rem 1=Código 2=Descripción 3=Vinc 4=Inicial 5=Modif 6=Inc.Rem 7=Actual
+      //    8=RC 9=A 10=Apend 11=D 12=Dpend 13=O 14=Opend ...
+      let hdr=-1;
+      let col={cod:1, desc:2, i:4, m:5, ac:7, a:9, d:11, o:13}; // fallback GEMA
+      for(let i=0;i<rows.length;i++){
+        const rn=rows[i].map(c=>norm(c));
+        const hasCod =rn.some(c=>c.includes("codigo")||c.includes("partida")||c.includes("cod."));
+        const hasInic=rn.some(c=>c==="inicial"||c.includes("inicial"));
+        if(hasCod||hasInic){
+          hdr=i;
+          // Mapear columnas dinámicamente — para A/D/O tomar PRIMERA coincidencia exacta
+          const mapped={};
+          rn.forEach((c,j)=>{
+            if(mapped.cod===undefined&&(c.includes("codigo")||c.includes("partida"))) mapped.cod=j;
+            if(mapped.desc===undefined&&c.includes("descrip")) mapped.desc=j;
+            if(mapped.i===undefined&&c==="inicial")   mapped.i=j;
+            if(mapped.m===undefined&&c.includes("modif")&&!c.includes("inc")) mapped.m=j;
+            if(mapped.ac===undefined&&(c==="actual"||c==="credito disponible")) mapped.ac=j;
+            if(mapped.a===undefined&&c==="a")   mapped.a=j; // exactamente "a"
+            if(mapped.d===undefined&&c==="d")   mapped.d=j;
+            if(mapped.o===undefined&&c==="o")   mapped.o=j;
+          });
+          // Solo sobreescribir los que se detectaron
+          Object.assign(col, mapped);
+          break;
+        }
+      }
+
+      // 4. Leer TODAS las filas de aplicaciones y agrupar por área → capítulo
+      //    Formato código: PPP/ECCCCC  (ej: 011/31000, 135/48903, 924/48920)
+      const start=hdr>=0?hdr+1:0;
+      // areaMap[nombreArea][capDigit] = { i,m,ac,a,d,o, partidas:[] }
+      const areaMap={};
+      let lineas=0, sinMapeo=new Set();
+
+      for(let i=start;i<rows.length;i++){
+        const row=rows[i];
+        const codRaw=String(row[col.cod]||"").trim();
+
+        // Solo procesamos filas que tengan formato PPP/ECCCCC
+        if(!/^\d{2,4}\/\d+$/.test(codRaw)) continue;
+
+        const slash=codRaw.indexOf("/");
+        const prog =codRaw.slice(0,slash).padStart(3,"0");  // "011"
+        const econ =codRaw.slice(slash+1);                   // "31000"
+        const cap  =econ[0];                                  // "3"
+
+        const areaNm = PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
+        if(!PROG_AREA[prog]) sinMapeo.add(prog);
+
+        if(!areaMap[areaNm]) areaMap[areaNm]={};
+        if(!areaMap[areaNm][cap]) areaMap[areaNm][cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
+
+        const g=areaMap[areaNm][cap];
+        const vals={
+          cod:codRaw,
+          nm :String(row[col.desc]||"").trim(),
+          i  :xlsN(row[col.i]),
+          m  :xlsN(row[col.m]),
+          ac :xlsN(row[col.ac]),
+          a  :xlsN(row[col.a]),
+          d  :xlsN(row[col.d]),
+          o  :xlsN(row[col.o])
+        };
+        if(vals.ac===0&&(vals.i>0||vals.m>0)) vals.ac=vals.i+vals.m;
+
+        g.i+=vals.i; g.m+=vals.m; g.ac+=vals.ac;
+        g.a+=vals.a; g.d+=vals.d; g.o+=vals.o;
+        g.partidas.push(vals);
+        lineas++;
+      }
+
+      if(lineas===0){
+        const muestra=rows.slice(0,8).map((r,ri)=>`Fila ${ri+1}: ${r.slice(0,5).join(" | ")}`).join("\n");
+        alert("No se leyeron aplicaciones del Excel.\n\nHoja: \""+wsName+"\"\n\nPrimeras filas:\n"+muestra+
+              "\n\nAsegúrate de que los códigos tienen el formato PPP/ECCCCC (ej: 011/31000).");
+        return;
+      }
+
+      // 5. Poblar AREAS.caps con los datos del Excel (sin tocar los totales de nivel 0)
+      let areasActualizadas=0;
+      AREAS.forEach(area=>{
+        const capMap=areaMap[area.n];
+        if(!capMap) return;
+        area.caps=Object.entries(capMap)
+          .sort(([a],[b])=>a.localeCompare(b))
+          .map(([digit,data])=>({
+            cod:"Cap. "+digit,
+            nm :CAP_NM[digit]||"Capítulo "+digit,
+            i:data.i, m:data.m, ac:data.ac, a:data.a, d:data.d, o:data.o,
+            partidas:data.partidas.sort((a,b)=>b.ac-a.ac)
+          }));
+        areasActualizadas++;
+      });
+
+      // Programas sin mapeo → añadir como áreas extra si tienen datos
+      if(sinMapeo.size>0){
+        for(const [areaNm,capMap] of Object.entries(areaMap)){
+          if(AREAS.find(a=>a.n===areaNm)) continue; // ya existe
+          const caps=Object.entries(capMap).sort(([a],[b])=>a.localeCompare(b))
+            .map(([digit,data])=>({
+              cod:"Cap."+digit, nm:CAP_NM[digit]||"Cap."+digit,
+              i:data.i,m:data.m,ac:data.ac,a:data.a,d:data.d,o:data.o,
+              partidas:data.partidas
+            }));
+          const totAc=caps.reduce((s,c)=>s+c.ac,0);
+          const totO =caps.reduce((s,c)=>s+c.o,0);
+          AREAS.push({
+            id:AREAS.length+1, n:areaNm, nota:"Programa sin clasificar — asignar área",
+            i:0,m:0,ac:totAc,a:0,d:0,o:totO, caps
+          });
+          areasActualizadas++;
+        }
+      }
+
+      // 6. Confirmación y aplicar
+      _xlsPrev={fecha:fechaXls, periodo:periodoXls};
+      const aviso=sinMapeo.size?`\n⚠ ${sinMapeo.size} programas sin mapeo de área: ${[...sinMapeo].join(", ")}`:"";
+      const msg=
+        `✓ Excel de GEMA procesado.\n`+
+        `  ${lineas} aplicaciones leídas → ${areasActualizadas} áreas actualizadas\n`+
+        (fechaXls?`  Fecha: ${fechaXls}  Periodo: ${periodoXls}\n`:"")+aviso+
+        `\n\n¿Aplicar al dashboard?`;
+
+      if(confirm(msg)) aplicarExcel();
+      else _xlsPrev=null;
+
+    }catch(err){
+      alert("Error al leer el Excel: "+err.message);
+      console.error(err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  input.value="";
+}
+
+function aplicarExcel(){
+  if(!_xlsPrev) return;
+  if(_xlsPrev.fecha)   CONFIG.fecha=_xlsPrev.fecha;
+  if(_xlsPrev.periodo) CONFIG.periodo=_xlsPrev.periodo;
+  _xlsPrev=null;
+  closeEditor();
+  renderTotal();
+  // Si estaba en vista área, refrescar también ese nivel
+  if(curArea){ const a=AREAS.find(x=>x.id===curArea.id); if(a) drillArea(a.id); }
+}
+
+function confirmarReset(){
+  if(confirm("¿Restaurar los datos originales del PDF (11/05/2026)?\nSe perderán las actualizaciones manuales no exportadas.")){
+    CONFIG=JSON.parse(JSON.stringify(DATOS_PDF.config));
+    TOTAL =JSON.parse(JSON.stringify(DATOS_PDF.total));
+    AREAS =JSON.parse(JSON.stringify(DATOS_PDF.areas));
+    CAPS_G=JSON.parse(JSON.stringify(DATOS_PDF.caps_globales));
+    closeEditor();
+    renderTotal();
+  }
+}
+
+// ================================================================
+//  INIT
+// ================================================================
+renderTotal();
+</script>
+</body>
+</html>
