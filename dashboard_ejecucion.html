@@ -437,6 +437,8 @@ const DATOS_PDF = {
     { id:23, n:"Vivienda",                           nota:"Prog. 152",
       i:0, m:0, ac:18266298.22, a:0, d:0, o:89582.23,    caps:[] },
     { id:24, n:"Residuos",                           nota:"Prog. 162",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
+    { id:25, n:"Recursos Humanos",                   nota:"Cap. 1 — todos los programas",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] }
   ],
   caps_globales: [
@@ -1072,8 +1074,15 @@ async function procesarXLS(file){
         if(lineas===0){reject(new Error("No se encontraron aplicaciones con formato PPP/ECCCCC en la hoja \""+wsName+"\"")); return;}
         // Poblar AREAS.caps
         let areasOk=0;
+        const cap1Acum={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
         AREAS.forEach(area=>{
           const cm=areaMap[area.n]; if(!cm) return;
+          // Acumular Cap. 1 en Recursos Humanos
+          if(cm["1"]){
+            cap1Acum.i+=cm["1"].i; cap1Acum.m+=cm["1"].m; cap1Acum.ac+=cm["1"].ac;
+            cap1Acum.a+=cm["1"].a; cap1Acum.d+=cm["1"].d; cap1Acum.o+=cm["1"].o;
+            cap1Acum.partidas.push(...cm["1"].partidas);
+          }
           area.caps=Object.entries(cm).sort(([a],[b])=>a.localeCompare(b))
             .filter(([d])=>d!=="1")
             .map(([d,dt])=>({cod:"Cap. "+d,nm:CAP_NM[d]||"Cap."+d,
@@ -1087,6 +1096,15 @@ async function procesarXLS(file){
           area.o =area.caps.reduce((s,c)=>s+c.o, 0);
           areasOk++;
         });
+        // Asignar Cap. 1 acumulado al área Recursos Humanos
+        const rrHH=AREAS.find(a=>a.n==="Recursos Humanos");
+        if(rrHH&&cap1Acum.ac>0){
+          rrHH.caps=[{cod:"Cap. 1",nm:CAP_NM["1"],
+            i:cap1Acum.i,m:cap1Acum.m,ac:cap1Acum.ac,a:cap1Acum.a,d:cap1Acum.d,o:cap1Acum.o,
+            partidas:cap1Acum.partidas.sort((a,b)=>b.ac-a.ac)}];
+          rrHH.i=cap1Acum.i; rrHH.m=cap1Acum.m; rrHH.ac=cap1Acum.ac;
+          rrHH.a=cap1Acum.a; rrHH.d=cap1Acum.d; rrHH.o=cap1Acum.o;
+        }
         resolve({lineas,areas:areasOk,fecha:fechaXls,periodo:periodoXls,total:totCalc});
       }catch(err){reject(err);}
     };
