@@ -523,17 +523,12 @@ const PROG_AREA = {
   "934":"Hacienda","943":"Administración General"
 };
 
+// Clave: prog (3 dígitos) → objeto con código económico numérico → área
 const PARTIDA_AREA = {
-  "943/22605":"Presidencia",
-  "943/22608":"Presidencia",
-  "943/46700":"Residuos",
-  "943/76700":"Residuos",
-  "943/76701":"Residuos",
-  "943/48900":"Medio Ambiente",
-  "943/48901":"Medio Ambiente",
-  "920/83000":"Recursos Humanos",
-  "920/83100":"Recursos Humanos",
-  "920/83101":"Recursos Humanos"
+  "943": { 22605:"Presidencia", 22608:"Presidencia",
+           46700:"Residuos", 76700:"Residuos", 76701:"Residuos",
+           48900:"Medio Ambiente", 48901:"Medio Ambiente" },
+  "920": { 83000:"Recursos Humanos", 83100:"Recursos Humanos", 83101:"Recursos Humanos" }
 };
 
 const CAP_NM = {
@@ -1290,17 +1285,12 @@ function importarExcel(input){
         const econ =codRaw.slice(slash+1);                   // "31000"
         const cap  =econ[0];                                  // "3"
 
-        // Buscar en PARTIDA_AREA comparando prog (3 dígitos) y econ numéricamente
+        // Buscar en PARTIDA_AREA: prog (3 dígitos) + código económico como entero
         const econNum = parseInt(econ, 10);
-        const partidaKey = Object.keys(PARTIDA_AREA).find(k => {
-          const ks = k.indexOf("/");
-          return ks >= 0
-            && k.slice(0, ks).padStart(3,"0") === prog
-            && parseInt(k.slice(ks+1), 10) === econNum;
-        });
-        const areaNm = (partidaKey ? PARTIDA_AREA[partidaKey] : null) || PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
-        if(!partidaKey && !PROG_AREA[prog]) sinMapeo.add(prog);
-        if(partidaKey) partidasEspeciales.push(codRaw+" → "+areaNm);
+        const areaPartida = PARTIDA_AREA[prog] && PARTIDA_AREA[prog][econNum];
+        const areaNm = areaPartida || PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
+        if(!areaPartida && !PROG_AREA[prog]) sinMapeo.add(prog);
+        if(areaPartida) partidasEspeciales.push(codRaw+" → "+areaNm);
         if(prog==="943") codigosProg943.push(codRaw);
         if(prog==="920") codigosProg920.push(codRaw);
 
@@ -1428,7 +1418,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v26_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v27_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
