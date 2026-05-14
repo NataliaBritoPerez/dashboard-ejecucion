@@ -398,7 +398,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:62015906.50, a:0, d:0, o:11722850.99, caps:[] },
     { id:3,  n:"Medio Ambiente",                     nota:"Progs. 170+172+179",
       i:0, m:0, ac:29963924.56, a:0, d:0, o:3252735.70,  caps:[] },
-    { id:4,  n:"Administración General",             nota:"Progs. 920+923+929+931+934+943",
+    { id:4,  n:"Administración General",             nota:"Progs. 920+923+943",
       i:0, m:0, ac:18294368.89, a:0, d:0, o:3016686.85,  caps:[] },
     { id:5,  n:"Ordenación del Territorio",           nota:"Prog. 151",
       i:0, m:0, ac:1139850.91,  a:0, d:0, o:281988.27,   caps:[] },
@@ -444,8 +444,8 @@ const DATOS_PDF = {
       i:0, m:0, ac:2874530.53,  a:0, d:0, o:300367.84,   caps:[] },
     { id:20, n:"Órganos de Gobierno",                nota:"Prog. 912",
       i:0, m:0, ac:2704234.87,  a:0, d:0, o:843886.81,   caps:[] },
-    { id:21, n:"Deuda Pública",                      nota:"Prog. 011",
-      i:0, m:0, ac:2054285.00,  a:0, d:0, o:52152.89,    caps:[] },
+    { id:21, n:"Hacienda",                            nota:"Progs. 011+929+931+934 + apps 943/22605+943/22608",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:22, n:"Seguridad y Protec. Civil",          nota:"Progs. 130+135+136",
       i:0, m:0, ac:1411507.73,  a:0, d:0, o:403551.62,   caps:[] },
     { id:23, n:"Vivienda",                           nota:"Prog. 152",
@@ -479,7 +479,7 @@ let CAPS_G = JSON.parse(JSON.stringify(DATOS_PDF.caps_globales));
 //  Clave = código de programa (3 dígitos), valor = nombre de área en AREAS
 // ================================================================
 const PROG_AREA = {
-  "011":"Deuda Pública",
+  "011":"Hacienda",
   "130":"Seguridad y Protec. Civil","135":"Seguridad y Protec. Civil","136":"Seguridad y Protec. Civil",
   "151":"Ordenación del Territorio","152":"Vivienda",
   "162":"Residuos",
@@ -516,9 +516,14 @@ const PROG_AREA = {
   "920":"Administración General","921":"Presidencia","922":"Presidencia",
   "923":"Administración General","924":"Organización y Participación Ciudadana","925":"Organización y Participación Ciudadana",
   "926":"Transformación Digital","927":"Recursos Humanos","928":"Contratación",
-  "929":"Administración General","931":"Administración General",
+  "929":"Hacienda","931":"Hacienda",
   "933":"Infraestructuras",
-  "934":"Administración General","943":"Administración General"
+  "934":"Hacienda","943":"Administración General"
+};
+
+const PARTIDA_AREA = {
+  "943/22605":"Hacienda",
+  "943/22608":"Hacienda"
 };
 
 const CAP_NM = {
@@ -1275,8 +1280,8 @@ function importarExcel(input){
         const econ =codRaw.slice(slash+1);                   // "31000"
         const cap  =econ[0];                                  // "3"
 
-        const areaNm = PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
-        if(!PROG_AREA[prog]) sinMapeo.add(prog);
+        const areaNm = PARTIDA_AREA[codRaw] || PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
+        if(!PARTIDA_AREA[codRaw] && !PROG_AREA[prog]) sinMapeo.add(prog);
 
         if(!areaMap[areaNm]) areaMap[areaNm]={};
         if(!areaMap[areaNm][cap]) areaMap[areaNm][cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
@@ -1392,7 +1397,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v16_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v17_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
