@@ -597,6 +597,7 @@ function mkChart(id,cfg){
 //  RECALCULAR CAPÍTULOS GLOBALES desde los caps de cada área
 // ================================================================
 function recalcCapsG(){
+  if(CAPS_G.length===0) CAPS_G=JSON.parse(JSON.stringify(DATOS_PDF.caps_globales));
   CAPS_G.forEach(c=>{c.i=0;c.m=0;c.ac=0;c.a=0;c.d=0;c.o=0;});
   AREAS.forEach(area=>{
     (area.caps||[]).forEach(cap=>{
