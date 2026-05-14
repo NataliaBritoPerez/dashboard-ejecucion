@@ -1078,6 +1078,12 @@ async function procesarXLS(file){
             .map(([d,dt])=>({cod:"Cap. "+d,nm:CAP_NM[d]||"Cap."+d,
               i:dt.i,m:dt.m,ac:dt.ac,a:dt.a,d:dt.d,o:dt.o,
               partidas:dt.partidas.sort((a,b)=>b.ac-a.ac)}));
+          area.i =area.caps.reduce((s,c)=>s+c.i, 0);
+          area.m =area.caps.reduce((s,c)=>s+c.m, 0);
+          area.ac=area.caps.reduce((s,c)=>s+c.ac,0);
+          area.a =area.caps.reduce((s,c)=>s+c.a, 0);
+          area.d =area.caps.reduce((s,c)=>s+c.d, 0);
+          area.o =area.caps.reduce((s,c)=>s+c.o, 0);
           areasOk++;
         });
         resolve({lineas,areas:areasOk,fecha:fechaXls,periodo:periodoXls,total:totCalc});
