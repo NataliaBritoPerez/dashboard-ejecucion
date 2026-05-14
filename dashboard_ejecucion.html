@@ -422,7 +422,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:9400011.77,  a:0, d:0, o:811877.46,   caps:[] },
     { id:14, n:"Centro de Mayores La Dehesa",         nota:"Prog. 235",
       i:0, m:0, ac:7773730.09,  a:0, d:0, o:1660479.88,  caps:[] },
-    { id:15, n:"Recursos Humanos",                   nota:"Progs. 927+211+221 (sin Cap. 1)",
+    { id:15, n:"Recursos Humanos",                   nota:"Progs. 927+211+221 + apps 920/83000+920/83100+920/83101 (sin Cap. 1)",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:16, n:"Energía",                            nota:"Prog. 425",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
@@ -530,7 +530,10 @@ const PARTIDA_AREA = {
   "943/76700":"Residuos",
   "943/76701":"Residuos",
   "943/48900":"Medio Ambiente",
-  "943/48901":"Medio Ambiente"
+  "943/48901":"Medio Ambiente",
+  "920/83000":"Recursos Humanos",
+  "920/83100":"Recursos Humanos",
+  "920/83101":"Recursos Humanos"
 };
 
 const CAP_NM = {
@@ -1404,7 +1407,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v20_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v21_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
