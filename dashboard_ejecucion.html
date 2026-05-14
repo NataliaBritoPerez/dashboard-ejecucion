@@ -396,7 +396,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:67297949.71, a:0, d:0, o:2352260.10,  caps:[] },
     { id:2,  n:"Infraestructuras",                   nota:"Progs. 450+452+453+459+933",
       i:0, m:0, ac:62015906.50, a:0, d:0, o:11722850.99, caps:[] },
-    { id:3,  n:"Medio Ambiente",                     nota:"Progs. 169+170+172+179",
+    { id:3,  n:"Medio Ambiente",                     nota:"Progs. 170+172+179",
       i:0, m:0, ac:29963924.56, a:0, d:0, o:3252735.70,  caps:[] },
     { id:4,  n:"Administración General",             nota:"Progs. 920+923-926+928+929+931+934+943",
       i:0, m:0, ac:18294368.89, a:0, d:0, o:3016686.85,  caps:[] },
@@ -416,7 +416,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:8901536.01,  a:0, d:0, o:2267043.38,  caps:[] },
     { id:12, n:"Deportes",                           nota:"Progs. 340+341+342",
       i:0, m:0, ac:7990892.62,  a:0, d:0, o:667889.25,   caps:[] },
-    { id:13, n:"Agricultura",                        nota:"Progs. 410+412-417+419",
+    { id:13, n:"Agricultura",                        nota:"Progs. 169+410+412-417+419",
       i:0, m:0, ac:9400011.77,  a:0, d:0, o:811877.46,   caps:[] },
     { id:14, n:"Residencia Pensionistas",            nota:"Prog. 235",
       i:0, m:0, ac:7773730.09,  a:0, d:0, o:1660479.88,  caps:[] },
@@ -475,7 +475,7 @@ const PROG_AREA = {
   "130":"Seguridad y Protec. Civil","135":"Seguridad y Protec. Civil","136":"Seguridad y Protec. Civil",
   "151":"Ordenación del Territorio","152":"Vivienda",
   "162":"Residuos",
-  "169":"Medio Ambiente","170":"Medio Ambiente","172":"Medio Ambiente","179":"Medio Ambiente",
+  "169":"Agricultura","170":"Medio Ambiente","172":"Medio Ambiente","179":"Medio Ambiente",
   "211":"Recursos Humanos","221":"Recursos Humanos",
   "230":"Acción Social y Dependencia","231":"Acción Social y Dependencia",
   "232":"Acción Social y Dependencia","233":"Acción Social y Dependencia",
@@ -1384,7 +1384,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v8_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v9_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
