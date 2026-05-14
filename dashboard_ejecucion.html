@@ -420,8 +420,10 @@ const DATOS_PDF = {
       i:0, m:0, ac:7773730.09,  a:0, d:0, o:1660479.88,  caps:[] },
     { id:15, n:"Recursos Humanos",                   nota:"Progs. 927+211+221 (sin Cap. 1)",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
-    { id:16, n:"Energía e Industria",                nota:"Progs. 420+422+425",
-      i:0, m:0, ac:2156736.63,  a:0, d:0, o:34016.36,    caps:[] },
+    { id:16, n:"Energía",                            nota:"Prog. 425",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
+    { id:26, n:"Industria",                          nota:"Prog. 422",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:17, n:"Artesanía",                          nota:"Prog. 426",
       i:0, m:0, ac:1003185.26,  a:0, d:0, o:109086.19,   caps:[] },
     { id:18, n:"Comercio",                           nota:"Prog. 431",
@@ -487,7 +489,7 @@ const PROG_AREA = {
   "410":"Agricultura","411":"Agricultura","412":"Agricultura","413":"Agricultura",
   "414":"Agricultura","415":"Agricultura","416":"Agricultura","417":"Agricultura",
   "418":"Agricultura","419":"Agricultura",
-  "420":"Energía e Industria","422":"Energía e Industria","425":"Energía e Industria",
+  "422":"Industria","425":"Energía",
   "421":"Artesanía","423":"Artesanía","424":"Artesanía",
   "426":"Artesanía","427":"Artesanía","428":"Artesanía",
   "431":"Comercio",
@@ -1378,7 +1380,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v3_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v4_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
