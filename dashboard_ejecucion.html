@@ -594,6 +594,20 @@ function mkChart(id,cfg){
 }
 
 // ================================================================
+//  RECALCULAR CAPÍTULOS GLOBALES desde los caps de cada área
+// ================================================================
+function recalcCapsG(){
+  CAPS_G.forEach(c=>{c.i=0;c.m=0;c.ac=0;c.a=0;c.d=0;c.o=0;});
+  AREAS.forEach(area=>{
+    (area.caps||[]).forEach(cap=>{
+      const digit=cap.cod.replace(/Cap\.\s*/,"");
+      const cg=CAPS_G.find(c=>c.cod==="Cap. "+digit);
+      if(cg){cg.i+=cap.i||0;cg.m+=cap.m||0;cg.ac+=cap.ac||0;cg.a+=cap.a||0;cg.d+=cap.d||0;cg.o+=cap.o||0;}
+    });
+  });
+}
+
+// ================================================================
 //  RENDER TOTAL
 // ================================================================
 function renderTotal(){
@@ -889,6 +903,7 @@ function importarDatos(input){
       if(data.config)  Object.assign(CONFIG,data.config);
       if(data.total)   Object.assign(TOTAL,data.total);
       if(data.caps_globales) CAPS_G=data.caps_globales;
+      if(!CAPS_G.some(c=>c.ac>0)) recalcCapsG();
       closeEditor();
       renderTotal();
       alert("✓ Datos importados correctamente para el periodo "+CONFIG.fecha);
@@ -959,6 +974,7 @@ async function importarAmbos(){
     if(tot) Object.assign(TOTAL,tot);
     if(fecha)   CONFIG.fecha=fecha;
     if(periodo) CONFIG.periodo=periodo;
+    recalcCapsG();
     closeEditor();
     renderTotal();
 
@@ -1310,6 +1326,7 @@ function aplicarExcel(){
   if(_xlsPrev.fecha)   CONFIG.fecha=_xlsPrev.fecha;
   if(_xlsPrev.periodo) CONFIG.periodo=_xlsPrev.periodo;
   _xlsPrev=null;
+  recalcCapsG();
   closeEditor();
   renderTotal();
   // Si estaba en vista área, refrescar también ese nivel
