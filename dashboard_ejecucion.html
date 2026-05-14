@@ -404,7 +404,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:1139850.91,  a:0, d:0, o:281988.27,   caps:[] },
     { id:6,  n:"Formación y Empleo",                 nota:"Prog. 241",
       i:0, m:0, ac:15092582.98, a:0, d:0, o:1678598.65,  caps:[] },
-    { id:8,  n:"Turismo",                            nota:"Progs. 432+439",
+    { id:8,  n:"Turismo",                            nota:"Prog. 432",
       i:0, m:0, ac:11751112.51, a:0, d:0, o:1870010.58,  caps:[] },
     { id:9,  n:"Educación",                          nota:"Progs. 326+328",
       i:0, m:0, ac:0, a:0, d:0, o:0, caps:[] },
@@ -429,6 +429,8 @@ const DATOS_PDF = {
     { id:26, n:"Industria",                          nota:"Progs. 420+422",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:28, n:"Presidencia",                        nota:"Progs. 921+922",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
+    { id:30, n:"Promoción Económica",                nota:"Prog. 439",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:17, n:"Artesanía",                          nota:"Prog. 426",
       i:0, m:0, ac:1003185.26,  a:0, d:0, o:109086.19,   caps:[] },
@@ -499,7 +501,7 @@ const PROG_AREA = {
   "421":"Artesanía","423":"Artesanía","424":"Artesanía",
   "426":"Artesanía","427":"Artesanía","428":"Artesanía",
   "431":"Comercio",
-  "432":"Turismo","433":"Turismo","439":"Turismo",
+  "432":"Turismo","433":"Turismo","439":"Promoción Económica",
   "440":"Transporte","441":"Transporte","442":"Transporte","443":"Transporte",
   "450":"Infraestructuras",
   "452":"Infraestructuras",
@@ -1386,7 +1388,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v12_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v13_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
