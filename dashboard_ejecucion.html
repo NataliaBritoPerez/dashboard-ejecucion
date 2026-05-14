@@ -1290,8 +1290,10 @@ function importarExcel(input){
         const econ =codRaw.slice(slash+1);                   // "31000"
         const cap  =econ[0];                                  // "3"
 
-        const areaNm = PARTIDA_AREA[codRaw] || PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
-        if(!PARTIDA_AREA[codRaw] && !PROG_AREA[prog]) sinMapeo.add(prog);
+        // Normalizar clave: prog 3 dígitos + econ sin ceros iniciales
+        const normCod = prog + "/" + String(parseInt(econ, 10) || econ);
+        const areaNm = PARTIDA_AREA[normCod] || PARTIDA_AREA[codRaw] || PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
+        if(!PARTIDA_AREA[normCod] && !PARTIDA_AREA[codRaw] && !PROG_AREA[prog]) sinMapeo.add(prog);
 
         if(!areaMap[areaNm]) areaMap[areaNm]={};
         if(!areaMap[areaNm][cap]) areaMap[areaNm][cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
@@ -1335,6 +1337,13 @@ function importarExcel(input){
             i:data.i, m:data.m, ac:data.ac, a:data.a, d:data.d, o:data.o,
             partidas:data.partidas.sort((a,b)=>b.ac-a.ac)
           }));
+        // Recalcular totales del área desde los capítulos importados
+        area.ac = area.caps.reduce((s,c)=>s+c.ac, 0);
+        area.i  = area.caps.reduce((s,c)=>s+c.i,  0);
+        area.o  = area.caps.reduce((s,c)=>s+c.o,  0);
+        area.m  = area.caps.reduce((s,c)=>s+c.m,  0);
+        area.a  = area.caps.reduce((s,c)=>s+c.a,  0);
+        area.d  = area.caps.reduce((s,c)=>s+c.d,  0);
         areasActualizadas++;
       });
 
@@ -1407,7 +1416,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v21_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v22_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
