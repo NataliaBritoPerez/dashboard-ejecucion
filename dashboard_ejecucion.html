@@ -400,7 +400,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:29963924.56, a:0, d:0, o:3252735.70,  caps:[] },
     { id:4,  n:"Administración General",             nota:"Progs. 920+923-926+928+929+931+934+943",
       i:0, m:0, ac:18294368.89, a:0, d:0, o:3016686.85,  caps:[] },
-    { id:5,  n:"Urbanismo",                          nota:"Prog. 151",
+    { id:5,  n:"Ordenación del Territorio",           nota:"Prog. 151",
       i:0, m:0, ac:1139850.91,  a:0, d:0, o:281988.27,   caps:[] },
     { id:6,  n:"Formación y Empleo",                 nota:"Prog. 241",
       i:0, m:0, ac:15092582.98, a:0, d:0, o:1678598.65,  caps:[] },
@@ -473,7 +473,7 @@ let CAPS_G = JSON.parse(JSON.stringify(DATOS_PDF.caps_globales));
 const PROG_AREA = {
   "011":"Deuda Pública",
   "130":"Seguridad y Protec. Civil","135":"Seguridad y Protec. Civil","136":"Seguridad y Protec. Civil",
-  "151":"Urbanismo","152":"Vivienda",
+  "151":"Ordenación del Territorio","152":"Vivienda",
   "162":"Residuos",
   "169":"Medio Ambiente","170":"Medio Ambiente","172":"Medio Ambiente","179":"Medio Ambiente",
   "211":"Recursos Humanos","221":"Recursos Humanos",
@@ -1384,7 +1384,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v7_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v8_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
