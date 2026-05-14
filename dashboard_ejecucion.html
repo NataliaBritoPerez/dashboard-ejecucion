@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ejecución Presupuestaria — Cabildo Insular de La Palma</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
   <style>
@@ -266,7 +267,7 @@
             <div><div class="panel-title">% Ejecución por Área</div><div class="panel-sub">Obligaciones / Crédito Actual</div></div>
           </div>
           <div class="panel-body">
-            <div class="chart-wrap" style="height:460px"><canvas id="chartAreas"></canvas></div>
+            <div class="chart-wrap" style="height:720px"><canvas id="chartAreas"></canvas></div>
           </div>
         </div>
         <div class="panel">
@@ -678,26 +679,38 @@ function renderTotal(){
     </tr>`;
 
   // Gráfica áreas
-  const asSorted=[...AREAS].sort((a,b)=>PCT(a.o,a.ac)-PCT(b.o,b.ac));
+  const EXCL_AREAS_CHART = new Set(["Contratación","Recursos Humanos","Capítulo 1"]);
+  const asSorted=[...AREAS]
+    .filter(a=>!EXCL_AREAS_CHART.has(a.n))
+    .sort((a,b)=>PCT(a.o,a.ac)-PCT(b.o,b.ac));
   mkChart("chartAreas",{
     type:"bar",
     data:{
-      labels:asSorted.map(a=>a.n.length>34?a.n.slice(0,32)+"…":a.n),
+      labels:asSorted.map(a=>a.n),
       datasets:[
-        {label:"% Ejecutado (O)",    data:asSorted.map(a=>PCT(a.o,a.ac)),  backgroundColor:asSorted.map(a=>COLOR(PCT(a.o,a.ac))), borderRadius:3, barPercentage:0.72},
-        {label:"% Comprometido (D)", data:asSorted.map(a=>PCT(a.d,a.ac)),  backgroundColor:"rgba(44,95,158,0.18)", borderRadius:3, barPercentage:0.72}
+        {label:"% Ejecutado (O)",    data:asSorted.map(a=>PCT(a.o,a.ac)),
+         backgroundColor:asSorted.map(a=>COLOR(PCT(a.o,a.ac))), borderRadius:3, barPercentage:0.75,
+         datalabels:{anchor:"end",align:"start",color:"#fff",font:{size:9,weight:"bold"},
+           formatter:v=>v>=2?v.toFixed(1)+"%":""}},
+        {label:"% Comprometido (D)", data:asSorted.map(a=>PCT(a.d,a.ac)),
+         backgroundColor:"rgba(44,95,158,0.18)", borderRadius:3, barPercentage:0.75,
+         datalabels:{display:false}}
       ]
     },
     options:{
       indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{font:{size:11},boxWidth:12}},
+      plugins:{
+        datalabels:{},
+        legend:{labels:{font:{size:11},boxWidth:12}},
         tooltip:{callbacks:{label:ctx=>{
           const a=asSorted[ctx.dataIndex];
           return ctx.datasetIndex===0?` Ejecutado: ${ctx.parsed.x.toFixed(1)}% (${EURK(a.o)})`:` Comprometido: ${ctx.parsed.x.toFixed(1)}% (${EURK(a.d)})`;
-        }}}},
+        }}}
+      },
       scales:{x:{max:100,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#F0F2F5"}},
-              y:{ticks:{font:{size:10}},grid:{display:false}}}
-    }
+              y:{ticks:{font:{size:9},padding:4},grid:{display:false}}}
+    },
+    plugins:[ChartDataLabels]
   });
 
   // Capítulos globales
@@ -1390,7 +1403,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v30_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v31_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
