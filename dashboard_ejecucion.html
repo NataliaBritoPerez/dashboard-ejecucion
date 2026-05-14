@@ -67,6 +67,9 @@
     .data-table tbody tr.total-row{background:#1B3A6B;color:white;font-weight:700;cursor:default}
     .data-table tbody tr.total-row:hover{background:#1B3A6B}
     .data-table tbody tr.cap-row{cursor:default}
+    .data-table tbody tr.cnd-row{background:#FFF8ED}
+    .data-table tbody tr.cnd-row:hover{background:#FFF0D6}
+    .badge-cnd{display:inline-block;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:700;background:#E8640A;color:#fff;letter-spacing:.5px;vertical-align:middle;margin-left:4px}
     .data-table td{padding:8px 10px}
     .data-table td.num{text-align:right;font-variant-numeric:tabular-nums}
     .badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:600}
@@ -527,6 +530,26 @@ const PROG_AREA = {
 // Clave: prog (3 dígitos) → objeto con código económico numérico → área
 const PARTIDA_AREA = {};
 
+// Crédito No Disponible — inversiones vinculadas a operación de crédito pendiente de autorizar
+const CND_PARTIDAS = new Set([
+  "135/62901","136/62901","152/62700","162/60000","162/62400",
+  "162/62701","162/62702","162/62703","162/62704","162/62705","162/62706",
+  "169/62700","172/61100","172/61900","172/62700","172/62703","172/62704",
+  "230/62700","231/62702","233/62700","233/62701","233/62703","233/62704",
+  "235/62500","312/62500","328/62703",
+  "333/62700","333/62702","335/64000",
+  "342/62701","342/62704",
+  "410/62700","412/62704","413/63200","417/62700","419/62700",
+  "422/62700","422/62701","425/62701","425/62702",
+  "432/62704","432/62705","432/64000",
+  "440/64100","442/62200",
+  "453/61100","453/61101","453/61102","453/62300","453/62700",
+  "459/62700",
+  "491/62700","491/62705","491/64101",
+  "920/62700","933/62200",
+  "943/76700","943/76701"
+]);
+
 const CAP_NM = {
   "1":"Gastos de Personal",
   "2":"Gastos Corrientes en Bienes y Servicios",
@@ -809,8 +832,8 @@ function drillCap(idx){
     <div class="area-pct"><div class="big-pct">${pc.toFixed(1)}%</div><div class="pct-label">% Ejecución</div></div>`;
   const partidas=c.partidas||[];
   document.getElementById("tbodyPartidas").innerHTML=partidas.length?
-    partidas.map(p=>{const pp=PCT(p.o,p.ac);return`<tr class="cap-row">
-      <td style="font-family:monospace;font-size:12px"><strong>${p.cod}</strong></td>
+    partidas.map(p=>{const pp=PCT(p.o,p.ac);const isCND=CND_PARTIDAS.has(p.cod);return`<tr class="cap-row${isCND?" cnd-row":""}">
+      <td style="font-family:monospace;font-size:12px"><strong>${p.cod}</strong>${isCND?` <span class="badge-cnd" title="Crédito No Disponible — pendiente de autorización de operación de crédito">CND</span>`:""}</td>
       <td style="max-width:320px">${p.nm}</td>
       <td class="num">${DASH(p.i)}</td>
       <td class="num">${DASH(p.m)}</td>
@@ -1403,7 +1426,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v31_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v32_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
