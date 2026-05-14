@@ -452,7 +452,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:1411507.73,  a:0, d:0, o:403551.62,   caps:[] },
     { id:23, n:"Vivienda",                           nota:"Prog. 152",
       i:0, m:0, ac:18266298.22, a:0, d:0, o:89582.23,    caps:[] },
-    { id:24, n:"Residuos",                           nota:"Prog. 162",
+    { id:24, n:"Residuos",                           nota:"Prog. 162 + apps 943/46700+943/76700+943/76701",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:25, n:"Capítulo 1",                          nota:"Cap. 1 — todos los programas",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] }
@@ -525,7 +525,10 @@ const PROG_AREA = {
 
 const PARTIDA_AREA = {
   "943/22605":"Hacienda",
-  "943/22608":"Hacienda"
+  "943/22608":"Hacienda",
+  "943/46700":"Residuos",
+  "943/76700":"Residuos",
+  "943/76701":"Residuos"
 };
 
 const CAP_NM = {
@@ -1399,7 +1402,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v18_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v19_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
