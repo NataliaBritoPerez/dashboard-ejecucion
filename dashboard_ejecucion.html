@@ -428,8 +428,6 @@ const DATOS_PDF = {
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:26, n:"Industria",                          nota:"Progs. 420+422",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
-    { id:28, n:"Presidencia",                        nota:"Progs. 921+922",
-      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:30, n:"Promoción Económica",                nota:"Prog. 439",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:31, n:"Organización y Participación Ciudadana", nota:"Progs. 924+925",
@@ -446,8 +444,8 @@ const DATOS_PDF = {
       i:0, m:0, ac:410877.44,   a:0, d:0, o:0,           caps:[] },
     { id:19, n:"Transformación Digital",             nota:"Progs. 491+926",
       i:0, m:0, ac:2874530.53,  a:0, d:0, o:300367.84,   caps:[] },
-    { id:20, n:"Órganos de Gobierno",                nota:"Prog. 912",
-      i:0, m:0, ac:2704234.87,  a:0, d:0, o:843886.81,   caps:[] },
+    { id:20, n:"Presidencia y Órganos de Gobierno",  nota:"Progs. 912+921+922",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:21, n:"Hacienda",                            nota:"Progs. 011+929+931+934",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:22, n:"Seguridad y Protec. Civil",          nota:"Progs. 130+135+136",
@@ -516,8 +514,8 @@ const PROG_AREA = {
   "453":"Infraestructuras",
   "459":"Infraestructuras",
   "491":"Transformación Digital","492":"Transformación Digital","493":"Transformación Digital",
-  "911":"Órganos de Gobierno","912":"Órganos de Gobierno","913":"Órganos de Gobierno",
-  "920":"Administración General","921":"Presidencia","922":"Presidencia",
+  "911":"Presidencia y Órganos de Gobierno","912":"Presidencia y Órganos de Gobierno","913":"Presidencia y Órganos de Gobierno",
+  "920":"Administración General","921":"Presidencia y Órganos de Gobierno","922":"Presidencia y Órganos de Gobierno",
   "923":"Administración General","924":"Organización y Participación Ciudadana","925":"Organización y Participación Ciudadana",
   "926":"Transformación Digital","927":"Recursos Humanos","928":"Contratación",
   "929":"Hacienda","931":"Hacienda",
@@ -1392,7 +1390,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v29_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v30_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
