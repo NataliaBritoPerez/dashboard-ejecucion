@@ -418,7 +418,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:7990892.62,  a:0, d:0, o:667889.25,   caps:[] },
     { id:13, n:"Agricultura",                        nota:"Progs. 169+410+412-417+419",
       i:0, m:0, ac:9400011.77,  a:0, d:0, o:811877.46,   caps:[] },
-    { id:14, n:"Residencia Pensionistas",            nota:"Prog. 235",
+    { id:14, n:"Centro de Mayores La Dehesa",         nota:"Prog. 235",
       i:0, m:0, ac:7773730.09,  a:0, d:0, o:1660479.88,  caps:[] },
     { id:15, n:"Recursos Humanos",                   nota:"Progs. 927+211+221 (sin Cap. 1)",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
@@ -479,7 +479,7 @@ const PROG_AREA = {
   "211":"Recursos Humanos","221":"Recursos Humanos",
   "230":"Acción Social y Dependencia","231":"Acción Social y Dependencia",
   "232":"Acción Social y Dependencia","233":"Acción Social y Dependencia",
-  "235":"Residencia Pensionistas",
+  "235":"Centro de Mayores La Dehesa",
   "241":"Formación y Empleo","242":"Formación y Empleo",
   "312":"Hospital","313":"Acción Social y Dependencia",
   "320":"Cultura","321":"Cultura","322":"Cultura",
@@ -1384,7 +1384,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v9_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v10_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
