@@ -1364,11 +1364,12 @@ function aplicarExcel(){
 }
 
 function confirmarReset(){
-  if(confirm("¿Restaurar los datos originales del PDF (13/05/2026)?\nSe perderán las actualizaciones manuales no exportadas.")){
+  if(confirm("¿Restaurar los datos originales del PDF (14/05/2026)?\nSe perderán las actualizaciones manuales no exportadas.")){
     CONFIG=JSON.parse(JSON.stringify(DATOS_PDF.config));
     TOTAL =JSON.parse(JSON.stringify(DATOS_PDF.total));
     AREAS =JSON.parse(JSON.stringify(DATOS_PDF.areas));
     CAPS_G=JSON.parse(JSON.stringify(DATOS_PDF.caps_globales));
+    guardarLocal();
     closeEditor();
     renderTotal();
   }
@@ -1377,9 +1378,10 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
+const LOCAL_VERSION = DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
-    localStorage.setItem("dashEjecucion", JSON.stringify({config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
+    localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
   }catch(e){}
 }
 function cargarLocal(){
@@ -1387,6 +1389,7 @@ function cargarLocal(){
     const raw=localStorage.getItem("dashEjecucion");
     if(!raw) return false;
     const data=JSON.parse(raw);
+    if(data.v !== LOCAL_VERSION){ localStorage.removeItem("dashEjecucion"); return false; }
     if(data.config)  Object.assign(CONFIG,data.config);
     if(data.total)   Object.assign(TOTAL,data.total);
     if(data.areas)   AREAS=data.areas;
