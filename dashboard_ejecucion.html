@@ -1075,6 +1075,7 @@ async function procesarXLS(file){
         AREAS.forEach(area=>{
           const cm=areaMap[area.n]; if(!cm) return;
           area.caps=Object.entries(cm).sort(([a],[b])=>a.localeCompare(b))
+            .filter(([d])=>d!=="1")
             .map(([d,dt])=>({cod:"Cap. "+d,nm:CAP_NM[d]||"Cap."+d,
               i:dt.i,m:dt.m,ac:dt.ac,a:dt.a,d:dt.d,o:dt.o,
               partidas:dt.partidas.sort((a,b)=>b.ac-a.ac)}));
