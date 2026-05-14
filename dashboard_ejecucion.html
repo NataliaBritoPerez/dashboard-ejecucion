@@ -1276,7 +1276,7 @@ function importarExcel(input){
       const start=hdr>=0?hdr+1:0;
       // areaMap[nombreArea][capDigit] = { i,m,ac,a,d,o, partidas:[] }
       const areaMap={};
-      let lineas=0, sinMapeo=new Set();
+      let lineas=0, sinMapeo=new Set(), partidasEspeciales=[];
 
       for(let i=start;i<rows.length;i++){
         const row=rows[i];
@@ -1300,6 +1300,7 @@ function importarExcel(input){
         });
         const areaNm = (partidaKey ? PARTIDA_AREA[partidaKey] : null) || PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
         if(!partidaKey && !PROG_AREA[prog]) sinMapeo.add(prog);
+        if(partidaKey) partidasEspeciales.push(codRaw+" → "+areaNm);
 
         if(!areaMap[areaNm]) areaMap[areaNm]={};
         if(!areaMap[areaNm][cap]) areaMap[areaNm][cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
@@ -1376,10 +1377,11 @@ function importarExcel(input){
       // 6. Confirmación y aplicar
       _xlsPrev={fecha:fechaXls, periodo:periodoXls};
       const aviso=sinMapeo.size?`\n⚠ ${sinMapeo.size} programas sin mapeo de área: ${[...sinMapeo].join(", ")}`:"";
+      const avisoEsp=partidasEspeciales.length?`\n✓ ${partidasEspeciales.length} aplicaciones reasignadas:\n  `+partidasEspeciales.join("\n  "):"";
       const msg=
         `✓ Excel de GEMA procesado.\n`+
         `  ${lineas} aplicaciones leídas → ${areasActualizadas} áreas actualizadas\n`+
-        (fechaXls?`  Fecha: ${fechaXls}  Periodo: ${periodoXls}\n`:"")+aviso+
+        (fechaXls?`  Fecha: ${fechaXls}  Periodo: ${periodoXls}\n`:"")+aviso+avisoEsp+
         `\n\n¿Aplicar al dashboard?`;
 
       if(confirm(msg)) aplicarExcel();
@@ -1422,7 +1424,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v23_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v24_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
