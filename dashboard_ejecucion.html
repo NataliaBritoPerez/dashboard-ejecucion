@@ -406,8 +406,10 @@ const DATOS_PDF = {
       i:0, m:0, ac:15092582.98, a:0, d:0, o:1678598.65,  caps:[] },
     { id:8,  n:"Turismo",                            nota:"Progs. 432+439",
       i:0, m:0, ac:11751112.51, a:0, d:0, o:1870010.58,  caps:[] },
-    { id:9,  n:"Educación y Cultura",                nota:"Progs. 326+328+330-339",
-      i:0, m:0, ac:11672005.65, a:0, d:0, o:2444306.73,  caps:[] },
+    { id:9,  n:"Educación",                          nota:"Prog. 326",
+      i:0, m:0, ac:0, a:0, d:0, o:0, caps:[] },
+    { id:27, n:"Cultura",                            nota:"Progs. 328+330-339",
+      i:0, m:0, ac:0, a:0, d:0, o:0, caps:[] },
     { id:10, n:"Hospital",                           nota:"Prog. 312",
       i:0, m:0, ac:9118545.53,  a:0, d:0, o:2143169.23,  caps:[] },
     { id:11, n:"Transporte",                         nota:"Progs. 440+441+442",
@@ -478,13 +480,13 @@ const PROG_AREA = {
   "235":"Residencia Pensionistas",
   "241":"Formación y Empleo","242":"Formación y Empleo",
   "312":"Hospital","313":"Acción Social y Dependencia",
-  "320":"Educación y Cultura","321":"Educación y Cultura","322":"Educación y Cultura",
-  "323":"Educación y Cultura","324":"Educación y Cultura",
-  "325":"Educación y Cultura","326":"Educación y Cultura",
-  "327":"Educación y Cultura","328":"Educación y Cultura","329":"Educación y Cultura",
-  "330":"Educación y Cultura","331":"Educación y Cultura","332":"Educación y Cultura",
-  "333":"Educación y Cultura","334":"Educación y Cultura","335":"Educación y Cultura",
-  "336":"Educación y Cultura","337":"Educación y Cultura","338":"Educación y Cultura","339":"Educación y Cultura",
+  "320":"Cultura","321":"Cultura","322":"Cultura",
+  "323":"Cultura","324":"Cultura",
+  "325":"Cultura","326":"Educación",
+  "327":"Cultura","328":"Cultura","329":"Cultura",
+  "330":"Cultura","331":"Cultura","332":"Cultura",
+  "333":"Cultura","334":"Cultura","335":"Cultura",
+  "336":"Cultura","337":"Cultura","338":"Cultura","339":"Cultura",
   "340":"Deportes","341":"Deportes","342":"Deportes","343":"Deportes",
   "410":"Agricultura","411":"Agricultura","412":"Agricultura","413":"Agricultura",
   "414":"Agricultura","415":"Agricultura","416":"Agricultura","417":"Agricultura",
@@ -1380,7 +1382,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v4_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v5_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
