@@ -406,9 +406,9 @@ const DATOS_PDF = {
       i:0, m:0, ac:15092582.98, a:0, d:0, o:1678598.65,  caps:[] },
     { id:8,  n:"Turismo",                            nota:"Progs. 432+439",
       i:0, m:0, ac:11751112.51, a:0, d:0, o:1870010.58,  caps:[] },
-    { id:9,  n:"Educación",                          nota:"Prog. 326",
+    { id:9,  n:"Educación",                          nota:"Progs. 326+328",
       i:0, m:0, ac:0, a:0, d:0, o:0, caps:[] },
-    { id:27, n:"Cultura",                            nota:"Progs. 328+330-339",
+    { id:27, n:"Cultura",                            nota:"Progs. 330-339",
       i:0, m:0, ac:0, a:0, d:0, o:0, caps:[] },
     { id:10, n:"Hospital",                           nota:"Prog. 312",
       i:0, m:0, ac:9118545.53,  a:0, d:0, o:2143169.23,  caps:[] },
@@ -483,7 +483,7 @@ const PROG_AREA = {
   "320":"Cultura","321":"Cultura","322":"Cultura",
   "323":"Cultura","324":"Cultura",
   "325":"Cultura","326":"Educación",
-  "327":"Cultura","328":"Cultura","329":"Cultura",
+  "327":"Cultura","328":"Educación","329":"Cultura",
   "330":"Cultura","331":"Cultura","332":"Cultura",
   "333":"Cultura","334":"Cultura","335":"Cultura",
   "336":"Cultura","337":"Cultura","338":"Cultura","339":"Cultura",
@@ -1382,7 +1382,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v5_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v6_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
