@@ -490,18 +490,16 @@ const PROG_AREA = {
   "432":"Turismo","433":"Turismo","439":"Turismo",
   "440":"Transporte","441":"Transporte","442":"Transporte","443":"Transporte",
   "450":"Infraestructuras",
-  "451":"Infraestructuras",
   "452":"Infraestructuras",
-  "453":"Infraestructuras","454":"Infraestructuras",
-  "455":"Infraestructuras","456":"Infraestructuras",
-  "457":"Infraestructuras","458":"Infraestructuras",
+  "453":"Infraestructuras",
   "459":"Infraestructuras",
   "491":"Transformación Digital","492":"Transformación Digital","493":"Transformación Digital",
   "911":"Órganos de Gobierno","912":"Órganos de Gobierno","913":"Órganos de Gobierno",
   "920":"Administración General","921":"Administración General","922":"Administración General",
   "923":"Administración General","924":"Administración General","925":"Administración General",
   "926":"Administración General","927":"Administración General","928":"Administración General",
-  "929":"Administración General","931":"Administración General","933":"Administración General",
+  "929":"Administración General","931":"Administración General",
+  "933":"Infraestructuras",
   "934":"Administración General","943":"Administración General"
 };
 
@@ -959,8 +957,8 @@ async function importarAmbos(){
     // 3. Determinar fecha y totales definitivos
     const fecha   =(pdfInfo?.fecha)  ||(excelInfo?.fecha)  ||CONFIG.fecha;
     const periodo =(pdfInfo?.periodo)||(excelInfo?.periodo)||CONFIG.periodo;
-    // PDF tiene prioridad en totales; si falla, usar suma del Excel
-    const tot=(pdfInfo?.total)||(excelInfo?.total);
+    // Los totales vienen siempre del Excel (el lector de PDF no extrae cifras)
+    const tot=excelInfo?.total||null;
 
     // 4. Confirmación
     let msg="✓ Procesado correctamente:\n\n";
