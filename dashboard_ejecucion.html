@@ -70,6 +70,7 @@
     .data-table tbody tr.cnd-row{background:#FFF8ED}
     .data-table tbody tr.cnd-row:hover{background:#FFF0D6}
     .badge-cnd{display:inline-block;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:700;background:#E8640A;color:#fff;letter-spacing:.5px;vertical-align:middle;margin-left:4px}
+    .badge-rem{display:inline-block;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:700;background:#6A1B9A;color:#fff;letter-spacing:.5px;vertical-align:middle;margin-left:4px}
     .data-table td{padding:8px 10px}
     .data-table td.num{text-align:right;font-variant-numeric:tabular-nums}
     .badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:600}
@@ -758,7 +759,7 @@ function renderTablaAreaGasto(){
   document.getElementById("tbodyAreaGasto").innerHTML=partidas.map(p=>{
     const pp=PCT(p.o,p.ac); const isCND=isCNDfn(p);
     return`<tr class="cap-row${isCND?" cnd-row":""}">
-      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>${p.cod}</strong>${isCND?` <span class="badge-cnd" title="Crédito No Disponible">CND</span>`:""}</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>${p.cod}</strong>${isCND?` <span class="badge-cnd" title="Crédito No Disponible">CND</span>`:""}${p.rem?` <span class="badge-rem" title="Remanente ${p.rem}">REM ${p.rem}</span>`:""}</td>
       <td style="max-width:280px;font-size:12px">${p.nm}</td>
       <td style="font-size:11px;white-space:nowrap"><span style="font-weight:700">${p._ag}</span> — ${AREA_GASTO_NM[p._ag]||p._ag}</td>
       <td style="font-size:11px;color:#555">${p._areaNm}</td>
@@ -986,8 +987,8 @@ function drillCap(idx){
     <div class="area-pct"><div class="big-pct">${pc.toFixed(1)}%</div><div class="pct-label">% Ejecución</div></div>`;
   const partidas=c.partidas||[];
   document.getElementById("tbodyPartidas").innerHTML=partidas.length?
-    partidas.map(p=>{const isCND=CND_PARTIDAS.has(p.cod);const pp=PCT(p.o,p.ac);return`<tr class="cap-row${isCND?" cnd-row":""}">
-      <td style="font-family:monospace;font-size:12px"><strong>${p.cod}</strong>${isCND?` <span class="badge-cnd" title="Crédito No Disponible — pendiente de autorización de operación de crédito">CND</span>`:""}</td>
+    partidas.map(p=>{const isCND=CND_PARTIDAS.has(p.cod);const isREM=!!p.rem;const pp=PCT(p.o,p.ac);return`<tr class="cap-row${isCND?" cnd-row":""}">
+      <td style="font-family:monospace;font-size:12px"><strong>${p.cod}</strong>${isCND?` <span class="badge-cnd" title="Crédito No Disponible — pendiente de autorización de operación de crédito">CND</span>`:""}${isREM?` <span class="badge-rem" title="Remanente ${p.rem} — fondos de subvenciones o créditos de años anteriores">REM ${p.rem}</span>`:""}</td>
       <td style="max-width:320px">${p.nm}</td>
       <td class="num">${DASH(p.i)}</td>
       <td class="num">${DASH(p.m)}</td>
@@ -1237,13 +1238,14 @@ async function procesarXLS(file){
           if(mP&&!periodoXls) periodoXls=mP[1];
         }
         // Cabecera y columnas
-        let hdr=-1,col={cod:1,desc:2,i:4,m:5,ac:7,a:9,d:11,o:13};
+        let hdr=-1,col={rem:0,cod:1,desc:2,i:4,m:5,ac:7,a:9,d:11,o:13};
         for(let i=0;i<rows.length;i++){
           const rn=rows[i].map(c=>norm(c));
           if(rn.some(c=>c.includes("codigo")||c.includes("partida"))&&rn.some(c=>c==="inicial"||c.includes("inicial"))){
             hdr=i;
             const mapped={};
             rn.forEach((c,j)=>{
+              if(mapped.rem===undefined&&(c==="rem"||c.includes("remanent"))) mapped.rem=j;
               if(mapped.cod===undefined&&(c.includes("codigo")||c.includes("partida"))) mapped.cod=j;
               if(mapped.desc===undefined&&c.includes("descrip")) mapped.desc=j;
               if(mapped.i===undefined&&c==="inicial") mapped.i=j;
@@ -1273,7 +1275,9 @@ async function procesarXLS(file){
           if(!areaMap[areaNm]) areaMap[areaNm]={};
           if(!areaMap[areaNm][cap]) areaMap[areaNm][cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
           const g=areaMap[areaNm][cap];
+          const remV=String(row[col.rem]||"").trim();
           const v={cod:codRaw,nm:String(row[col.desc]||"").trim(),
+            rem:/^(19|20)\d{2}$/.test(remV)?remV:"",
             i:xlsN(row[col.i]),m:xlsN(row[col.m]),ac:xlsN(row[col.ac]),
             a:xlsN(row[col.a]),d:xlsN(row[col.d]),o:xlsN(row[col.o])};
           if(v.ac===0&&(v.i>0||v.m>0)) v.ac=v.i+v.m;
@@ -1426,7 +1430,7 @@ function importarExcel(input){
       //    0=Rem 1=Código 2=Descripción 3=Vinc 4=Inicial 5=Modif 6=Inc.Rem 7=Actual
       //    8=RC 9=A 10=Apend 11=D 12=Dpend 13=O 14=Opend ...
       let hdr=-1;
-      let col={cod:1, desc:2, i:4, m:5, ac:7, a:9, d:11, o:13}; // fallback GEMA
+      let col={rem:0, cod:1, desc:2, i:4, m:5, ac:7, a:9, d:11, o:13}; // fallback GEMA
       for(let i=0;i<rows.length;i++){
         const rn=rows[i].map(c=>norm(c));
         const hasCod =rn.some(c=>c.includes("codigo")||c.includes("partida")||c.includes("cod."));
@@ -1436,6 +1440,7 @@ function importarExcel(input){
           // Mapear columnas dinámicamente — para A/D/O tomar PRIMERA coincidencia exacta
           const mapped={};
           rn.forEach((c,j)=>{
+            if(mapped.rem===undefined&&(c==="rem"||c.includes("remanent"))) mapped.rem=j;
             if(mapped.cod===undefined&&(c.includes("codigo")||c.includes("partida"))) mapped.cod=j;
             if(mapped.desc===undefined&&c.includes("descrip")) mapped.desc=j;
             if(mapped.i===undefined&&c==="inicial")   mapped.i=j;
@@ -1481,9 +1486,11 @@ function importarExcel(input){
         if(!areaMap[areaNm][cap]) areaMap[areaNm][cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
 
         const g=areaMap[areaNm][cap];
+        const remVal=String(row[col.rem]||"").trim();
         const vals={
           cod:codRaw,
           nm :String(row[col.desc]||"").trim(),
+          rem:/^(19|20)\d{2}$/.test(remVal)?remVal:"",
           i  :xlsN(row[col.i]),
           m  :xlsN(row[col.m]),
           ac :xlsN(row[col.ac]),
@@ -1580,7 +1587,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v35_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v36_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
