@@ -879,6 +879,7 @@ function guardarDatos(){
     if(area) area[f]=parseNum(inp.value);
   });
 
+  guardarLocal();
   closeEditor();
   renderTotal();
   if(curArea){
@@ -907,6 +908,7 @@ function importarDatos(input){
       if(data.total)   Object.assign(TOTAL,data.total);
       if(data.caps_globales) CAPS_G=data.caps_globales;
       if(!CAPS_G.some(c=>c.ac>0)) recalcCapsG();
+      guardarLocal();
       closeEditor();
       renderTotal();
       alert("✓ Datos importados correctamente para el periodo "+CONFIG.fecha);
@@ -978,6 +980,7 @@ async function importarAmbos(){
     if(fecha)   CONFIG.fecha=fecha;
     if(periodo) CONFIG.periodo=periodo;
     recalcCapsG();
+    guardarLocal();
     closeEditor();
     renderTotal();
 
@@ -1353,6 +1356,7 @@ function aplicarExcel(){
   if(_xlsPrev.periodo) CONFIG.periodo=_xlsPrev.periodo;
   _xlsPrev=null;
   recalcCapsG();
+  guardarLocal();
   closeEditor();
   renderTotal();
   // Si estaba en vista área, refrescar también ese nivel
@@ -1371,8 +1375,30 @@ function confirmarReset(){
 }
 
 // ================================================================
+//  PERSISTENCIA localStorage
+// ================================================================
+function guardarLocal(){
+  try{
+    localStorage.setItem("dashEjecucion", JSON.stringify({config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
+  }catch(e){}
+}
+function cargarLocal(){
+  try{
+    const raw=localStorage.getItem("dashEjecucion");
+    if(!raw) return false;
+    const data=JSON.parse(raw);
+    if(data.config)  Object.assign(CONFIG,data.config);
+    if(data.total)   Object.assign(TOTAL,data.total);
+    if(data.areas)   AREAS=data.areas;
+    if(data.caps_globales) CAPS_G=data.caps_globales;
+    return true;
+  }catch(e){ return false; }
+}
+
+// ================================================================
 //  INIT
 // ================================================================
+cargarLocal();
 renderTotal();
 </script>
 </body>
