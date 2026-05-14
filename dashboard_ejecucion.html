@@ -398,7 +398,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:62015906.50, a:0, d:0, o:11722850.99, caps:[] },
     { id:3,  n:"Medio Ambiente",                     nota:"Progs. 169+170+172+179",
       i:0, m:0, ac:29963924.56, a:0, d:0, o:3252735.70,  caps:[] },
-    { id:4,  n:"Administración General",             nota:"Progs. 920-929+931+934+943",
+    { id:4,  n:"Administración General",             nota:"Progs. 920-926+928+929+931+934+943",
       i:0, m:0, ac:18294368.89, a:0, d:0, o:3016686.85,  caps:[] },
     { id:5,  n:"Urbanismo",                          nota:"Prog. 151",
       i:0, m:0, ac:1139850.91,  a:0, d:0, o:281988.27,   caps:[] },
@@ -418,8 +418,8 @@ const DATOS_PDF = {
       i:0, m:0, ac:9400011.77,  a:0, d:0, o:811877.46,   caps:[] },
     { id:14, n:"Residencia Pensionistas",            nota:"Prog. 235",
       i:0, m:0, ac:7773730.09,  a:0, d:0, o:1660479.88,  caps:[] },
-    { id:15, n:"Pensiones y Prestaciones Empleados", nota:"Progs. 211+221",
-      i:0, m:0, ac:1347519.14,  a:0, d:0, o:71464.91,    caps:[] },
+    { id:15, n:"Recursos Humanos",                   nota:"Progs. 927+211+221 (sin Cap. 1)",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:16, n:"Energía e Industria",                nota:"Progs. 420+422+425",
       i:0, m:0, ac:2156736.63,  a:0, d:0, o:34016.36,    caps:[] },
     { id:17, n:"Artesanía",                          nota:"Prog. 426",
@@ -438,7 +438,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:18266298.22, a:0, d:0, o:89582.23,    caps:[] },
     { id:24, n:"Residuos",                           nota:"Prog. 162",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
-    { id:25, n:"Recursos Humanos",                   nota:"Cap. 1 — todos los programas",
+    { id:25, n:"Capítulo 1",                          nota:"Cap. 1 — todos los programas",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] }
   ],
   caps_globales: [
@@ -470,7 +470,7 @@ const PROG_AREA = {
   "151":"Urbanismo","152":"Vivienda",
   "162":"Residuos",
   "169":"Medio Ambiente","170":"Medio Ambiente","172":"Medio Ambiente","179":"Medio Ambiente",
-  "211":"Pensiones y Prestaciones Empleados","221":"Pensiones y Prestaciones Empleados",
+  "211":"Recursos Humanos","221":"Recursos Humanos",
   "230":"Acción Social y Dependencia","231":"Acción Social y Dependencia",
   "232":"Acción Social y Dependencia","233":"Acción Social y Dependencia",
   "235":"Residencia Pensionistas",
@@ -501,7 +501,7 @@ const PROG_AREA = {
   "911":"Órganos de Gobierno","912":"Órganos de Gobierno","913":"Órganos de Gobierno",
   "920":"Administración General","921":"Administración General","922":"Administración General",
   "923":"Administración General","924":"Administración General","925":"Administración General",
-  "926":"Administración General","927":"Administración General","928":"Administración General",
+  "926":"Administración General","927":"Recursos Humanos","928":"Administración General",
   "929":"Administración General","931":"Administración General",
   "933":"Infraestructuras",
   "934":"Administración General","943":"Administración General"
@@ -1100,7 +1100,7 @@ async function procesarXLS(file){
           areasOk++;
         });
         // Asignar Cap. 1 acumulado al área Recursos Humanos
-        const rrHH=AREAS.find(a=>a.n==="Recursos Humanos");
+        const rrHH=AREAS.find(a=>a.n==="Capítulo 1");
         if(rrHH&&cap1Acum.ac>0){
           rrHH.caps=[{cod:"Cap. 1",nm:CAP_NM["1"],
             i:cap1Acum.i,m:cap1Acum.m,ac:cap1Acum.ac,a:cap1Acum.a,d:cap1Acum.d,o:cap1Acum.o,
