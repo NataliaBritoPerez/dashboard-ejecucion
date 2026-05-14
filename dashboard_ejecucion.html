@@ -394,7 +394,7 @@ const DATOS_PDF = {
   areas: [
     { id:1,  n:"Acción Social y Dependencia",        nota:"Progs. 230+231+232+233+313",
       i:0, m:0, ac:67297949.71, a:0, d:0, o:2352260.10,  caps:[] },
-    { id:2,  n:"Infraestructuras",                   nota:"Progs. 450+452+453+459+933",
+    { id:2,  n:"Infraestructuras",                   nota:"Progs. 450+452+453+459",
       i:0, m:0, ac:62015906.50, a:0, d:0, o:11722850.99, caps:[] },
     { id:3,  n:"Medio Ambiente",                     nota:"Progs. 170+172+179",
       i:0, m:0, ac:29963924.56, a:0, d:0, o:3252735.70,  caps:[] },
@@ -435,6 +435,8 @@ const DATOS_PDF = {
     { id:31, n:"Organización y Participación Ciudadana", nota:"Progs. 924+925",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:32, n:"Contratación",                       nota:"Prog. 928",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
+    { id:33, n:"Gestión del Patrimonio",             nota:"Prog. 933",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:17, n:"Artesanía",                          nota:"Prog. 426",
       i:0, m:0, ac:1003185.26,  a:0, d:0, o:109086.19,   caps:[] },
@@ -517,7 +519,7 @@ const PROG_AREA = {
   "923":"Administración General","924":"Organización y Participación Ciudadana","925":"Organización y Participación Ciudadana",
   "926":"Transformación Digital","927":"Recursos Humanos","928":"Contratación",
   "929":"Hacienda","931":"Hacienda",
-  "933":"Infraestructuras",
+  "933":"Gestión del Patrimonio",
   "934":"Hacienda","943":"Administración General"
 };
 
@@ -1397,7 +1399,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v17_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v18_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
