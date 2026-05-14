@@ -428,7 +428,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:26, n:"Industria",                          nota:"Progs. 420+422",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
-    { id:28, n:"Presidencia",                        nota:"Progs. 921+922",
+    { id:28, n:"Presidencia",                        nota:"Progs. 921+922 + apps 943/22605+943/22608",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:30, n:"Promoción Económica",                nota:"Prog. 439",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
@@ -446,7 +446,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:2874530.53,  a:0, d:0, o:300367.84,   caps:[] },
     { id:20, n:"Órganos de Gobierno",                nota:"Prog. 912",
       i:0, m:0, ac:2704234.87,  a:0, d:0, o:843886.81,   caps:[] },
-    { id:21, n:"Hacienda",                            nota:"Progs. 011+929+931+934 + apps 943/22605+943/22608",
+    { id:21, n:"Hacienda",                            nota:"Progs. 011+929+931+934",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:22, n:"Seguridad y Protec. Civil",          nota:"Progs. 130+135+136",
       i:0, m:0, ac:1411507.73,  a:0, d:0, o:403551.62,   caps:[] },
@@ -524,8 +524,8 @@ const PROG_AREA = {
 };
 
 const PARTIDA_AREA = {
-  "943/22605":"Hacienda",
-  "943/22608":"Hacienda",
+  "943/22605":"Presidencia",
+  "943/22608":"Presidencia",
   "943/46700":"Residuos",
   "943/76700":"Residuos",
   "943/76701":"Residuos",
@@ -1424,7 +1424,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v24_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v25_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
