@@ -689,11 +689,11 @@ function renderTotal(){
       labels:asSorted.map(a=>a.n),
       datasets:[
         {label:"% Ejecutado (O)",    data:asSorted.map(a=>PCT(a.o,a.ac)),
-         backgroundColor:asSorted.map(a=>COLOR(PCT(a.o,a.ac))), borderRadius:3, barPercentage:0.75,
-         datalabels:{anchor:"end",align:"start",color:"#fff",font:{size:9,weight:"bold"},
+         backgroundColor:asSorted.map(a=>COLOR(PCT(a.o,a.ac))), borderRadius:3, barPercentage:0.92,
+         datalabels:{anchor:"end",align:"start",color:"#fff",font:{size:10,weight:"bold"},
            formatter:v=>v>=2?v.toFixed(1)+"%":""}},
         {label:"% Comprometido (D)", data:asSorted.map(a=>PCT(a.d,a.ac)),
-         backgroundColor:"rgba(44,95,158,0.18)", borderRadius:3, barPercentage:0.75,
+         backgroundColor:"rgba(44,95,158,0.18)", borderRadius:3, barPercentage:0.92,
          datalabels:{display:false}}
       ]
     },
