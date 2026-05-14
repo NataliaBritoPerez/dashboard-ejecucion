@@ -1341,30 +1341,11 @@ function importarExcel(input){
         areasActualizadas++;
       });
 
-      // Programas sin mapeo → añadir como áreas extra si tienen datos
-      if(sinMapeo.size>0){
-        for(const [areaNm,capMap] of Object.entries(areaMap)){
-          if(AREAS.find(a=>a.n===areaNm)) continue; // ya existe
-          const caps=Object.entries(capMap).sort(([a],[b])=>a.localeCompare(b))
-            .map(([digit,data])=>({
-              cod:"Cap."+digit, nm:CAP_NM[digit]||"Cap."+digit,
-              i:data.i,m:data.m,ac:data.ac,a:data.a,d:data.d,o:data.o,
-              partidas:data.partidas
-            }));
-          const totAc=caps.reduce((s,c)=>s+c.ac,0);
-          const totO =caps.reduce((s,c)=>s+c.o,0);
-          AREAS.push({
-            id:AREAS.length+1, n:areaNm, nota:"Programa sin clasificar — asignar área",
-            i:0,m:0,ac:totAc,a:0,d:0,o:totO, caps
-          });
-          areasActualizadas++;
-        }
-      }
+      // Estructura protegida: los programas sin mapeo se ignoran (no crean áreas nuevas)
 
       // 6. Confirmación y aplicar
       _xlsPrev={fecha:fechaXls, periodo:periodoXls};
-      const aviso=sinMapeo.size?`\n⚠ ${sinMapeo.size} programas sin mapeo de área: ${[...sinMapeo].join(", ")}`:"";
-      const avisoEsp="";
+      const aviso=sinMapeo.size?`\n⚠ Programas ignorados (sin área asignada): ${[...sinMapeo].join(", ")}`:"";
       const msg=
         `✓ Excel de GEMA procesado.\n`+
         `  ${lineas} aplicaciones leídas → ${areasActualizadas} áreas actualizadas\n`+
@@ -1411,7 +1392,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v28_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v29_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
