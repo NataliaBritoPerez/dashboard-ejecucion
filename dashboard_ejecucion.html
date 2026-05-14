@@ -396,9 +396,9 @@ const DATOS_PDF = {
       i:0, m:0, ac:67297949.71, a:0, d:0, o:2352260.10,  caps:[] },
     { id:2,  n:"Infraestructuras",                   nota:"Progs. 450+452+453+459",
       i:0, m:0, ac:62015906.50, a:0, d:0, o:11722850.99, caps:[] },
-    { id:3,  n:"Medio Ambiente",                     nota:"Progs. 170+172+179 + apps 943/48900+943/48901",
+    { id:3,  n:"Medio Ambiente",                     nota:"Progs. 170+172+179",
       i:0, m:0, ac:29963924.56, a:0, d:0, o:3252735.70,  caps:[] },
-    { id:4,  n:"Administración General",             nota:"Progs. 920+923+943",
+    { id:4,  n:"Administración General",             nota:"Progs. 920+923",
       i:0, m:0, ac:18294368.89, a:0, d:0, o:3016686.85,  caps:[] },
     { id:5,  n:"Ordenación del Territorio",           nota:"Prog. 151",
       i:0, m:0, ac:1139850.91,  a:0, d:0, o:281988.27,   caps:[] },
@@ -422,13 +422,13 @@ const DATOS_PDF = {
       i:0, m:0, ac:9400011.77,  a:0, d:0, o:811877.46,   caps:[] },
     { id:14, n:"Centro de Mayores La Dehesa",         nota:"Prog. 235",
       i:0, m:0, ac:7773730.09,  a:0, d:0, o:1660479.88,  caps:[] },
-    { id:15, n:"Recursos Humanos",                   nota:"Progs. 927+211+221 + apps 920/83000+920/83100+920/83101 (sin Cap. 1)",
+    { id:15, n:"Recursos Humanos",                   nota:"Progs. 927+211+221 (sin Cap. 1)",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:16, n:"Energía",                            nota:"Prog. 425",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:26, n:"Industria",                          nota:"Progs. 420+422",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
-    { id:28, n:"Presidencia",                        nota:"Progs. 921+922 + apps 943/22605+943/22608",
+    { id:28, n:"Presidencia",                        nota:"Progs. 921+922",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:30, n:"Promoción Económica",                nota:"Prog. 439",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
@@ -437,6 +437,8 @@ const DATOS_PDF = {
     { id:32, n:"Contratación",                       nota:"Prog. 928",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:33, n:"Gestión del Patrimonio",             nota:"Prog. 933",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
+    { id:34, n:"Transferencias otras EELL",          nota:"Prog. 943",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:17, n:"Artesanía",                          nota:"Prog. 426",
       i:0, m:0, ac:1003185.26,  a:0, d:0, o:109086.19,   caps:[] },
@@ -452,7 +454,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:1411507.73,  a:0, d:0, o:403551.62,   caps:[] },
     { id:23, n:"Vivienda",                           nota:"Prog. 152",
       i:0, m:0, ac:18266298.22, a:0, d:0, o:89582.23,    caps:[] },
-    { id:24, n:"Residuos",                           nota:"Prog. 162 + apps 943/46700+943/76700+943/76701",
+    { id:24, n:"Residuos",                           nota:"Prog. 162",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:25, n:"Capítulo 1",                          nota:"Cap. 1 — todos los programas",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] }
@@ -520,16 +522,11 @@ const PROG_AREA = {
   "926":"Transformación Digital","927":"Recursos Humanos","928":"Contratación",
   "929":"Hacienda","931":"Hacienda",
   "933":"Gestión del Patrimonio",
-  "934":"Hacienda","943":"Administración General"
+  "934":"Hacienda","943":"Transferencias otras EELL"
 };
 
 // Clave: prog (3 dígitos) → objeto con código económico numérico → área
-const PARTIDA_AREA = {
-  "943": { 22605:"Presidencia", 22608:"Presidencia",
-           46700:"Residuos", 76700:"Residuos", 76701:"Residuos",
-           48900:"Medio Ambiente", 48901:"Medio Ambiente" },
-  "920": { 83000:"Recursos Humanos", 83100:"Recursos Humanos", 83101:"Recursos Humanos" }
-};
+const PARTIDA_AREA = {};
 
 const CAP_NM = {
   "1":"Gastos de Personal",
@@ -1271,7 +1268,7 @@ function importarExcel(input){
       const start=hdr>=0?hdr+1:0;
       // areaMap[nombreArea][capDigit] = { i,m,ac,a,d,o, partidas:[] }
       const areaMap={};
-      let lineas=0, sinMapeo=new Set(), partidasEspeciales=[], codigosProg943=[], codigosProg920=[];
+      let lineas=0, sinMapeo=new Set(), partidasEspeciales=[];
 
       for(let i=start;i<rows.length;i++){
         const row=rows[i];
@@ -1291,8 +1288,6 @@ function importarExcel(input){
         const areaNm = areaPartida || PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
         if(!areaPartida && !PROG_AREA[prog]) sinMapeo.add(prog);
         if(areaPartida) partidasEspeciales.push(codRaw+" → "+areaNm);
-        if(prog==="943") codigosProg943.push(codRaw);
-        if(prog==="920") codigosProg920.push(codRaw);
 
         if(!areaMap[areaNm]) areaMap[areaNm]={};
         if(!areaMap[areaNm][cap]) areaMap[areaNm][cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
@@ -1369,13 +1364,11 @@ function importarExcel(input){
       // 6. Confirmación y aplicar
       _xlsPrev={fecha:fechaXls, periodo:periodoXls};
       const aviso=sinMapeo.size?`\n⚠ ${sinMapeo.size} programas sin mapeo de área: ${[...sinMapeo].join(", ")}`:"";
-      const avisoEsp=partidasEspeciales.length?`\n✓ ${partidasEspeciales.length} aplicaciones reasignadas:\n  `+partidasEspeciales.join("\n  "):"";
-      const avisoD=`\n\n🔍 DIAGNÓSTICO prog 943 (${codigosProg943.length} apps): ${codigosProg943.slice(0,15).join(", ")}${codigosProg943.length>15?"...":""}`+
-                   `\n🔍 DIAGNÓSTICO prog 920 (${codigosProg920.length} apps): ${codigosProg920.slice(0,10).join(", ")}${codigosProg920.length>10?"...":""}`;
+      const avisoEsp="";
       const msg=
         `✓ Excel de GEMA procesado.\n`+
         `  ${lineas} aplicaciones leídas → ${areasActualizadas} áreas actualizadas\n`+
-        (fechaXls?`  Fecha: ${fechaXls}  Periodo: ${periodoXls}\n`:"")+aviso+avisoEsp+avisoD+
+        (fechaXls?`  Fecha: ${fechaXls}  Periodo: ${periodoXls}\n`:"")+aviso+
         `\n\n¿Aplicar al dashboard?`;
 
       if(confirm(msg)) aplicarExcel();
@@ -1418,7 +1411,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v27_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v28_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
