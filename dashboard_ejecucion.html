@@ -1290,10 +1290,16 @@ function importarExcel(input){
         const econ =codRaw.slice(slash+1);                   // "31000"
         const cap  =econ[0];                                  // "3"
 
-        // Normalizar clave: prog 3 dígitos + econ sin ceros iniciales
-        const normCod = prog + "/" + String(parseInt(econ, 10) || econ);
-        const areaNm = PARTIDA_AREA[normCod] || PARTIDA_AREA[codRaw] || PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
-        if(!PARTIDA_AREA[normCod] && !PARTIDA_AREA[codRaw] && !PROG_AREA[prog]) sinMapeo.add(prog);
+        // Buscar en PARTIDA_AREA comparando prog (3 dígitos) y econ numéricamente
+        const econNum = parseInt(econ, 10);
+        const partidaKey = Object.keys(PARTIDA_AREA).find(k => {
+          const ks = k.indexOf("/");
+          return ks >= 0
+            && k.slice(0, ks).padStart(3,"0") === prog
+            && parseInt(k.slice(ks+1), 10) === econNum;
+        });
+        const areaNm = (partidaKey ? PARTIDA_AREA[partidaKey] : null) || PROG_AREA[prog] || ("Prog."+prog+" (sin asignar)");
+        if(!partidaKey && !PROG_AREA[prog]) sinMapeo.add(prog);
 
         if(!areaMap[areaNm]) areaMap[areaNm]={};
         if(!areaMap[areaNm][cap]) areaMap[areaNm][cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
@@ -1416,7 +1422,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v22_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v23_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
