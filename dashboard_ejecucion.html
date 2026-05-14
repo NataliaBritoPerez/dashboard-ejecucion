@@ -253,6 +253,7 @@
 <div id="viewTabs" class="view-tabs">
   <button class="tab-btn active" onclick="switchTab('areas')"     id="tabAreas">📊 Por Área</button>
   <button class="tab-btn"        onclick="switchTab('capitulos')" id="tabCaps">📋 Por Capítulo Económico</button>
+  <button class="tab-btn"        onclick="switchTab('areagasto')" id="tabAreaGasto">⚖️ Por Área de Gasto</button>
 </div>
 
 <!-- ===== MAIN CONTENT ===== -->
@@ -326,6 +327,57 @@
             </table>
           </div>
           <div class="data-note" id="fuenteCaps"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: ÁREA DE GASTO -->
+    <div id="tabContentAreaGasto" class="hidden">
+      <div id="kpiAreaGasto" class="kpi-grid" style="margin-bottom:16px"></div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <div>
+            <div class="panel-title">Aplicaciones por Área de Gasto</div>
+            <div class="panel-sub">Las transferencias de crédito entre aplicaciones genéricas se pueden realizar dentro del mismo área de gasto (Ord. HAP/419/2014)</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px">
+              <label style="font-size:12px;font-weight:600;color:#444">Área:</label>
+              <select id="filtroAreaGasto" onchange="renderTablaAreaGasto()" style="border:1px solid #ddd;border-radius:6px;padding:4px 8px;font-size:12px;background:white">
+                <option value="">Todas las áreas</option>
+                <option value="0">0 — Deuda Pública</option>
+                <option value="1">1 — Servicios Públicos Básicos</option>
+                <option value="2">2 — Protección y Promoción Social</option>
+                <option value="3">3 — Bienes Públicos Preferentes</option>
+                <option value="4">4 — Carácter Económico</option>
+                <option value="9">9 — Carácter General</option>
+              </select>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <label style="font-size:12px;font-weight:600;color:#444">Ordenar por:</label>
+              <select id="ordenAreaGasto" onchange="renderTablaAreaGasto()" style="border:1px solid #ddd;border-radius:6px;padding:4px 8px;font-size:12px;background:white">
+                <option value="pct_asc">% Ejecución (menor primero)</option>
+                <option value="saldo_desc">Saldo disponible (mayor primero)</option>
+                <option value="ac_desc">Crédito actual (mayor primero)</option>
+                <option value="cod_asc">Código (A→Z)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table" id="tableAreaGasto">
+            <thead><tr>
+              <th>Código</th>
+              <th>Descripción</th>
+              <th>Área de Gasto</th>
+              <th>Área Operativa</th>
+              <th class="num">Crédito Actual</th>
+              <th class="num">Ejecutado (O)</th>
+              <th class="num">Saldo</th>
+              <th>% Ejec.</th>
+            </tr></thead>
+            <tbody id="tbodyAreaGasto"></tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -563,6 +615,16 @@ const CAP_NM = {
   "9":"Pasivos Financieros"
 };
 
+// Orden HAP/419/2014 — Clasificación funcional local (primer dígito del programa)
+const AREA_GASTO_NM = {
+  "0":"Deuda Pública",
+  "1":"Servicios Públicos Básicos",
+  "2":"Actuaciones de Protección y Promoción Social",
+  "3":"Producción de Bienes Públicos de Carácter Preferente",
+  "4":"Actuaciones de Carácter Económico",
+  "9":"Actuaciones de Carácter General"
+};
+
 // ================================================================
 //  UTILIDADES
 // ================================================================
@@ -613,8 +675,99 @@ function switchTab(tab){
   activeTab=tab;
   document.getElementById("tabContentAreas").classList.toggle("hidden",tab!=="areas");
   document.getElementById("tabContentCaps").classList.toggle("hidden",tab!=="capitulos");
+  document.getElementById("tabContentAreaGasto").classList.toggle("hidden",tab!=="areagasto");
   document.getElementById("tabAreas").classList.toggle("active",tab==="areas");
   document.getElementById("tabCaps").classList.toggle("active",tab==="capitulos");
+  document.getElementById("tabAreaGasto").classList.toggle("active",tab==="areagasto");
+  if(tab==="areagasto") renderAreaGasto();
+}
+
+// ================================================================
+//  ÁREA DE GASTO
+// ================================================================
+function getAllPartidas(){
+  const result=[];
+  AREAS.forEach(area=>{
+    (area.caps||[]).forEach(cap=>{
+      (cap.partidas||[]).forEach(p=>{
+        result.push({...p, _areaNm:area.n});
+      });
+    });
+  });
+  return result;
+}
+
+function getAgDigit(cod){ return (cod.split("/")[0]||"")[0]||"?"; }
+
+function renderAreaGasto(){
+  const partidas=getAllPartidas();
+  const hayDatos=partidas.length>0;
+
+  // KPI por área de gasto
+  const totAG={};
+  if(hayDatos){
+    partidas.forEach(p=>{
+      const ag=getAgDigit(p.cod);
+      if(!totAG[ag]) totAG[ag]={ac:0,o:0,d:0};
+      totAG[ag].ac+=p.ac; totAG[ag].o+=p.o; totAG[ag].d+=p.d;
+    });
+  } else {
+    // Sin GEMA: derivar de AREAS + PROG_AREA (aproximado)
+    AREAS.forEach(area=>{
+      // Buscar programas que mapean a esta área
+      const progs=Object.entries(PROG_AREA).filter(([,v])=>v===area.n).map(([k])=>k);
+      if(progs.length===0) return;
+      const ag=progs[0][0]; // primer dígito del primer programa
+      if(!totAG[ag]) totAG[ag]={ac:0,o:0,d:0};
+      totAG[ag].ac+=area.ac; totAG[ag].o+=area.o; totAG[ag].d+=area.d;
+    });
+  }
+
+  const kpiCards=Object.keys(AREA_GASTO_NM).filter(k=>totAG[k]).map(k=>{
+    const t=totAG[k]; const pct=PCT(t.o,t.ac);
+    return {cl:pct>=60?"green":pct>=30?"orange":"red",
+      label:`${k} — ${AREA_GASTO_NM[k]}`,
+      val:pct.toFixed(1)+"%",
+      sub:`Saldo: ${EURK(t.ac-t.o)} | Crédito: ${EURK(t.ac)}`};
+  });
+  renderKPI("kpiAreaGasto", kpiCards);
+
+  renderTablaAreaGasto();
+}
+
+function renderTablaAreaGasto(){
+  const filtro=document.getElementById("filtroAreaGasto").value;
+  const orden=document.getElementById("ordenAreaGasto").value;
+  let partidas=getAllPartidas();
+
+  if(!partidas.length){
+    document.getElementById("tbodyAreaGasto").innerHTML=
+      `<tr><td colspan="8" class="empty-caps">Sin partidas — importa el Excel de GEMA para ver el desglose por área de gasto.</td></tr>`;
+    return;
+  }
+
+  partidas=partidas.map(p=>({...p, _ag:getAgDigit(p.cod), _saldo:p.ac-p.o}));
+  if(filtro) partidas=partidas.filter(p=>p._ag===filtro);
+
+  if(orden==="pct_asc")    partidas.sort((a,b)=>PCT(a.o,a.ac)-PCT(b.o,b.ac));
+  else if(orden==="saldo_desc") partidas.sort((a,b)=>b._saldo-a._saldo);
+  else if(orden==="ac_desc")   partidas.sort((a,b)=>b.ac-a.ac);
+  else                          partidas.sort((a,b)=>a.cod.localeCompare(b.cod));
+
+  const isCNDfn=p=>CND_PARTIDAS.has(p.cod);
+  document.getElementById("tbodyAreaGasto").innerHTML=partidas.map(p=>{
+    const pp=PCT(p.o,p.ac); const isCND=isCNDfn(p);
+    return`<tr class="cap-row${isCND?" cnd-row":""}">
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>${p.cod}</strong>${isCND?` <span class="badge-cnd" title="Crédito No Disponible">CND</span>`:""}</td>
+      <td style="max-width:280px;font-size:12px">${p.nm}</td>
+      <td style="font-size:11px;white-space:nowrap"><span style="font-weight:700">${p._ag}</span> — ${AREA_GASTO_NM[p._ag]||p._ag}</td>
+      <td style="font-size:11px;color:#555">${p._areaNm}</td>
+      <td class="num">${EUR(p.ac)}</td>
+      <td class="num"><strong>${EUR(p.o)}</strong></td>
+      <td class="num" style="color:${p._saldo>0?"#E65100":"#2E7D32"};font-weight:600">${EUR(p._saldo)}</td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px">${BAR(pp)} ${BSP(pp)}</div></td>
+    </tr>`;
+  }).join("")||`<tr><td colspan="8" class="empty-caps">Sin aplicaciones para el área de gasto seleccionada.</td></tr>`;
 }
 
 // ================================================================
@@ -1427,7 +1580,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v34_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v35_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
