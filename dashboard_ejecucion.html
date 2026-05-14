@@ -398,7 +398,7 @@ const DATOS_PDF = {
       i:0, m:0, ac:62015906.50, a:0, d:0, o:11722850.99, caps:[] },
     { id:3,  n:"Medio Ambiente",                     nota:"Progs. 169+170+172+179",
       i:0, m:0, ac:29963924.56, a:0, d:0, o:3252735.70,  caps:[] },
-    { id:4,  n:"Administración General",             nota:"Progs. 920-926+928+929+931+934+943",
+    { id:4,  n:"Administración General",             nota:"Progs. 920+923-926+928+929+931+934+943",
       i:0, m:0, ac:18294368.89, a:0, d:0, o:3016686.85,  caps:[] },
     { id:5,  n:"Urbanismo",                          nota:"Prog. 151",
       i:0, m:0, ac:1139850.91,  a:0, d:0, o:281988.27,   caps:[] },
@@ -425,6 +425,8 @@ const DATOS_PDF = {
     { id:16, n:"Energía",                            nota:"Prog. 425",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:26, n:"Industria",                          nota:"Prog. 422",
+      i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
+    { id:28, n:"Presidencia",                        nota:"Progs. 921+922",
       i:0, m:0, ac:0,           a:0, d:0, o:0,           caps:[] },
     { id:17, n:"Artesanía",                          nota:"Prog. 426",
       i:0, m:0, ac:1003185.26,  a:0, d:0, o:109086.19,   caps:[] },
@@ -503,7 +505,7 @@ const PROG_AREA = {
   "459":"Infraestructuras",
   "491":"Transformación Digital","492":"Transformación Digital","493":"Transformación Digital",
   "911":"Órganos de Gobierno","912":"Órganos de Gobierno","913":"Órganos de Gobierno",
-  "920":"Administración General","921":"Administración General","922":"Administración General",
+  "920":"Administración General","921":"Presidencia","922":"Presidencia",
   "923":"Administración General","924":"Administración General","925":"Administración General",
   "926":"Administración General","927":"Recursos Humanos","928":"Administración General",
   "929":"Administración General","931":"Administración General",
@@ -1382,7 +1384,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v6_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v7_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
