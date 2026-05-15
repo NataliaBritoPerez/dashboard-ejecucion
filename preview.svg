@@ -1,0 +1,11 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#1B3A6B"/>
+  <rect x="280" y="100" width="640" height="430" rx="28" fill="white"/>
+  <rect x="520" y="148" width="160" height="160" rx="22" fill="#1B3A6B"/>
+  <text x="600" y="258" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="58" fill="white">CP</text>
+  <text x="600" y="358" text-anchor="middle" font-family="Arial, sans-serif" font-weight="600" font-size="24" fill="#666">Cabildo Insular de La Palma</text>
+  <text x="600" y="404" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="34" fill="#1B3A6B">Ejecución Presupuestaria</text>
+  <text x="600" y="444" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="34" fill="#1B3A6B">2026</text>
+  <rect x="400" y="468" width="400" height="52" rx="14" fill="#1B3A6B"/>
+  <text x="600" y="501" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="20" fill="white">Consultar Ejecución</text>
+</svg>
