@@ -200,7 +200,7 @@
 </div>
 
 <!-- ===== EDITOR MODAL ===== -->
-<div id="editorModal" class="modal-backdrop">
+<div id="editorModal" class="modal-backdrop hidden">
   <div class="modal-box">
     <div class="modal-header">
       <h2>Actualizar Datos de Ejecución Semanal</h2>
@@ -27109,6 +27109,8 @@ function guardarDatos(){
 }
 
 function guardarHTMLActualizado(){
+  // Cerrar modal antes de capturar para que no se guarde abierto
+  document.getElementById("editorModal").classList.add("hidden");
   const datos={config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G};
   const nuevaSeccion=
     "/*@@DATOS_PDF_START@@*/\nconst DATOS_PDF = "+
@@ -27116,6 +27118,8 @@ function guardarHTMLActualizado(){
   const html="<!DOCTYPE html>\n"+
     document.documentElement.outerHTML
       .replace(/\/\*@@DATOS_PDF_START@@\*\/[\s\S]*?\/\*@@DATOS_PDF_END@@\*\//,nuevaSeccion);
+  // Reabrir modal
+  document.getElementById("editorModal").classList.remove("hidden");
   const blob=new Blob([html],{type:"text/html;charset=utf-8"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
@@ -27613,7 +27617,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v39_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v40_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
