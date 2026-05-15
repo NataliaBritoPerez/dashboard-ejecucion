@@ -46398,8 +46398,8 @@ function guardarDatos(){
 }
 
 function guardarHTMLActualizado(){
-  // Cerrar modal antes de capturar para que no se guarde abierto
   document.getElementById("editorModal").classList.add("hidden");
+  document.getElementById("_po").style.display="";  // resetear overlay PIN (estaba oculto por autenticación)
   const datos={config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G};
   const nuevaSeccion=
     "/*@@DATOS_PDF_START@@*/\nconst DATOS_PDF = "+
@@ -46407,7 +46407,7 @@ function guardarHTMLActualizado(){
   const html="<!DOCTYPE html>\n"+
     document.documentElement.outerHTML
       .replace(/\/\*@@DATOS_PDF_START@@\*\/[\s\S]*?\/\*@@DATOS_PDF_END@@\*\//,nuevaSeccion);
-  // Reabrir modal
+  document.getElementById("_po").style.display="none"; // restaurar estado autenticado
   document.getElementById("editorModal").classList.remove("hidden");
   const blob=new Blob([html],{type:"text/html;charset=utf-8"});
   const a=document.createElement("a");
