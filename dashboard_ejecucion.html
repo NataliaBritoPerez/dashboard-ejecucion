@@ -282,6 +282,11 @@
           </label>
           <button class="btn-danger" onclick="confirmarReset()">↺ Restaurar datos PDF</button>
         </div>
+        <div style="margin-top:4px;padding:10px;background:#EEF4FF;border-radius:8px;border:1px solid #c5d8f8">
+          <div style="font-size:12px;color:#1B3A6B;font-weight:600;margin-bottom:6px">📤 Publicar en GitHub Pages</div>
+          <div style="font-size:11px;color:#555;margin-bottom:8px">Descarga el HTML con los datos actuales integrados. Reemplaza el archivo local y haz git push para que los consejeros vean los datos actualizados.</div>
+          <button class="btn-primary" onclick="guardarHTMLActualizado()" style="background:#1B3A6B">⬇ Guardar HTML para GitHub</button>
+        </div>
         <div style="display:flex;gap:8px">
           <button class="btn-secondary" onclick="closeEditor()">Cancelar</button>
           <button class="btn-primary" onclick="guardarDatos()">✓ Guardar y Actualizar</button>
@@ -490,6 +495,7 @@
 // ================================================================
 //  DATOS BASE — 14/05/2026
 // ================================================================
+/*@@DATOS_PDF_START@@*/
 const DATOS_PDF = {
   config: { fecha:"14/05/2026", periodo:"2026", fuente:"TGEM_0115 — Estado de Ejecución del Presupuesto de Gastos" },
   total: { i:208090000, m:84551592.55, ac:292641592.55, a:134816843.05, d:125813466.30, o:36074005.92 },
@@ -571,6 +577,7 @@ const DATOS_PDF = {
     {cod:"Cap. 9", nm:"Pasivos Financieros",                     ac:0, a:0, o:0}
   ]
 };
+/*@@DATOS_PDF_END@@*/
 
 // Estado mutable (se actualiza con el editor)
 let CONFIG = JSON.parse(JSON.stringify(DATOS_PDF.config));
@@ -1144,6 +1151,22 @@ function guardarDatos(){
   }
 }
 
+function guardarHTMLActualizado(){
+  const datos={config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G};
+  const nuevaSeccion=
+    "/*@@DATOS_PDF_START@@*/\nconst DATOS_PDF = "+
+    JSON.stringify(datos,null,2)+";\n/*@@DATOS_PDF_END@@*/";
+  const html="<!DOCTYPE html>\n"+
+    document.documentElement.outerHTML
+      .replace(/\/\*@@DATOS_PDF_START@@\*\/[\s\S]*?\/\*@@DATOS_PDF_END@@\*\//,nuevaSeccion);
+  const blob=new Blob([html],{type:"text/html;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="dashboard_ejecucion.html";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
 function exportarDatos(){
   const data={config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
@@ -1633,7 +1656,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v38_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v39_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
