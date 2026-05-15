@@ -46413,15 +46413,17 @@ function guardarDatos(){
 
 function guardarHTMLActualizado(){
   document.getElementById("editorModal").classList.add("hidden");
-  document.getElementById("_po").style.display="";  // resetear overlay PIN (estaba oculto por autenticación)
   const datos={config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G};
   const nuevaSeccion=
     "/*@@DATOS_PDF_START@@*/\nconst DATOS_PDF = "+
     JSON.stringify(datos,null,2)+";\n/*@@DATOS_PDF_END@@*/";
-  const html="<!DOCTYPE html>\n"+
-    document.documentElement.outerHTML
-      .replace(/\/\*@@DATOS_PDF_START@@\*\/[\s\S]*?\/\*@@DATOS_PDF_END@@\*\//,nuevaSeccion);
-  document.getElementById("_po").style.display="none"; // restaurar estado autenticado
+  let html="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+  // Reemplazar datos
+  html=html.replace(/\/\*@@DATOS_PDF_START@@\*\/[\s\S]*?\/\*@@DATOS_PDF_END@@\*\//,nuevaSeccion);
+  // Quitar inline style del overlay PIN para que se muestre en el archivo generado
+  html=html.replace(/(<div id="_po"[^>]*?)style="[^"]*"/,"$1");
+  // Asegurar que el modal editor empieza cerrado
+  html=html.replace(/(<div id="editorModal"[^>]*?)(?:class="([^"]*?)\bhidden\b([^"]*?)")/,"$1class=\"$2hidden$3\"");
   document.getElementById("editorModal").classList.remove("hidden");
   const blob=new Blob([html],{type:"text/html;charset=utf-8"});
   const a=document.createElement("a");
