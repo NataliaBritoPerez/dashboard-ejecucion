@@ -10,6 +10,9 @@
   <meta property="og:url" content="https://nataliabritoperez.github.io/dashboard-ejecucion/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1B3A6B">
+  <link rel="apple-touch-icon" href="icon.svg">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{min-height:100vh;display:flex;align-items:center;justify-content:center;
@@ -39,5 +42,8 @@
     <a class="btn" href="dashboard_ejecucion.html">Consultar Ejecución</a>
     <div class="fecha">Datos actualizados semanalmente</div>
   </div>
+  <script>
+    if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+  </script>
 </body>
 </html>

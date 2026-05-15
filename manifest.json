@@ -1,0 +1,20 @@
+{
+  "name": "Ejecución Presupuestaria 2026 - Cabildo de La Palma",
+  "short_name": "Ejecución Presupuestaria",
+  "description": "Seguimiento semanal de la ejecución del presupuesto insular",
+  "start_url": "/dashboard-ejecucion/dashboard_ejecucion.html",
+  "scope": "/dashboard-ejecucion/",
+  "display": "standalone",
+  "background_color": "#1B3A6B",
+  "theme_color": "#1B3A6B",
+  "lang": "es",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
