@@ -199,6 +199,19 @@
   </div>
 </div>
 
+<!-- ===== ADMIN PIN MODAL ===== -->
+<div id="_apo" class="modal-backdrop hidden">
+  <div class="pin-card">
+    <div class="pin-logo">CP</div>
+    <div class="pin-title">Acceso Administrador</div>
+    <div class="pin-sub">Introduce el PIN de administrador para editar</div>
+    <input id="_api" type="password" maxlength="10" placeholder="••••••••" autocomplete="off" onkeydown="if(event.key==='Enter')_asubm();if(event.key==='Escape')_aclose()">
+    <div class="pin-err" id="_ape"></div>
+    <button onclick="_asubm()">Acceder</button>
+    <button onclick="_aclose()" style="margin-top:8px;background:#e0e0e0;color:#555">Cancelar</button>
+  </div>
+</div>
+
 <!-- ===== EDITOR MODAL ===== -->
 <div id="editorModal" class="modal-backdrop hidden">
   <div class="modal-box">
@@ -46342,6 +46355,36 @@ function sortTbl(tbId,col){
 // ================================================================
 function openEditor(){
   if(document.body.classList.contains("readonly")) return;
+  const _ak="MjYwNDE5MTA=";
+  if(sessionStorage.getItem("__adm")!==_ak){
+    document.getElementById("_apo").classList.remove("hidden");
+    document.getElementById("_api").value="";
+    document.getElementById("_ape").textContent="";
+    setTimeout(()=>document.getElementById("_api").focus(),100);
+    return;
+  }
+  _openEditorCore();
+}
+
+function _aclose(){
+  document.getElementById("_apo").classList.add("hidden");
+}
+
+window._asubm=function(){
+  const _ak="MjYwNDE5MTA=";
+  const v=document.getElementById("_api").value;
+  if(btoa(v)===_ak){
+    sessionStorage.setItem("__adm",_ak);
+    document.getElementById("_apo").classList.add("hidden");
+    _openEditorCore();
+  }else{
+    document.getElementById("_ape").textContent="PIN incorrecto. Inténtalo de nuevo.";
+    document.getElementById("_api").value="";
+    setTimeout(()=>document.getElementById("_api").focus(),50);
+  }
+};
+
+function _openEditorCore(){
   // Fecha
   const parts=CONFIG.fecha.split("/");
   if(parts.length===3) document.getElementById("edFecha").value=`${parts[2]}-${parts[1].padStart(2,"0")}-${parts[0].padStart(2,"0")}`;
@@ -46922,7 +46965,7 @@ function confirmarReset(){
 // ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION = "v40_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
+const LOCAL_VERSION = "v41_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
