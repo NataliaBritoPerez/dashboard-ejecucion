@@ -88,27 +88,24 @@
     .kpi-res-logo{width:36px;height:36px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0}
     .kpi-res-htitle{font-size:13px;font-weight:700;line-height:1.3}
     .kpi-res-hdate{font-size:10px;opacity:.7;margin-top:1px}
-    .kpi-res-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px}
-    .kpi-res-mini{background:#F7F8FA;border-radius:7px;padding:8px 10px;border-left:3px solid #ccc}
+    .kpi-res-cards{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px}
+    .kpi-res-mini{background:#F7F8FA;border-radius:6px;padding:6px 9px;border-left:3px solid #ccc}
     .kpi-res-mini.blue{border-left-color:#2C5F9E}
     .kpi-res-mini.green{border-left-color:#2E7D32}
     .kpi-res-mini.orange{border-left-color:#E65100}
     .kpi-res-mini.purple{border-left-color:#6A1B9A}
-    .kpi-res-mini-label{font-size:8.5px;text-transform:uppercase;letter-spacing:0.5px;color:#888;margin-bottom:2px}
-    .kpi-res-mini-value{font-size:15px;font-weight:800;color:#1a1a2e}
-    .kpi-res-mini-sub{font-size:9px;color:#aaa;margin-top:1px}
-    .kpi-res-divider{height:1px;background:#F0F2F5;margin:0 10px}
-    .kpi-res-row{padding:6px 14px;border-bottom:1px solid #F0F2F5}
-    .kpi-res-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-    .kpi-res-name{font-size:11px;font-weight:600;color:#1a1a2e}
-    .kpi-res-pct{font-size:12px;font-weight:800;min-width:40px;text-align:right}
-    .kpi-res-bar-bg{height:6px;background:#EAEDF0;border-radius:3px;overflow:hidden;margin-bottom:3px}
+    .kpi-res-mini-label{font-size:8px;text-transform:uppercase;letter-spacing:0.4px;color:#999;margin-bottom:1px}
+    .kpi-res-mini-value{font-size:14px;font-weight:800;color:#1a1a2e}
+    .kpi-res-divider{height:1px;background:#F0F2F5;margin:0 8px}
+    .kpi-res-row{padding:5px 12px;border-bottom:1px solid #F0F2F5;display:flex;align-items:center;gap:8px}
+    .kpi-res-name{font-size:10.5px;font-weight:600;color:#1a1a2e;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kpi-res-bar-bg{height:5px;background:#EAEDF0;border-radius:3px;overflow:hidden;width:70px;flex-shrink:0}
     .kpi-res-bar-fill{height:100%;border-radius:3px}
-    .kpi-res-amounts{font-size:9.5px;color:#aaa;display:flex;justify-content:space-between}
-    .kpi-res-footer{background:#F7F8FA;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-top:2px solid #E8ECEF}
-    .kpi-res-footer-label{font-size:11px;font-weight:700;color:#1B3A6B}
-    .kpi-res-footer-pct{font-size:20px;font-weight:900;color:#1B3A6B}
-    .kpi-res-caption{text-align:center;font-size:9px;color:#ccc;padding:5px;background:#F7F8FA}
+    .kpi-res-pct{font-size:11px;font-weight:800;min-width:36px;text-align:right;flex-shrink:0}
+    .kpi-res-footer{background:#F7F8FA;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-top:2px solid #E8ECEF}
+    .kpi-res-footer-label{font-size:10px;font-weight:700;color:#1B3A6B}
+    .kpi-res-footer-pct{font-size:18px;font-weight:900;color:#1B3A6B}
+    .kpi-res-caption{text-align:center;font-size:8.5px;color:#ccc;padding:4px;background:#F7F8FA}
     /* AREA HEADER */
     .area-hdr{background:linear-gradient(135deg,#2C5F9E,#1B3A6B);color:white;border-radius:10px;padding:18px 22px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
     .area-name{font-size:17px;font-weight:700}
@@ -46081,36 +46078,28 @@ function renderKPIResumen(){
     <div class="kpi-res-mini blue">
       <div class="kpi-res-mini-label">Crédito Total (Actual)</div>
       <div class="kpi-res-mini-value">${M(TOTAL.ac)}</div>
-      <div class="kpi-res-mini-sub">Inicial: ${M(TOTAL.i)}</div>
     </div>
     <div class="kpi-res-mini green">
       <div class="kpi-res-mini-label">Obligaciones (O)</div>
       <div class="kpi-res-mini-value">${M(TOTAL.o)}</div>
-      <div class="kpi-res-mini-sub">Autorizado (A): ${M(TOTAL.a||0)}</div>
     </div>
     <div class="kpi-res-mini orange">
       <div class="kpi-res-mini-label">Pendiente Ejecutar</div>
       <div class="kpi-res-mini-value">${M(pendiente)}</div>
-      <div class="kpi-res-mini-sub">Sin comprometer: ${M((TOTAL.ac-(TOTAL.a||0)))}</div>
     </div>
     <div class="kpi-res-mini purple">
       <div class="kpi-res-mini-label">% Ejecución</div>
       <div class="kpi-res-mini-value">${totalPct.toFixed(2)}%</div>
-      <div class="kpi-res-mini-sub">O / Crédito actual</div>
     </div>`;
 
-  // Filas por área
+  // Filas por área — una línea por área
   document.getElementById("kpiResRows").innerHTML=sorted.map(a=>{
     const p=PCT(a.o,a.ac);
-    const w=Math.min(p,100).toFixed(1);
     const col=barColor(p);
     return `<div class="kpi-res-row">
-      <div class="kpi-res-top">
-        <span class="kpi-res-name">${a.n}</span>
-        <span class="kpi-res-pct" style="color:${col}">${p.toFixed(1)}%</span>
-      </div>
-      <div class="kpi-res-bar-bg"><div class="kpi-res-bar-fill" style="width:${w}%;background:${col}"></div></div>
-      <div class="kpi-res-amounts"><span>Ejec: ${M(a.o)}</span><span>Créd: ${M(a.ac)}</span></div>
+      <span class="kpi-res-name">${a.n}</span>
+      <div class="kpi-res-bar-bg"><div class="kpi-res-bar-fill" style="width:${Math.min(p,100).toFixed(1)}%;background:${col}"></div></div>
+      <span class="kpi-res-pct" style="color:${col}">${p.toFixed(1)}%</span>
     </div>`;
   }).join("");
 
