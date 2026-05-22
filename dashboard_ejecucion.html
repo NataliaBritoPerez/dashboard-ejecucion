@@ -46581,6 +46581,21 @@ function guardarDatos(){
 }
 
 function guardarHTMLActualizado(){
+  // Leer formulario antes de capturar (igual que guardarDatos)
+  const fv=document.getElementById("edFecha").value;
+  if(fv){const d=new Date(fv);CONFIG.fecha=`${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`}
+  CONFIG.periodo=document.getElementById("edPeriodo").value||CONFIG.periodo;
+  TOTAL.i =parseNum(document.getElementById("edTotalI").value);
+  TOTAL.m =parseNum(document.getElementById("edTotalM").value);
+  TOTAL.ac=parseNum(document.getElementById("edTotalAc").value);
+  TOTAL.a =parseNum(document.getElementById("edTotalA").value);
+  TOTAL.d =parseNum(document.getElementById("edTotalD").value);
+  TOTAL.o =parseNum(document.getElementById("edTotalO").value);
+  document.querySelectorAll("#editorBody .ed-input").forEach(inp=>{
+    const id=parseInt(inp.dataset.id),f=inp.dataset.f;
+    const area=AREAS.find(a=>a.id===id);
+    if(area) area[f]=parseNum(inp.value);
+  });
   document.getElementById("editorModal").classList.add("hidden");
   const datos={config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G};
   const nuevaSeccion=
