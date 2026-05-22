@@ -81,6 +81,24 @@
     .badge-low{background:#FDECEA;color:#C62828}
     .prog-bar{height:5px;background:#EEE;border-radius:3px;min-width:70px}
     .prog-fill{height:5px;border-radius:3px}
+    /* KPI RESUMEN */
+    .kpi-res-wrap{display:flex;justify-content:center;padding:24px 16px;background:#F0F2F5}
+    .kpi-res-box{background:white;border-radius:16px;width:100%;max-width:430px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.12)}
+    .kpi-res-hdr{background:#1B3A6B;color:white;padding:18px 20px;display:flex;align-items:center;gap:14px}
+    .kpi-res-logo{width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0}
+    .kpi-res-htitle{font-size:14px;font-weight:700;line-height:1.3}
+    .kpi-res-hdate{font-size:11px;opacity:.7;margin-top:2px}
+    .kpi-res-row{padding:11px 18px;border-bottom:1px solid #F0F2F5}
+    .kpi-res-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .kpi-res-name{font-size:12.5px;font-weight:600;color:#1a1a2e}
+    .kpi-res-pct{font-size:14px;font-weight:800;min-width:46px;text-align:right}
+    .kpi-res-bar-bg{height:9px;background:#EAEDF0;border-radius:5px;overflow:hidden;margin-bottom:5px}
+    .kpi-res-bar-fill{height:100%;border-radius:5px}
+    .kpi-res-amounts{font-size:10.5px;color:#999;display:flex;justify-content:space-between}
+    .kpi-res-footer{background:#F7F8FA;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;border-top:2px solid #E8ECEF}
+    .kpi-res-footer-label{font-size:12px;font-weight:700;color:#1B3A6B}
+    .kpi-res-footer-pct{font-size:22px;font-weight:900;color:#1B3A6B}
+    .kpi-res-caption{text-align:center;font-size:10px;color:#bbb;padding:7px;background:#F7F8FA}
     /* AREA HEADER */
     .area-hdr{background:linear-gradient(135deg,#2C5F9E,#1B3A6B);color:white;border-radius:10px;padding:18px 22px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
     .area-name{font-size:17px;font-weight:700}
@@ -634,6 +652,7 @@
   <button class="tab-btn active" onclick="switchTab('areas')" id="tabAreas">📊 Por Área</button>
   <button class="tab-btn" onclick="switchTab('capitulos')" id="tabCaps">📋 Por Capítulo Económico</button>
   <button class="tab-btn" onclick="switchTab('areagasto')" id="tabAreaGasto">⚖️ Por Área de Gasto</button>
+  <button class="tab-btn" onclick="switchTab('kpires')" id="tabKPIRes">📱 Resumen KPI</button>
 </div>
 
 <!-- ===== MAIN CONTENT ===== -->
@@ -1114,6 +1133,27 @@
             </table>
           </div>
           <div class="data-note" id="fuenteCaps">Fuente: TGEM_0115 — Estado de Ejecución del Presupuesto de Gastos — 31/12/2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: RESUMEN KPI -->
+    <div id="tabContentKPIRes" class="hidden">
+      <div class="kpi-res-wrap">
+        <div class="kpi-res-box">
+          <div class="kpi-res-hdr">
+            <div class="kpi-res-logo">CP</div>
+            <div>
+              <div class="kpi-res-htitle">Ejecución Presupuestaria 2026</div>
+              <div class="kpi-res-hdate" id="kpiResDate">Cabildo Insular de La Palma</div>
+            </div>
+          </div>
+          <div id="kpiResRows"></div>
+          <div class="kpi-res-footer">
+            <div class="kpi-res-footer-label">CABILDO TOTAL<div id="kpiResTotalEur" style="font-size:10px;font-weight:400;color:#666;margin-top:2px"></div></div>
+            <div class="kpi-res-footer-pct" id="kpiResTotalPct">—</div>
+          </div>
+          <div class="kpi-res-caption">Cabildo Insular de La Palma · nataliabritoperez.github.io/dashboard-ejecucion</div>
         </div>
       </div>
     </div>
@@ -46006,10 +46046,37 @@ function switchTab(tab){
   document.getElementById("tabContentAreas").classList.toggle("hidden",tab!=="areas");
   document.getElementById("tabContentCaps").classList.toggle("hidden",tab!=="capitulos");
   document.getElementById("tabContentAreaGasto").classList.toggle("hidden",tab!=="areagasto");
+  document.getElementById("tabContentKPIRes").classList.toggle("hidden",tab!=="kpires");
   document.getElementById("tabAreas").classList.toggle("active",tab==="areas");
   document.getElementById("tabCaps").classList.toggle("active",tab==="capitulos");
   document.getElementById("tabAreaGasto").classList.toggle("active",tab==="areagasto");
+  document.getElementById("tabKPIRes").classList.toggle("active",tab==="kpires");
   if(tab==="areagasto") renderAreaGasto();
+  if(tab==="kpires") renderKPIResumen();
+}
+
+function renderKPIResumen(){
+  const M=v=>(v/1e6).toFixed(2).replace(".",",")+" M€";
+  const barColor=p=>p>=60?"#2E7D32":p>=30?"#E65100":"#C62828";
+  const sorted=[...AREAS].sort((a,b)=>PCT(b.o,b.ac)-PCT(a.o,a.ac));
+  const totalPct=PCT(TOTAL.o,TOTAL.ac);
+
+  document.getElementById("kpiResDate").textContent="Datos al "+CONFIG.fecha+" · "+CONFIG.periodo;
+  document.getElementById("kpiResRows").innerHTML=sorted.map(a=>{
+    const p=PCT(a.o,a.ac);
+    const w=Math.min(p,100).toFixed(1);
+    const col=barColor(p);
+    return `<div class="kpi-res-row">
+      <div class="kpi-res-top">
+        <span class="kpi-res-name">${a.n}</span>
+        <span class="kpi-res-pct" style="color:${col}">${p.toFixed(1)}%</span>
+      </div>
+      <div class="kpi-res-bar-bg"><div class="kpi-res-bar-fill" style="width:${w}%;background:${col}"></div></div>
+      <div class="kpi-res-amounts"><span>Ejecutado: ${M(a.o)}</span><span>Crédito: ${M(a.ac)}</span></div>
+    </div>`;
+  }).join("");
+  document.getElementById("kpiResTotalPct").textContent=totalPct.toFixed(1)+"%";
+  document.getElementById("kpiResTotalEur").textContent="Ejecutado: "+M(TOTAL.o)+" de "+M(TOTAL.ac);
 }
 
 // ================================================================
