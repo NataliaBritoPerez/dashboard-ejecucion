@@ -6,6 +6,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1B3A6B">
   <link rel="apple-touch-icon" href="icon.svg">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -106,6 +107,9 @@
     .kpi-res-footer-label{font-size:10px;font-weight:700;color:#1B3A6B}
     .kpi-res-footer-pct{font-size:18px;font-weight:900;color:#1B3A6B}
     .kpi-res-caption{text-align:center;font-size:8.5px;color:#ccc;padding:4px;background:#F7F8FA}
+    .kpi-res-copy-btn{display:block;margin:10px auto 0;padding:9px 22px;background:#1B3A6B;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;width:100%;max-width:420px}
+    .kpi-res-copy-btn:hover{background:#2C5F9E}
+    .kpi-res-copy-ok{display:block;text-align:center;font-size:11px;color:#2E7D32;margin-top:5px;height:16px}
     /* AREA HEADER */
     .area-hdr{background:linear-gradient(135deg,#2C5F9E,#1B3A6B);color:white;border-radius:10px;padding:18px 22px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
     .area-name{font-size:17px;font-weight:700}
@@ -1146,8 +1150,8 @@
 
     <!-- TAB: RESUMEN KPI -->
     <div id="tabContentKPIRes" class="hidden">
-      <div class="kpi-res-wrap">
-        <div class="kpi-res-box">
+      <div class="kpi-res-wrap" style="flex-direction:column;align-items:center">
+        <div class="kpi-res-box" id="kpiResBox">
           <div class="kpi-res-hdr">
             <div class="kpi-res-logo">CP</div>
             <div>
@@ -1164,6 +1168,8 @@
           </div>
           <div class="kpi-res-caption">Cabildo Insular de La Palma · nataliabritoperez.github.io/dashboard-ejecucion</div>
         </div>
+        <button class="kpi-res-copy-btn" onclick="copiarKPIImagen()">📋 Copiar imagen</button>
+        <span class="kpi-res-copy-ok" id="kpiResCopyOk"></span>
       </div>
     </div>
 
@@ -46105,6 +46111,28 @@ function renderKPIResumen(){
 
   document.getElementById("kpiResTotalPct").textContent=totalPct.toFixed(1)+"%";
   document.getElementById("kpiResTotalEur").textContent="Ejec: "+M(TOTAL.o)+" de "+M(TOTAL.ac);
+}
+
+function copiarKPIImagen(){
+  const btn=document.querySelector(".kpi-res-copy-btn");
+  const ok=document.getElementById("kpiResCopyOk");
+  btn.textContent="⏳ Generando...";
+  btn.disabled=true;
+  html2canvas(document.getElementById("kpiResBox"),{scale:2,useCORS:true,backgroundColor:"#ffffff"}).then(canvas=>{
+    canvas.toBlob(blob=>{
+      navigator.clipboard.write([new ClipboardItem({"image/png":blob})]).then(()=>{
+        btn.textContent="📋 Copiar imagen";
+        btn.disabled=false;
+        ok.textContent="✓ Imagen copiada — pega en WhatsApp con Ctrl+V";
+        setTimeout(()=>ok.textContent="",4000);
+      }).catch(()=>{
+        btn.textContent="📋 Copiar imagen";
+        btn.disabled=false;
+        ok.textContent="❌ Tu navegador no permite copiar. Usa la captura de pantalla.";
+        setTimeout(()=>ok.textContent="",4000);
+      });
+    });
+  });
 }
 
 // ================================================================
