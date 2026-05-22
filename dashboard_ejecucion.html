@@ -103,9 +103,10 @@
     .kpi-res-bar-bg{height:5px;background:#EAEDF0;border-radius:3px;overflow:hidden;width:65px;flex-shrink:0}
     .kpi-res-bar-fill{height:100%;border-radius:3px}
     .kpi-res-pct{font-size:10.5px;font-weight:800;min-width:34px;text-align:right;flex-shrink:0}
-    .kpi-res-footer{background:#F7F8FA;padding:6px 10px;display:flex;justify-content:space-between;align-items:center;border-top:2px solid #E8ECEF}
-    .kpi-res-footer-label{font-size:9.5px;font-weight:700;color:#1B3A6B}
-    .kpi-res-footer-pct{font-size:16px;font-weight:900;color:#1B3A6B}
+    .kpi-res-footer{background:#F7F8FA;padding:5px 10px;display:flex;align-items:center;gap:8px;border-top:2px solid #E8ECEF}
+    .kpi-res-footer-label{font-size:9px;font-weight:700;color:#1B3A6B;flex-shrink:0}
+    .kpi-res-footer-eur{font-size:9px;color:#666;flex:1}
+    .kpi-res-footer-pct{font-size:13px;font-weight:900;color:#1B3A6B;flex-shrink:0}
     .kpi-res-caption{display:none}
     .kpi-res-copy-btn{display:block;margin:10px auto 0;padding:9px 22px;background:#1B3A6B;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;width:100%;max-width:420px}
     .kpi-res-copy-btn:hover{background:#2C5F9E}
@@ -1153,18 +1154,16 @@
       <div class="kpi-res-wrap" style="flex-direction:column;align-items:center">
         <div class="kpi-res-box" id="kpiResBox">
           <div class="kpi-res-hdr">
-            <div class="kpi-res-logo">CP</div>
-            <div>
-              <div class="kpi-res-htitle">Ejecución Presupuestaria 2026</div>
-              <div class="kpi-res-hdate" id="kpiResDate">Cabildo Insular de La Palma</div>
-            </div>
+            <span class="kpi-res-hdate" id="kpiResDate"></span>
+            <span class="kpi-res-htitle">Ejecución Presupuestaria 2026</span>
           </div>
           <div class="kpi-res-cards" id="kpiResCards"></div>
           <div class="kpi-res-divider"></div>
           <div id="kpiResRows"></div>
           <div class="kpi-res-footer">
-            <div class="kpi-res-footer-label">CABILDO TOTAL<div id="kpiResTotalEur" style="font-size:10px;font-weight:400;color:#666;margin-top:2px"></div></div>
-            <div class="kpi-res-footer-pct" id="kpiResTotalPct">—</div>
+            <span class="kpi-res-footer-label">TOTAL</span>
+            <span id="kpiResTotalEur" class="kpi-res-footer-eur"></span>
+            <span class="kpi-res-footer-pct" id="kpiResTotalPct">—</span>
           </div>
           <div class="kpi-res-caption">Cabildo Insular de La Palma · nataliabritoperez.github.io/dashboard-ejecucion</div>
         </div>
@@ -46077,7 +46076,7 @@ function renderKPIResumen(){
   const totalPct=PCT(TOTAL.o,TOTAL.ac);
   const pendiente=TOTAL.ac-TOTAL.o;
 
-  document.getElementById("kpiResDate").textContent="Datos al "+CONFIG.fecha+" · "+CONFIG.periodo;
+  document.getElementById("kpiResDate").textContent=CONFIG.fecha+" ·";
 
   // 4 tarjetas 2x2
   document.getElementById("kpiResCards").innerHTML=`
