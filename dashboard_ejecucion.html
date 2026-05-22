@@ -170,8 +170,9 @@
 <script>
 (function(){
   const _k="MTIzMTIz";
-  if(location.hostname.includes("github.io")) document.body.classList.add("readonly");
-  if(sessionStorage.getItem("__dp")===_k){document.getElementById("_po").style.display="none";}
+  const _isGH=location.hostname.includes("github.io");
+  if(_isGH) document.body.classList.add("readonly");
+  if(!_isGH||sessionStorage.getItem("__dp")===_k){document.getElementById("_po").style.display="none";}
   else{setTimeout(()=>document.getElementById("_pi").focus(),100);}
   window._sub=function(){
     const v=document.getElementById("_pi").value;
