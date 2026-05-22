@@ -82,23 +82,33 @@
     .prog-bar{height:5px;background:#EEE;border-radius:3px;min-width:70px}
     .prog-fill{height:5px;border-radius:3px}
     /* KPI RESUMEN */
-    .kpi-res-wrap{display:flex;justify-content:center;padding:24px 16px;background:#F0F2F5}
-    .kpi-res-box{background:white;border-radius:16px;width:100%;max-width:430px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.12)}
-    .kpi-res-hdr{background:#1B3A6B;color:white;padding:18px 20px;display:flex;align-items:center;gap:14px}
-    .kpi-res-logo{width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0}
-    .kpi-res-htitle{font-size:14px;font-weight:700;line-height:1.3}
-    .kpi-res-hdate{font-size:11px;opacity:.7;margin-top:2px}
-    .kpi-res-row{padding:11px 18px;border-bottom:1px solid #F0F2F5}
-    .kpi-res-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-    .kpi-res-name{font-size:12.5px;font-weight:600;color:#1a1a2e}
-    .kpi-res-pct{font-size:14px;font-weight:800;min-width:46px;text-align:right}
-    .kpi-res-bar-bg{height:9px;background:#EAEDF0;border-radius:5px;overflow:hidden;margin-bottom:5px}
-    .kpi-res-bar-fill{height:100%;border-radius:5px}
-    .kpi-res-amounts{font-size:10.5px;color:#999;display:flex;justify-content:space-between}
-    .kpi-res-footer{background:#F7F8FA;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;border-top:2px solid #E8ECEF}
-    .kpi-res-footer-label{font-size:12px;font-weight:700;color:#1B3A6B}
-    .kpi-res-footer-pct{font-size:22px;font-weight:900;color:#1B3A6B}
-    .kpi-res-caption{text-align:center;font-size:10px;color:#bbb;padding:7px;background:#F7F8FA}
+    .kpi-res-wrap{display:flex;justify-content:center;padding:16px 12px;background:#F0F2F5}
+    .kpi-res-box{background:white;border-radius:14px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.12)}
+    .kpi-res-hdr{background:#1B3A6B;color:white;padding:13px 16px;display:flex;align-items:center;gap:12px}
+    .kpi-res-logo{width:36px;height:36px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0}
+    .kpi-res-htitle{font-size:13px;font-weight:700;line-height:1.3}
+    .kpi-res-hdate{font-size:10px;opacity:.7;margin-top:1px}
+    .kpi-res-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px}
+    .kpi-res-mini{background:#F7F8FA;border-radius:7px;padding:8px 10px;border-left:3px solid #ccc}
+    .kpi-res-mini.blue{border-left-color:#2C5F9E}
+    .kpi-res-mini.green{border-left-color:#2E7D32}
+    .kpi-res-mini.orange{border-left-color:#E65100}
+    .kpi-res-mini.purple{border-left-color:#6A1B9A}
+    .kpi-res-mini-label{font-size:8.5px;text-transform:uppercase;letter-spacing:0.5px;color:#888;margin-bottom:2px}
+    .kpi-res-mini-value{font-size:15px;font-weight:800;color:#1a1a2e}
+    .kpi-res-mini-sub{font-size:9px;color:#aaa;margin-top:1px}
+    .kpi-res-divider{height:1px;background:#F0F2F5;margin:0 10px}
+    .kpi-res-row{padding:6px 14px;border-bottom:1px solid #F0F2F5}
+    .kpi-res-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+    .kpi-res-name{font-size:11px;font-weight:600;color:#1a1a2e}
+    .kpi-res-pct{font-size:12px;font-weight:800;min-width:40px;text-align:right}
+    .kpi-res-bar-bg{height:6px;background:#EAEDF0;border-radius:3px;overflow:hidden;margin-bottom:3px}
+    .kpi-res-bar-fill{height:100%;border-radius:3px}
+    .kpi-res-amounts{font-size:9.5px;color:#aaa;display:flex;justify-content:space-between}
+    .kpi-res-footer{background:#F7F8FA;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-top:2px solid #E8ECEF}
+    .kpi-res-footer-label{font-size:11px;font-weight:700;color:#1B3A6B}
+    .kpi-res-footer-pct{font-size:20px;font-weight:900;color:#1B3A6B}
+    .kpi-res-caption{text-align:center;font-size:9px;color:#ccc;padding:5px;background:#F7F8FA}
     /* AREA HEADER */
     .area-hdr{background:linear-gradient(135deg,#2C5F9E,#1B3A6B);color:white;border-radius:10px;padding:18px 22px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
     .area-name{font-size:17px;font-weight:700}
@@ -1148,6 +1158,8 @@
               <div class="kpi-res-hdate" id="kpiResDate">Cabildo Insular de La Palma</div>
             </div>
           </div>
+          <div class="kpi-res-cards" id="kpiResCards"></div>
+          <div class="kpi-res-divider"></div>
           <div id="kpiResRows"></div>
           <div class="kpi-res-footer">
             <div class="kpi-res-footer-label">CABILDO TOTAL<div id="kpiResTotalEur" style="font-size:10px;font-weight:400;color:#666;margin-top:2px"></div></div>
@@ -46060,8 +46072,34 @@ function renderKPIResumen(){
   const barColor=p=>p>=60?"#2E7D32":p>=30?"#E65100":"#C62828";
   const sorted=[...AREAS].sort((a,b)=>PCT(b.o,b.ac)-PCT(a.o,a.ac));
   const totalPct=PCT(TOTAL.o,TOTAL.ac);
+  const pendiente=TOTAL.ac-TOTAL.o;
 
   document.getElementById("kpiResDate").textContent="Datos al "+CONFIG.fecha+" · "+CONFIG.periodo;
+
+  // 4 tarjetas 2x2
+  document.getElementById("kpiResCards").innerHTML=`
+    <div class="kpi-res-mini blue">
+      <div class="kpi-res-mini-label">Crédito Total (Actual)</div>
+      <div class="kpi-res-mini-value">${M(TOTAL.ac)}</div>
+      <div class="kpi-res-mini-sub">Inicial: ${M(TOTAL.i)}</div>
+    </div>
+    <div class="kpi-res-mini green">
+      <div class="kpi-res-mini-label">Obligaciones (O)</div>
+      <div class="kpi-res-mini-value">${M(TOTAL.o)}</div>
+      <div class="kpi-res-mini-sub">Autorizado (A): ${M(TOTAL.a||0)}</div>
+    </div>
+    <div class="kpi-res-mini orange">
+      <div class="kpi-res-mini-label">Pendiente Ejecutar</div>
+      <div class="kpi-res-mini-value">${M(pendiente)}</div>
+      <div class="kpi-res-mini-sub">Sin comprometer: ${M((TOTAL.ac-(TOTAL.a||0)))}</div>
+    </div>
+    <div class="kpi-res-mini purple">
+      <div class="kpi-res-mini-label">% Ejecución</div>
+      <div class="kpi-res-mini-value">${totalPct.toFixed(2)}%</div>
+      <div class="kpi-res-mini-sub">O / Crédito actual</div>
+    </div>`;
+
+  // Filas por área
   document.getElementById("kpiResRows").innerHTML=sorted.map(a=>{
     const p=PCT(a.o,a.ac);
     const w=Math.min(p,100).toFixed(1);
@@ -46072,11 +46110,12 @@ function renderKPIResumen(){
         <span class="kpi-res-pct" style="color:${col}">${p.toFixed(1)}%</span>
       </div>
       <div class="kpi-res-bar-bg"><div class="kpi-res-bar-fill" style="width:${w}%;background:${col}"></div></div>
-      <div class="kpi-res-amounts"><span>Ejecutado: ${M(a.o)}</span><span>Crédito: ${M(a.ac)}</span></div>
+      <div class="kpi-res-amounts"><span>Ejec: ${M(a.o)}</span><span>Créd: ${M(a.ac)}</span></div>
     </div>`;
   }).join("");
+
   document.getElementById("kpiResTotalPct").textContent=totalPct.toFixed(1)+"%";
-  document.getElementById("kpiResTotalEur").textContent="Ejecutado: "+M(TOTAL.o)+" de "+M(TOTAL.ac);
+  document.getElementById("kpiResTotalEur").textContent="Ejec: "+M(TOTAL.o)+" de "+M(TOTAL.ac);
 }
 
 // ================================================================
