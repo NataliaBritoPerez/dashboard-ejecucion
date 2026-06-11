@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMP por Áreas — Cabildo de La Palma</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --azul:#1a3a5c;--azul2:#1e4a7a;--rojo:#c0392b;--amari:#e67e22;--verde:#1e8449;
+  --fondo:#f0f4f8;--blanco:#fff;--borde:#d0d8e4;--texto:#2c3e50;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--fondo);color:var(--texto);font-size:14px}
+
+/* HEADER */
+.hdr{background:var(--azul);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.hdr h1{font-size:1.15rem;font-weight:600;line-height:1.3}
+.hdr .sub{font-size:.8rem;opacity:.75;margin-top:3px}
+.btn-ed{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);
+  padding:6px 16px;border-radius:4px;cursor:pointer;font-size:.8rem;white-space:nowrap}
+.btn-ed:hover{background:rgba(255,255,255,.25)}
+
+/* BANNER */
+.banner{background:#fff;border-bottom:3px solid var(--azul);padding:16px 24px;
+  display:flex;align-items:center;gap:36px;flex-wrap:wrap}
+.pmp-num{display:flex;flex-direction:column;align-items:center;min-width:90px}
+.pmp-num .val{font-size:2.4rem;font-weight:700;color:var(--azul);line-height:1}
+.pmp-num .lbl{font-size:.72rem;color:#777;text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+.stats{display:flex;gap:28px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column}
+.stat .v{font-size:1rem;font-weight:600;color:var(--azul)}
+.stat .l{font-size:.72rem;color:#888}
+.chips{display:flex;gap:10px;margin-left:auto;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:.8rem;font-weight:600}
+.chip.r{background:#fdecea;color:var(--rojo)}.chip.a{background:#fef5e7;color:var(--amari)}
+.chip.v{background:#eafaf1;color:var(--verde)}
+.dot{width:8px;height:8px;border-radius:50%}
+.chip.r .dot{background:var(--rojo)}.chip.a .dot{background:var(--amari)}.chip.v .dot{background:var(--verde)}
+
+/* CONTENEDOR */
+.wrap{max-width:1320px;margin:0 auto;padding:20px}
+.nota{font-size:.75rem;color:#999;margin-bottom:8px;padding:0 2px}
+
+/* TABLA */
+.card{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.07);overflow:hidden}
+.card-h{padding:12px 20px;border-bottom:1px solid var(--borde);font-weight:600;font-size:.88rem;color:var(--azul)}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+thead tr{background:var(--azul);color:#fff}
+thead th{padding:9px 11px;text-align:right;font-weight:500;white-space:nowrap}
+thead th:nth-child(1){text-align:center;width:54px}
+thead th:nth-child(2){text-align:left}
+tbody tr{border-bottom:1px solid #eef1f5;transition:background .12s}
+tbody tr:hover{background:#f8fafc}
+tbody td{padding:8px 11px;text-align:right}
+tbody td:nth-child(1){text-align:center;font-weight:600;color:#555;padding-left:0}
+tbody td:nth-child(2){text-align:left;font-weight:500}
+/* semáforo */
+tbody tr.r td:nth-child(1){border-left:4px solid var(--rojo)}
+tbody tr.a td:nth-child(1){border-left:4px solid var(--amari)}
+tbody tr.v td:nth-child(1){border-left:4px solid var(--verde)}
+tbody tr.tot{background:#edf2f7;font-weight:700;border-top:2px solid var(--azul)}
+tbody tr.tot td:nth-child(1){border-left:none}
+.bdg{display:inline-block;padding:2px 10px;border-radius:12px;font-weight:700;font-size:.82rem;min-width:62px;text-align:center}
+.bdg.r{background:#fdecea;color:var(--rojo)}.bdg.a{background:#fef5e7;color:var(--amari)}
+.bdg.v{background:#eafaf1;color:var(--verde)}.bdg.t{background:#e8eaf6;color:var(--azul)}
+/* leyenda */
+.ley{display:flex;gap:20px;padding:10px 20px;font-size:.76rem;color:#777;
+  background:#fff;border-top:1px solid var(--borde);flex-wrap:wrap}
+.ley-i{display:flex;align-items:center;gap:6px}
+.ley-d{width:10px;height:10px;border-radius:50%}
+
+footer{text-align:center;color:#bbb;font-size:.73rem;padding:20px}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;
+  justify-content:center;align-items:flex-start;padding:32px 16px;overflow-y:auto}
+.overlay.on{display:flex}
+.modal{background:#fff;border-radius:10px;width:100%;max-width:680px;
+  box-shadow:0 10px 40px rgba(0,0,0,.22)}
+.mhd{padding:16px 22px;background:var(--azul);color:#fff;border-radius:10px 10px 0 0;
+  display:flex;justify-content:space-between;align-items:center}
+.mhd h2{font-size:.95rem;font-weight:600}
+.mbtn-x{background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;line-height:1;padding:0 4px}
+.mbody{padding:22px}
+
+/* PIN */
+.pin-box{text-align:center;padding:16px 0}
+.pin-box p{color:#666;margin-bottom:14px;font-size:.9rem}
+.pin-in{width:190px;padding:9px 14px;font-size:1.1rem;border:2px solid var(--borde);
+  border-radius:6px;text-align:center;letter-spacing:.2em}
+.pin-in:focus{outline:none;border-color:var(--azul)}
+.pin-err{color:var(--rojo);font-size:.84rem;margin-top:8px;min-height:18px}
+
+/* FORM */
+.fs{display:none}.fs.on{display:block}
+.fg{margin-bottom:15px}
+.fg label{display:block;font-weight:600;margin-bottom:5px;font-size:.86rem}
+.fg input[type=text],.fg input[type=number]{width:100%;padding:8px 11px;
+  border:1px solid var(--borde);border-radius:5px;font-size:.88rem;color:var(--texto)}
+.fg input:focus{outline:none;border-color:var(--azul)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.drop{border:2px dashed var(--borde);border-radius:6px;padding:14px;text-align:center;
+  cursor:pointer;position:relative;transition:border-color .2s}
+.drop:hover{border-color:var(--azul)}.drop.ok{border-color:var(--verde);background:#f0faf4}
+.drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.drop .ico{font-size:1.6rem;margin-bottom:3px}.drop .fn{font-size:.82rem;color:#666;margin-top:3px}
+.btn-p{background:var(--azul);color:#fff;border:none;padding:10px 22px;border-radius:5px;
+  font-size:.88rem;cursor:pointer;font-weight:600;width:100%;margin-top:6px}
+.btn-p:hover{background:var(--azul2)}.btn-p:disabled{background:#aaa;cursor:not-allowed}
+.btn-g{background:var(--verde);color:#fff;border:none;padding:10px 22px;border-radius:5px;
+  font-size:.88rem;cursor:pointer;font-weight:600;width:100%;margin-top:8px}
+.btn-g:hover{background:#1a7040}
+.alrt{padding:9px 13px;border-radius:5px;margin:10px 0;font-size:.85rem}
+.alrt.e{background:#fdecea;color:var(--rojo);border-left:3px solid var(--rojo)}
+.alrt.s{background:#eafaf1;color:var(--verde);border-left:3px solid var(--verde)}
+.alrt.i{background:#ebf5fb;color:#1a5276;border-left:3px solid #2980b9}
+.prev-sec{margin-top:18px;border-top:1px solid var(--borde);padding-top:14px;display:none}
+.prev-sec table{font-size:.78rem}.prev-sec thead th{padding:6px 8px}
+.prev-sec tbody td{padding:5px 8px}
+
+@media(max-width:680px){
+  .banner{flex-direction:column;align-items:flex-start}.chips{margin-left:0}
+  .frow{grid-template-columns:1fr}
+  table{font-size:.73rem}
+  thead th,tbody td{padding:7px 6px}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <h1>Período Medio de Pago por Áreas</h1>
+    <div class="sub" id="hdr-sub">Cabildo Insular de La Palma</div>
+  </div>
+  <button class="btn-ed" onclick="abrirAdmin()">✏ Actualizar datos</button>
+</div>
+
+<div class="banner" id="banner"></div>
+
+<div class="wrap">
+  <div class="nota" id="nota"></div>
+  <div class="card">
+    <div class="card-h">Desglose por Área Gestora</div>
+    <table id="tbl"></table>
+    <div class="ley">
+      <div class="ley-i"><div class="ley-d" style="background:var(--rojo)"></div>&gt; 60 días</div>
+      <div class="ley-i"><div class="ley-d" style="background:var(--amari)"></div>31 – 60 días</div>
+      <div class="ley-i"><div class="ley-d" style="background:var(--verde)"></div>≤ 30 días</div>
+      <div style="margin-left:auto;color:#aaa">PMP = Σ(días×importe) / Σ(importe) · pagadas + pendientes</div>
+    </div>
+  </div>
+</div>
+
+<footer>Cabildo Insular de La Palma · Área de Hacienda · Publicación mensual del PMP</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="ov">
+<div class="modal">
+  <div class="mhd">
+    <h2>Actualizar datos del PMP</h2>
+    <button class="mbtn-x" onclick="cerrarAdmin()">×</button>
+  </div>
+  <div class="mbody">
+
+    <!-- PIN -->
+    <div id="pin-sec" class="pin-box">
+      <p>Introduce el PIN de administrador</p>
+      <input type="password" class="pin-in" id="pin-in" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter')chkPin()">
+      <br><br>
+      <button class="btn-p" style="width:auto;padding:8px 32px" onclick="chkPin()">Acceder</button>
+      <div class="pin-err" id="pin-err"></div>
+    </div>
+
+    <!-- FORM -->
+    <div id="frm" class="fs">
+      <div class="frow">
+        <div class="fg">
+          <label>Mes / Período</label>
+          <input type="text" id="inp-mes" placeholder="ej. Junio 2026">
+        </div>
+        <div class="fg">
+          <label>Fecha de corte (dd/mm/aaaa)</label>
+          <input type="text" id="inp-fecha" placeholder="ej. 02/07/2026">
+        </div>
+      </div>
+      <div class="fg">
+        <label>PMP global oficial del sistema (días) — opcional, de GEMA</label>
+        <input type="number" id="inp-pmp" step="0.01" placeholder="ej. 79.37">
+      </div>
+      <div class="frow">
+        <div class="fg">
+          <label>📋 Facturas pendientes de pago</label>
+          <div class="drop" id="drop-pend">
+            <div class="ico">📊</div>
+            <div>Arrastra o haz clic</div>
+            <div class="fn" id="fn-pend">Sin archivo (.xlsx / .csv)</div>
+            <input type="file" id="f-pend" accept=".xlsx,.xls,.csv" onchange="selFile('pend')">
+          </div>
+        </div>
+        <div class="fg">
+          <label>✅ Facturas pagadas</label>
+          <div class="drop" id="drop-pag">
+            <div class="ico">📊</div>
+            <div>Arrastra o haz clic</div>
+            <div class="fn" id="fn-pag">Sin archivo (.xlsx / .csv)</div>
+            <input type="file" id="f-pag" accept=".xlsx,.xls,.csv" onchange="selFile('pag')">
+          </div>
+        </div>
+      </div>
+      <div id="msg"></div>
+      <button class="btn-p" id="btn-calc" onclick="calcular()">Calcular PMP por áreas</button>
+      <div class="prev-sec" id="prev-sec">
+        <div id="prev-html"></div>
+        <button class="btn-g" onclick="guardarHTML()">💾 Guardar y descargar HTML actualizado</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div><!-- /overlay -->
+
+<script>
+/*@@DATOS_PMP_START@@*/
+const DATOS_PMP = {
+  "fecha_corte": "02/06/2026",
+  "mes": "Mayo 2026",
+  "pmp_global": 79.37,
+  "n_pag_total": 686,
+  "imp_pag_total": 1983251.44,
+  "rop_pag": 53.53,
+  "n_pend_total": 1523,
+  "imp_pend_total": 10788507.56,
+  "rop_pend": 84.12,
+  "imp_total": 12771759.00,
+  "areas": [
+    {"cod":"080","nombre":"CULT. Y PATRIM",     "n_pag":83,  "imp_pag":111468.27,  "rop_pag":222.3,"n_pend":67,  "imp_pend":133629.76,   "rop_pend":388.1,"imp_total":245098.03,   "pmp":312.7},
+    {"cod":"070","nombre":"DEPORTES",            "n_pag":35,  "imp_pag":32074.48,   "rop_pag":158.6,"n_pend":173, "imp_pend":1172621.27,  "rop_pend":201.5,"imp_total":1204695.75,  "pmp":200.4},
+    {"cod":"032","nombre":"ARTESANÍA",           "n_pag":3,   "imp_pag":9581.52,    "rop_pag":259.2,"n_pend":5,   "imp_pend":6268.76,     "rop_pend":46.2, "imp_total":15850.28,    "pmp":174.9},
+    {"cod":"018","nombre":"TRANSF. DIGITAL",     "n_pag":23,  "imp_pag":167313.09,  "rop_pag":36.8, "n_pend":49,  "imp_pend":377669.47,   "rop_pend":168.7,"imp_total":544982.56,   "pmp":128.2},
+    {"cod":"071","nombre":"JUVENTUD",            "n_pag":5,   "imp_pag":146.87,     "rop_pag":72.5, "n_pend":21,  "imp_pend":23347.48,    "rop_pend":128.2,"imp_total":23494.35,    "pmp":127.9},
+    {"cod":"014","nombre":"SERVICIOS JURÍDICOS", "n_pag":0,   "imp_pag":0,          "rop_pag":0,    "n_pend":5,   "imp_pend":13728.93,    "rop_pend":115.4,"imp_total":13728.93,    "pmp":115.4},
+    {"cod":"051","nombre":"MEDIO AMBIENTE",      "n_pag":78,  "imp_pag":89313.31,   "rop_pag":73.1, "n_pend":110, "imp_pend":655689.73,   "rop_pend":94.0, "imp_total":745003.04,   "pmp":91.5},
+    {"cod":"100","nombre":"RECURSOS HUMANOS",    "n_pag":23,  "imp_pag":13554.15,   "rop_pag":60.2, "n_pend":41,  "imp_pend":48323.34,    "rop_pend":81.1, "imp_total":61877.49,    "pmp":76.5},
+    {"cod":"063","nombre":"ACT. CLASIF.",         "n_pag":19,  "imp_pag":57941.52,   "rop_pag":39.6, "n_pend":37,  "imp_pend":3917215.39,  "rop_pend":75.7, "imp_total":3975156.91,  "pmp":75.2},
+    {"cod":"091","nombre":"ORG. Y PART. CIUDAD.","n_pag":8,   "imp_pag":23279.15,   "rop_pag":69.8, "n_pend":16,  "imp_pend":79881.32,    "rop_pend":76.3, "imp_total":103160.47,   "pmp":74.8},
+    {"cod":"010","nombre":"HACIENDA",             "n_pag":1,   "imp_pag":5426.68,    "rop_pag":37.0, "n_pend":5,   "imp_pend":17928.78,    "rop_pend":66.4, "imp_total":23355.46,    "pmp":59.5},
+    {"cod":"015","nombre":"PATRIMONIO",           "n_pag":8,   "imp_pag":5062.78,    "rop_pag":97.2, "n_pend":9,   "imp_pend":12280.62,    "rop_pend":39.1, "imp_total":17343.40,    "pmp":56.1},
+    {"cod":"061","nombre":"HOSPITAL",             "n_pag":100, "imp_pag":77256.93,   "rop_pag":63.9, "n_pend":197, "imp_pend":180194.02,   "rop_pend":50.8, "imp_total":257450.95,   "pmp":54.7},
+    {"cod":"050","nombre":"INFRAESTRUCTURAS",     "n_pag":89,  "imp_pag":164933.44,  "rop_pag":48.7, "n_pend":369, "imp_pend":1181240.14,  "rop_pend":48.2, "imp_total":1346173.58,  "pmp":48.2},
+    {"cod":"090","nombre":"ASUNTOS SOCIALES",     "n_pag":30,  "imp_pag":63017.19,   "rop_pag":53.7, "n_pend":88,  "imp_pend":1873951.74,  "rop_pend":46.6, "imp_total":1936968.93,  "pmp":46.8},
+    {"cod":"022","nombre":"TURISMO",              "n_pag":32,  "imp_pag":78689.89,   "rop_pag":46.5, "n_pend":50,  "imp_pend":102010.60,   "rop_pend":44.2, "imp_total":180700.49,   "pmp":45.2},
+    {"cod":"013","nombre":"VICESECRETARÍA",       "n_pag":0,   "imp_pag":0,          "rop_pag":0,    "n_pend":5,   "imp_pend":7826.20,     "rop_pend":35.0, "imp_total":7826.20,     "pmp":35.0},
+    {"cod":"062","nombre":"DEHESA",               "n_pag":38,  "imp_pag":37515.42,   "rop_pag":51.0, "n_pend":41,  "imp_pend":84437.52,    "rop_pend":22.3, "imp_total":121952.94,   "pmp":31.1},
+    {"cod":"012","nombre":"PRESIDENCIA",          "n_pag":40,  "imp_pag":80314.56,   "rop_pag":46.0, "n_pend":79,  "imp_pend":431212.87,   "rop_pend":28.0, "imp_total":511527.43,   "pmp":30.8},
+    {"cod":"016","nombre":"ATM-FDCAN",            "n_pag":12,  "imp_pag":933850.76,  "rop_pag":30.8, "n_pend":9,   "imp_pend":129274.24,   "rop_pend":11.4, "imp_total":1063125.00,  "pmp":28.4},
+    {"cod":"021","nombre":"TRANSPORTE",           "n_pag":9,   "imp_pag":8345.34,    "rop_pag":34.8, "n_pend":10,  "imp_pend":12584.86,    "rop_pend":23.7, "imp_total":20930.20,    "pmp":28.1},
+    {"cod":"064","nombre":"ORD. TERRITORIO",      "n_pag":1,   "imp_pag":136.43,     "rop_pag":42.0, "n_pend":1,   "imp_pend":380.00,      "rop_pend":23.0, "imp_total":516.43,      "pmp":28.0},
+    {"cod":"033","nombre":"EMPLEO",               "n_pag":7,   "imp_pag":2408.69,    "rop_pag":57.3, "n_pend":42,  "imp_pend":184343.54,   "rop_pend":24.1, "imp_total":186752.23,   "pmp":24.5},
+    {"cod":"017","nombre":"PRRLL",                "n_pag":2,   "imp_pag":387.86,     "rop_pag":100.1,"n_pend":2,   "imp_pend":4989.66,     "rop_pend":18.1, "imp_total":5377.52,     "pmp":24.0},
+    {"cod":"040","nombre":"AGRIC., GANAD. Y PESCA","n_pag":40, "imp_pag":21233.11,   "rop_pag":42.1, "n_pend":91,  "imp_pend":139317.16,   "rop_pend":17.9, "imp_total":160550.27,   "pmp":21.1},
+    {"cod":"034","nombre":"SOC. INFORMACIÓN",     "n_pag":0,   "imp_pag":0,          "rop_pag":0,    "n_pend":1,   "imp_pend":10.60,       "rop_pend":17.0, "imp_total":10.60,       "pmp":17.0}
+  ]
+};
+/*@@DATOS_PMP_END@@*/
+
+// ─── Constantes ───────────────────────────────────────────────────────────────
+const PIN_B64 = 'MjYwNDE5MTA='; // btoa('26041910')
+
+const NOMBRES = {
+  "010":"HACIENDA","012":"PRESIDENCIA","013":"VICESECRETARÍA","014":"SERVICIOS JURÍDICOS",
+  "015":"PATRIMONIO","016":"ATM-FDCAN","017":"PRRLL","018":"TRANSF. DIGITAL",
+  "021":"TRANSPORTE","022":"TURISMO","032":"ARTESANÍA","033":"EMPLEO",
+  "034":"SOC. INFORMACIÓN","040":"AGRIC., GANAD. Y PESCA","050":"INFRAESTRUCTURAS",
+  "051":"MEDIO AMBIENTE","061":"HOSPITAL","062":"DEHESA","063":"ACT. CLASIF.",
+  "064":"ORD. TERRITORIO","070":"DEPORTES","071":"JUVENTUD","080":"CULT. Y PATRIM",
+  "090":"ASUNTOS SOCIALES","091":"ORG. Y PART. CIUDAD.","100":"RECURSOS HUMANOS"
+};
+
+// ─── Utilidades ───────────────────────────────────────────────────────────────
+function fmt(n, d=2){
+  if(n===null||n===undefined||n==='') return '—';
+  if(n===0 && d>0) return '—';
+  return Number(n).toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+}
+function fmtN(n){ return n>0 ? n.toLocaleString('es-ES') : '—'; }
+function sem(pmp){ return pmp>60?'r': pmp>30?'a':'v'; }
+function bdg(pmp){
+  const c=sem(pmp);
+  return `<span class="bdg ${c}">${fmt(pmp,1)} d</span>`;
+}
+
+// ─── Render ────────────────────────────────────────────────────────────────────
+function render(d){
+  document.getElementById('hdr-sub').textContent =
+    `${d.mes} · Foto a ${d.fecha_corte} · Cabildo Insular de La Palma`;
+  document.getElementById('nota').textContent =
+    `ℹ Facturas incluidas conforme a normativa PMP (campo Excl = FALSE). Foto a ${d.fecha_corte}.`;
+
+  const nr = d.areas.filter(a=>a.pmp>60).length;
+  const na = d.areas.filter(a=>a.pmp>30&&a.pmp<=60).length;
+  const nv = d.areas.filter(a=>a.pmp<=30).length;
+
+  document.getElementById('banner').innerHTML = `
+    <div class="pmp-num">
+      <div class="val">${fmt(d.pmp_global,2)}</div>
+      <div class="lbl">PMP Global (días)</div>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <span class="v">${fmt(d.imp_pag_total,0)} €</span>
+        <span class="l">${fmtN(d.n_pag_total)} fact. pagadas · ROP ${fmt(d.rop_pag,2)} d</span>
+      </div>
+      <div class="stat">
+        <span class="v">${fmt(d.imp_pend_total,0)} €</span>
+        <span class="l">${fmtN(d.n_pend_total)} fact. pendientes · ROP ${fmt(d.rop_pend,2)} d</span>
+      </div>
+      <div class="stat">
+        <span class="v">${fmt(d.imp_total,0)} €</span>
+        <span class="l">Importe total</span>
+      </div>
+    </div>
+    <div class="chips">
+      <div class="chip r"><div class="dot"></div>${nr} área${nr!==1?'s':''} &gt;60 d</div>
+      <div class="chip a"><div class="dot"></div>${na} área${na!==1?'s':''} 31–60 d</div>
+      <div class="chip v"><div class="dot"></div>${nv} área${nv!==1?'s':''} ≤30 d</div>
+    </div>`;
+
+  let h = `<thead><tr>
+    <th>Cód.</th><th>Área Gestora</th>
+    <th>N.º Pag.</th><th>Imp. Pagado (€)</th><th>ROP Pag. (d)</th>
+    <th>N.º Pend.</th><th>Imp. Pendiente (€)</th><th>ROP Pend. (d)</th>
+    <th>Imp. Total (€)</th><th>PMP (días)</th>
+  </tr></thead><tbody>`;
+
+  for(const a of d.areas){
+    const c = sem(a.pmp);
+    h += `<tr class="${c}">
+      <td>${a.cod}</td><td>${a.nombre}</td>
+      <td>${fmtN(a.n_pag)}</td>
+      <td>${a.imp_pag>0?fmt(a.imp_pag):'—'}</td>
+      <td>${a.rop_pag>0?fmt(a.rop_pag,1):'—'}</td>
+      <td>${fmtN(a.n_pend)}</td>
+      <td>${a.imp_pend>0?fmt(a.imp_pend):'—'}</td>
+      <td>${a.rop_pend>0?fmt(a.rop_pend,1):'—'}</td>
+      <td>${fmt(a.imp_total)}</td>
+      <td>${bdg(a.pmp)}</td>
+    </tr>`;
+  }
+
+  h += `<tr class="tot">
+    <td colspan="2">TOTAL · ${d.areas.length} áreas</td>
+    <td>${fmtN(d.n_pag_total)}</td>
+    <td>${fmt(d.imp_pag_total)}</td>
+    <td>${fmt(d.rop_pag,2)}</td>
+    <td>${fmtN(d.n_pend_total)}</td>
+    <td>${fmt(d.imp_pend_total)}</td>
+    <td>${fmt(d.rop_pend,2)}</td>
+    <td>${fmt(d.imp_total)}</td>
+    <td><span class="bdg t">${fmt(d.pmp_global,2)} d</span></td>
+  </tr></tbody>`;
+
+  document.getElementById('tbl').innerHTML = h;
+}
+
+// ─── Admin / PIN ──────────────────────────────────────────────────────────────
+function abrirAdmin(){
+  document.getElementById('ov').classList.add('on');
+  document.getElementById('pin-sec').style.display='block';
+  document.getElementById('frm').classList.remove('on');
+  document.getElementById('pin-in').value='';
+  document.getElementById('pin-err').textContent='';
+  document.getElementById('prev-sec').style.display='none';
+  document.getElementById('msg').innerHTML='';
+  archPend=null; archPag=null; nuevosDatos=null;
+  setTimeout(()=>document.getElementById('pin-in').focus(),80);
+}
+function cerrarAdmin(){ document.getElementById('ov').classList.remove('on'); }
+document.getElementById('ov').addEventListener('click',e=>{if(e.target===document.getElementById('ov'))cerrarAdmin();});
+
+function chkPin(){
+  const v = document.getElementById('pin-in').value;
+  if(btoa(v)===PIN_B64){
+    document.getElementById('pin-sec').style.display='none';
+    document.getElementById('frm').classList.add('on');
+  } else {
+    document.getElementById('pin-err').textContent='PIN incorrecto';
+    document.getElementById('pin-in').value='';
+    document.getElementById('pin-in').focus();
+  }
+}
+
+// ─── Archivos ─────────────────────────────────────────────────────────────────
+let archPend=null, archPag=null, nuevosDatos=null;
+
+function selFile(t){
+  const f = document.getElementById(`f-${t}`).files[0];
+  if(!f) return;
+  if(t==='pend') archPend=f; else archPag=f;
+  document.getElementById(`fn-${t}`).textContent = f.name;
+  document.getElementById(`drop-${t}`).classList.add('ok');
+}
+
+// ─── Procesamiento ────────────────────────────────────────────────────────────
+function normCol(s){
+  return String(s||'').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z0-9]+/g,' ').trim();
+}
+
+function parseImp(v){
+  if(v===null||v===undefined||v==='') return 0;
+  // Formato: coma = separador miles, punto = decimal (ej: "1,663.84")
+  const n = parseFloat(String(v).replace(/,/g,''));
+  return isNaN(n) ? 0 : n;
+}
+
+function parseDias(v){
+  if(v===null||v===undefined||v==='') return null;
+  const n = parseFloat(String(v));
+  return (isNaN(n)||n<0) ? null : n;
+}
+
+function leerWB(file){
+  return new Promise((ok,ko)=>{
+    const r = new FileReader();
+    r.onload = e => {
+      try{ ok(XLSX.read(new Uint8Array(e.target.result),{type:'array'})); }
+      catch(err){ ko(err); }
+    };
+    r.onerror = ()=>ko(new Error('No se pudo leer '+file.name));
+    r.readAsArrayBuffer(file);
+  });
+}
+
+function procesarHoja(wb, etiq){
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const data = XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+
+  // Buscar fila de cabecera (contiene "gestora")
+  let hi = -1;
+  for(let i=0; i<Math.min(data.length,12); i++){
+    if(data[i].map(normCol).join(' ').includes('gestora')){ hi=i; break; }
+  }
+  if(hi<0) throw new Error(
+    `"${etiq}": no se encontró la cabecera. Verifica que sea el archivo correcto.`);
+
+  // Mapear columnas por nombre normalizado
+  const hdrs = data[hi].map(normCol);
+  const ci = {}; // column indices
+  hdrs.forEach((h,i)=>{
+    if(h.includes('area')&&h.includes('gestora')) ci.area=i;
+    else if(h==='dias')    ci.dias=i;
+    else if(h==='importe') ci.imp=i;
+    else if(h==='excl')    ci.excl=i;
+    else if(h.includes('razon')||h.includes('exclusion')) ci.razon=i;
+  });
+
+  const falt = ['area','dias','imp'].filter(k=>ci[k]===undefined);
+  if(falt.length) throw new Error(
+    `"${etiq}": columnas no encontradas → ${falt.join(', ')}. Columnas detectadas: ${hdrs.filter(Boolean).join(', ')}`);
+
+  const acum = {};
+  let excl=0, proc=0;
+
+  for(let i=hi+1; i<data.length; i++){
+    const row = data[i];
+    if(!row||row.every(c=>c===''||c===null)) continue;
+
+    let area = String(row[ci.area]||'').trim();
+    if(!area) continue;
+    area = area.padStart(3,'0');
+
+    // Exclusión: Excl=TRUE  o  Razón de Exclusión no vacía
+    const exclVal = String(row[ci.excl]||'').trim().toUpperCase();
+    const razon   = ci.razon!==undefined ? String(row[ci.razon]||'').trim() : '';
+    const excluir = exclVal==='TRUE'||exclVal==='1'||exclVal==='VERDADERO'||
+                    (razon!==''&&!['FALSE','FALSO','NO','F'].includes(razon.toUpperCase()));
+    if(excluir){ excl++; continue; }
+
+    const dias = parseDias(row[ci.dias]);
+    const imp  = parseImp(row[ci.imp]);
+    if(dias===null||isNaN(dias)||imp<=0) continue;
+
+    if(!acum[area]) acum[area]={n:0,imp:0,dxi:0};
+    acum[area].n++;
+    acum[area].imp += imp;
+    acum[area].dxi += dias*imp;
+    proc++;
+  }
+  return {acum,excl,proc};
+}
+
+// ─── Calcular ─────────────────────────────────────────────────────────────────
+async function calcular(){
+  const msgEl = document.getElementById('msg');
+  const prevEl= document.getElementById('prev-sec');
+  prevEl.style.display='none';
+  nuevosDatos=null;
+
+  const mes   = document.getElementById('inp-mes').value.trim();
+  const fecha = document.getElementById('inp-fecha').value.trim();
+  const pmpOfi= parseFloat(document.getElementById('inp-pmp').value);
+
+  if(!mes)      { msgEl.innerHTML='<div class="alrt e">Introduce el mes/período.</div>'; return; }
+  if(!fecha)    { msgEl.innerHTML='<div class="alrt e">Introduce la fecha de corte (dd/mm/aaaa).</div>'; return; }
+  if(!archPend) { msgEl.innerHTML='<div class="alrt e">Sube el archivo de facturas pendientes.</div>'; return; }
+  if(!archPag)  { msgEl.innerHTML='<div class="alrt e">Sube el archivo de facturas pagadas.</div>'; return; }
+
+  // Validar formato fecha
+  if(!/^\d{2}\/\d{2}\/\d{4}$/.test(fecha)){
+    msgEl.innerHTML='<div class="alrt e">Fecha incorrecta. Usa el formato dd/mm/aaaa (ej: 02/07/2026).</div>';
+    return;
+  }
+
+  msgEl.innerHTML='<div class="alrt i">⏳ Procesando archivos…</div>';
+  const btnCalc = document.getElementById('btn-calc');
+  btnCalc.disabled=true;
+
+  try{
+    const [wbP, wbG] = await Promise.all([leerWB(archPend), leerWB(archPag)]);
+    const rPend = procesarHoja(wbP, archPend.name);
+    const rPag  = procesarHoja(wbG, archPag.name);
+
+    // Unir áreas
+    const todas = new Set([...Object.keys(rPend.acum),...Object.keys(rPag.acum)]);
+    const areas = [];
+    let tNPag=0,tIPag=0,tSPag=0, tNPend=0,tIPend=0,tSPend=0;
+
+    for(const cod of [...todas].sort()){
+      const dp = rPag.acum[cod]  ||{n:0,imp:0,dxi:0};
+      const dn = rPend.acum[cod] ||{n:0,imp:0,dxi:0};
+      const ropP = dp.imp>0 ? dp.dxi/dp.imp : 0;
+      const ropN = dn.imp>0 ? dn.dxi/dn.imp : 0;
+      const impT = dp.imp+dn.imp;
+      const pmp  = impT>0 ? (dp.dxi+dn.dxi)/impT : 0;
+      areas.push({
+        cod, nombre: NOMBRES[cod]||`ÁREA ${cod}`,
+        n_pag:dp.n,  imp_pag:  Math.round(dp.imp*100)/100, rop_pag: Math.round(ropP*10)/10,
+        n_pend:dn.n, imp_pend: Math.round(dn.imp*100)/100, rop_pend:Math.round(ropN*10)/10,
+        imp_total: Math.round(impT*100)/100,
+        pmp: Math.round(pmp*10)/10
+      });
+      tNPag+=dp.n; tIPag+=dp.imp; tSPag+=dp.dxi;
+      tNPend+=dn.n; tIPend+=dn.imp; tSPend+=dn.dxi;
+    }
+
+    areas.sort((a,b)=>b.pmp-a.pmp);
+
+    const tIT   = tIPag+tIPend;
+    const ropPT = tIPag >0 ? tSPag /tIPag  : 0;
+    const ropNT = tIPend>0 ? tSPend/tIPend : 0;
+    const pmpC  = tIT   >0 ? (tSPag+tSPend)/tIT : 0;
+    const pmpFin= (!isNaN(pmpOfi)&&pmpOfi>0) ? pmpOfi : Math.round(pmpC*100)/100;
+
+    nuevosDatos={
+      fecha_corte:fecha, mes,
+      pmp_global: pmpFin,
+      n_pag_total: tNPag,  imp_pag_total:  Math.round(tIPag*100)/100,  rop_pag:  Math.round(ropPT*100)/100,
+      n_pend_total:tNPend, imp_pend_total: Math.round(tIPend*100)/100, rop_pend: Math.round(ropNT*100)/100,
+      imp_total: Math.round(tIT*100)/100,
+      areas
+    };
+
+    const nr=areas.filter(a=>a.pmp>60).length;
+    const na=areas.filter(a=>a.pmp>30&&a.pmp<=60).length;
+    const nv=areas.filter(a=>a.pmp<=30).length;
+
+    msgEl.innerHTML=`<div class="alrt s">
+      ✅ <strong>${areas.length} áreas</strong> calculadas ·
+      Pagadas: ${tNPag.toLocaleString('es-ES')} fact. · ${fmt(tIPag)} € ·
+      Pendientes: ${tNPend.toLocaleString('es-ES')} fact. · ${fmt(tIPend)} € ·
+      <strong>PMP: ${pmpFin} días</strong>${(!isNaN(pmpOfi)&&pmpOfi>0)?' (oficial GEMA)':' (calculado)'}
+      <br>Excluidas: ${rPend.excl} pend. / ${rPag.excl} pag.
+    </div>`;
+
+    // Preview tabla (primeras 8 áreas + total)
+    let pt=`<div style="font-weight:600;margin-bottom:10px">
+      Vista previa · ${mes} · Foto a ${fecha} &nbsp;
+      <span style="font-weight:400;font-size:.8rem;color:#666">
+        🔴 ${nr} · 🟡 ${na} · 🟢 ${nv}
+      </span>
+    </div>
+    <table>
+      <thead><tr><th style="text-align:left">Cód.</th><th style="text-align:left">Área</th>
+        <th>N.Pag</th><th>N.Pend</th><th>Imp. Total</th><th>PMP</th></tr></thead><tbody>`;
+    for(const a of areas.slice(0,8)){
+      pt+=`<tr class="${sem(a.pmp)}">
+        <td>${a.cod}</td><td style="text-align:left">${a.nombre}</td>
+        <td>${fmtN(a.n_pag)}</td><td>${fmtN(a.n_pend)}</td>
+        <td>${fmt(a.imp_total)}</td><td>${bdg(a.pmp)}</td>
+      </tr>`;
+    }
+    if(areas.length>8) pt+=`<tr><td colspan="6" style="text-align:center;color:#aaa;font-size:.75rem">… y ${areas.length-8} áreas más</td></tr>`;
+    pt+=`<tr class="tot">
+      <td colspan="2">TOTAL (${areas.length} áreas)</td>
+      <td>${fmtN(tNPag)}</td><td>${fmtN(tNPend)}</td>
+      <td>${fmt(tIT)}</td>
+      <td><span class="bdg t">${pmpFin} d</span></td>
+    </tr></tbody></table>`;
+
+    document.getElementById('prev-html').innerHTML=pt;
+    prevEl.style.display='block';
+
+  }catch(err){
+    msgEl.innerHTML=`<div class="alrt e">❌ ${err.message}</div>`;
+  }finally{
+    btnCalc.disabled=false;
+  }
+}
+
+// ─── Guardar HTML ─────────────────────────────────────────────────────────────
+function guardarHTML(){
+  if(!nuevosDatos) return;
+
+  const reemplazar = html => {
+    const bloque =
+      '/*@@DATOS_PMP_START@@*/\nconst DATOS_PMP = '+
+      JSON.stringify(nuevosDatos,null,2)+';\n/*@@DATOS_PMP_END@@*/';
+    return html.replace(/\/\*@@DATOS_PMP_START@@\*\/[\s\S]*?\/\*@@DATOS_PMP_END@@\*\//, bloque);
+  };
+
+  // Intentar obtener la fuente original via fetch (GitHub Pages o servidor)
+  // Si falla (file://), usar outerHTML como fallback
+  const doDescarga = html => {
+    const fname = location.pathname.split('/').pop() || 'pmp_areas.html';
+    const blob = new Blob([html],{type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fname;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+    // Actualizar vista inmediatamente
+    Object.assign(DATOS_PMP, nuevosDatos);
+    render(DATOS_PMP);
+    cerrarAdmin();
+  };
+
+  fetch(location.href)
+    .then(r=>r.text())
+    .then(html=>doDescarga(reemplazar(html)))
+    .catch(()=>{
+      let html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+      doDescarga(reemplazar(html));
+    });
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+render(DATOS_PMP);
+</script>
+</body>
+</html>
