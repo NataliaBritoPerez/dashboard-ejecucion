@@ -45,7 +45,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--fondo);color:var(-
 /* TABLA */
 .card{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.07);overflow:hidden}
 .card-h{padding:12px 20px;border-bottom:1px solid var(--borde);font-weight:600;font-size:.88rem;color:var(--azul)}
-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:780px}
 thead tr{background:var(--azul);color:#fff}
 thead th{padding:9px 11px;text-align:right;font-weight:500;white-space:nowrap}
 thead th:nth-child(1){text-align:center;width:54px}
@@ -184,7 +185,7 @@ tbody tr.clickable:hover td:nth-child(2)::after{content:" ›";color:var(--azul)
   <div class="nota" id="nota"></div>
   <div class="card">
     <div class="card-h">Desglose por Área Gestora</div>
-    <table id="tbl"></table>
+    <div class="tbl-wrap"><table id="tbl"></table></div>
     <div class="ley">
       <div class="ley-i"><div class="ley-d" style="background:var(--rojo)"></div>&gt; 60 días</div>
       <div class="ley-i"><div class="ley-d" style="background:var(--amari)"></div>31 – 60 días</div>
