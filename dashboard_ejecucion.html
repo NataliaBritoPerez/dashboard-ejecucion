@@ -1078,6 +1078,7 @@
 
     <!-- TAB: CAPÍTULOS -->
     <div id="tabContentCaps" class="hidden">
+      <div id="capListView">
       <div class="main-grid">
         <div class="panel">
           <div class="panel-hdr">
@@ -1158,6 +1159,35 @@
             </table>
           </div>
           <div class="data-note" id="fuenteCaps">Fuente: TGEM_0115 — Estado de Ejecución del Presupuesto de Gastos — 11/06/2026</div>
+        </div>
+      </div>
+      </div><!-- /capListView -->
+
+      <!-- DETALLE CAPÍTULO POR ÁREA -->
+      <div id="capDetalleView" class="hidden" style="padding:16px">
+        <div class="panel">
+          <div class="panel-hdr" style="flex-wrap:wrap;gap:8px">
+            <div>
+              <button onclick="cerrarCapDetalle()" style="background:none;border:1px solid #1B3A6B;color:#1B3A6B;border-radius:6px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;margin-bottom:6px">‹ Volver a Capítulos</button>
+              <div class="panel-title" id="capDetalleTitulo"></div>
+              <div class="panel-sub" id="capDetalleSub"></div>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table" id="tableCapDetalle">
+              <thead><tr>
+                <th>Área</th>
+                <th class="num">Inicial</th>
+                <th class="num">Crédito Total</th>
+                <th class="num">Autorizado (A)</th>
+                <th class="num">Disposiciones (D)</th>
+                <th class="num">Ejecutado (O)</th>
+                <th>% Ejec.</th>
+                <th class="num">% s/Inicial Cap.</th>
+              </tr></thead>
+              <tbody id="tbodyCapDetalle"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -46220,6 +46250,62 @@ function renderKPIResumen(){
   document.getElementById("kpiResTotalEur").textContent="Ejec: "+M(TOTAL.o)+" de "+M(TOTAL.ac);
 }
 
+// ================================================================
+//  DETALLE CAPÍTULO POR ÁREA
+// ================================================================
+function drillCapGlobal(cod){
+  const cg=CAPS_G.find(c=>c.cod===cod);
+  if(!cg) return;
+
+  // Recopilar datos de cada área para este capítulo
+  const filas=[];
+  AREAS.forEach(area=>{
+    const cap=(area.caps||[]).find(c=>c.cod===cod);
+    if(cap&&(cap.ac>0||cap.o>0)) filas.push({areaN:area.n,i:cap.i||0,m:cap.m||0,ac:cap.ac||0,a:cap.a||0,d:cap.d||0,o:cap.o||0});
+  });
+  filas.sort((a,b)=>PCT(b.o,b.ac)-PCT(a.o,a.ac));
+
+  const totalI=filas.reduce((s,r)=>s+(r.i||0),0);
+  const pctCap=PCT(cg.o,cg.ac);
+
+  document.getElementById("capDetalleTitulo").textContent=cod+" — "+cg.nm;
+  document.getElementById("capDetalleSub").textContent=
+    "Crédito Total: "+EUR(cg.ac)+"  |  Ejecutado (O): "+EUR(cg.o)+"  |  % Ejec.: "+pctCap.toFixed(1)+"%";
+
+  document.getElementById("tbodyCapDetalle").innerHTML=
+    filas.map(r=>{
+      const p=PCT(r.o,r.ac);
+      const pI=totalI>0?Math.round(r.i/totalI*10000)/100:0;
+      return`<tr>
+        <td><strong>${r.areaN}</strong></td>
+        <td class="num">${DASH(r.i)}</td>
+        <td class="num">${EUR(r.ac)}</td>
+        <td class="num">${DASH(r.a)}</td>
+        <td class="num">${DASH(r.d)}</td>
+        <td class="num"><strong>${EUR(r.o)}</strong></td>
+        <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px">${BAR(p)} ${BSP(p)}</div></td>
+        <td class="num">${pI.toFixed(1)}%</td>
+      </tr>`;
+    }).join("")+
+    `<tr class="total-row">
+      <td><strong>TOTAL CAPÍTULO</strong></td>
+      <td class="num">${DASH(cg.i||totalI)}</td>
+      <td class="num">${EUR(cg.ac)}</td>
+      <td class="num">${DASH(cg.a)}</td>
+      <td class="num">${DASH(cg.d)}</td>
+      <td class="num">${EUR(cg.o)}</td>
+      <td colspan="2"><strong>${pctCap.toFixed(1)}%</strong></td>
+    </tr>`;
+
+  document.getElementById("capListView").classList.add("hidden");
+  document.getElementById("capDetalleView").classList.remove("hidden");
+}
+
+function cerrarCapDetalle(){
+  document.getElementById("capDetalleView").classList.add("hidden");
+  document.getElementById("capListView").classList.remove("hidden");
+}
+
 function copiarKPIImagen(){
   const btn=document.querySelector(".kpi-res-copy-btn");
   const ok=document.getElementById("kpiResCopyOk");
@@ -46458,12 +46544,13 @@ function renderTotal(){
     if(charts["chartCaps"]) charts["chartCaps"].destroy();
   } else {
     document.getElementById("tbodyCaps").innerHTML=
-      cg.map(c=>{const pc=PCT(c.o,c.ac);return`<tr class="cap-row">
+      cg.map(c=>{const pc=PCT(c.o,c.ac);return`<tr class="cap-row" style="cursor:pointer" onclick="drillCapGlobal('${c.cod}')">
         <td><strong>${c.cod}</strong> — ${c.nm}</td>
         <td class="num">${EUR(c.ac)}</td>
         <td class="num">${DASH(c.a)}</td>
         <td class="num"><strong>${EUR(c.o)}</strong></td>
         <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px">${BAR(pc)} ${BSP(pc)}</div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
       </tr>`;}).join("");
     const pcts=cg.map(c=>PCT(c.o,c.ac));
     mkChart("chartCaps",{
