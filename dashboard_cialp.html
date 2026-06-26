@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejecución C.I. Aguas — Cabildo de La Palma</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#F0F2F5;color:#1a1a2e;font-size:14px}
+    .header{background:linear-gradient(135deg,#1B3A6B 0%,#2C5F9E 100%);color:white;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+    .header-left{display:flex;align-items:center;gap:14px}
+    .header-logo{width:42px;height:42px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#1B3A6B;font-size:12px;flex-shrink:0}
+    .header-title h1{font-size:16px;font-weight:700}
+    .header-title p{font-size:11px;opacity:0.85;margin-top:2px}
+    .header-right{display:flex;align-items:center;gap:14px}
+    .header-meta{text-align:right;font-size:11px;opacity:0.9;line-height:1.7}
+    .btn-edit{background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:background 0.2s;white-space:nowrap;text-decoration:none}
+    .btn-edit:hover{background:rgba(255,255,255,0.28)}
+    .breadcrumb{background:white;border-bottom:2px solid #E8ECEF;padding:8px 24px;display:flex;align-items:center;gap:6px;font-size:13px}
+    .bc-item{cursor:pointer;color:#2C5F9E;font-weight:500}
+    .bc-item:hover{text-decoration:underline}
+    .bc-item.active{color:#1a1a2e;cursor:default;font-weight:600}
+    .bc-sep{color:#999}
+    .content{padding:18px 24px;max-width:1400px;margin:0 auto}
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+    @media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+    .kpi-card{background:white;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.08);border-left:4px solid #ccc}
+    .kpi-card.blue{border-left-color:#2C5F9E}
+    .kpi-card.green{border-left-color:#2E7D32}
+    .kpi-card.orange{border-left-color:#E65100}
+    .kpi-card.purple{border-left-color:#6A1B9A}
+    .kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:#666;margin-bottom:5px}
+    .kpi-value{font-size:21px;font-weight:700;color:#1a1a2e}
+    .kpi-sub{font-size:11px;color:#888;margin-top:5px}
+    .kpi-bar{height:3px;background:#eee;border-radius:2px;margin-top:7px}
+    .kpi-fill{height:3px;border-radius:2px}
+    .main-grid{display:grid;grid-template-columns:380px 1fr;gap:14px;margin-bottom:18px}
+    @media(max-width:1100px){.main-grid{grid-template-columns:1fr}}
+    .panel{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);overflow:hidden}
+    .panel-hdr{padding:12px 16px;border-bottom:1px solid #EEF0F3;display:flex;align-items:center;justify-content:space-between}
+    .panel-title{font-size:13px;font-weight:700}
+    .panel-sub{font-size:11px;color:#888;margin-top:1px}
+    .panel-body{padding:14px 16px}
+    .data-table{width:100%;border-collapse:collapse;font-size:12.5px}
+    .data-table thead th{background:#F7F8FA;padding:9px 10px;text-align:left;font-weight:600;color:#555;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #E8ECEF;white-space:nowrap}
+    .data-table thead th.num{text-align:right}
+    .data-table tbody tr{border-bottom:1px solid #F0F2F5;cursor:pointer;transition:background 0.15s}
+    .data-table tbody tr:hover{background:#EEF4FF}
+    .data-table tbody tr.total-row{background:#1B3A6B;color:white;font-weight:700;cursor:default}
+    .data-table tbody tr.total-row:hover{background:#1B3A6B}
+    .data-table tbody tr.partida-row{cursor:default}
+    .data-table td{padding:8px 10px}
+    .data-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+    .badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:600}
+    .badge-high{background:#E8F5E9;color:#2E7D32}
+    .badge-mid{background:#FFF8E1;color:#E65100}
+    .badge-low{background:#FDECEA;color:#C62828}
+    .prog-bar{height:5px;background:#EEE;border-radius:3px;min-width:70px}
+    .prog-fill{height:5px;border-radius:3px}
+    .cap-hdr{background:linear-gradient(135deg,#2C5F9E,#1B3A6B);color:white;border-radius:10px;padding:18px 22px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+    .cap-name{font-size:17px;font-weight:700}
+    .cap-period{font-size:11px;opacity:0.8;margin-top:3px}
+    .cap-pct{text-align:right}
+    .big-pct{font-size:36px;font-weight:900;line-height:1}
+    .pct-label{font-size:11px;opacity:0.8}
+    .data-note{font-size:11px;color:#999;text-align:right;padding:6px 12px 8px}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+    .modal-box{background:white;border-radius:12px;width:100%;max-width:700px;box-shadow:0 8px 32px rgba(0,0,0,0.22)}
+    .modal-header{padding:16px 20px;border-bottom:1px solid #E8ECEF;display:flex;align-items:center;justify-content:space-between}
+    .modal-header h2{font-size:15px;font-weight:700;color:#1B3A6B}
+    .modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#666}
+    .modal-info{padding:10px 20px;background:#EFF6FF;border-bottom:1px solid #DBEAFE;font-size:11px;color:#1e40af}
+    .modal-footer{padding:14px 20px;border-top:1px solid #E8ECEF}
+    .semanal-box{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+    .semanal-title{font-size:12px;font-weight:700;color:#166534;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+    .semanal-inputs{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+    .semanal-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px}
+    .semanal-field label{font-size:11px;font-weight:600;color:#166534}
+    .semanal-file-btn{display:flex;align-items:center;gap:6px;background:white;border:1.5px dashed #86efac;border-radius:6px;padding:7px 12px;cursor:pointer;font-size:12px;color:#166534;font-weight:500;transition:all 0.15s;white-space:nowrap}
+    .semanal-file-btn:hover{background:#f0fdf4;border-color:#4ade80}
+    .semanal-file-btn.has-file{border-style:solid;border-color:#22c55e;background:#f0fdf4}
+    .semanal-file-name{font-size:10px;color:#166534;opacity:0.8;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .btn-semanal{background:#166534;color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+    .btn-semanal:hover{background:#15803d}
+    .btn-semanal:disabled{background:#86efac;cursor:not-allowed}
+    .footer-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .btn-primary{background:#1B3A6B;color:white;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer}
+    .btn-primary:hover{background:#2C5F9E}
+    .btn-secondary{background:white;color:#444;border:1px solid #D0D5DD;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:500;cursor:pointer}
+    .btn-secondary:hover{background:#F7F8FA}
+    .hidden{display:none!important}
+    .footer{text-align:center;padding:14px;color:#aaa;font-size:11px;border-top:1px solid #E8ECEF;margin-top:8px}
+    .chart-wrap{position:relative}
+    .empty-msg{padding:24px;text-align:center;color:#999;font-size:12px;font-style:italic}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">CIA</div>
+    <div class="header-title">
+      <h1>Ejecución Presupuestaria</h1>
+      <p>Consejo Insular de Aguas de La Palma</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-meta" id="headerMeta"></div>
+    <a href="index.html" class="btn-edit" style="text-decoration:none">⬅ Inicio</a>
+    <button class="btn-edit" onclick="openEditor()">✏ Actualizar Datos</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="editorModal" class="modal-backdrop hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Actualizar Datos — Consejo Insular de Aguas</h2>
+      <button class="modal-close" onclick="closeEditor()">✕</button>
+    </div>
+    <div class="modal-info">
+      💡 Importa el Excel de GEMA y el PDF de TGEM del Consejo Insular de Aguas. Los datos se agrupan automáticamente por capítulo.
+    </div>
+    <div class="modal-footer">
+      <div class="semanal-box">
+        <div class="semanal-title">📅 Importación semanal — sube ambos archivos y actualiza con un clic</div>
+        <div class="semanal-inputs">
+          <div class="semanal-field">
+            <label>📊 Excel GEMA (.xlsx)</label>
+            <label class="semanal-file-btn" id="lblXls" onclick="document.getElementById('xlsInput').click()">Seleccionar archivo Excel</label>
+            <input type="file" id="xlsInput" accept=".xlsx,.xls" style="display:none" onchange="marcarArchivo('xlsInput','lblXls',this)">
+            <span class="semanal-file-name" id="nmXls"></span>
+          </div>
+          <div class="semanal-field">
+            <label>📄 PDF TGEM (.pdf)</label>
+            <label class="semanal-file-btn" id="lblPdf" onclick="document.getElementById('pdfInput').click()">Seleccionar archivo PDF</label>
+            <input type="file" id="pdfInput" accept=".pdf" style="display:none" onchange="marcarArchivo('pdfInput','lblPdf',this)">
+            <span class="semanal-file-name" id="nmPdf"></span>
+          </div>
+          <button class="btn-semanal" id="btnAmbos" onclick="importarAmbos()">📥 Importar</button>
+        </div>
+      </div>
+      <div class="footer-row">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-secondary" onclick="exportarDatos()">⬇ Exportar JSON</button>
+          <label class="btn-secondary" style="cursor:pointer">
+            ⬆ Importar JSON
+            <input type="file" accept=".json" style="display:none" onchange="importarDatos(this)">
+          </label>
+        </div>
+        <button class="btn-secondary" onclick="closeEditor()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb" id="breadcrumb">
+  <span class="bc-item active" onclick="nav(0)">Total CIA</span>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- NIVEL 0: TOTAL + CAPÍTULOS -->
+  <div id="view-total">
+    <div class="kpi-grid" id="kpiTotal"></div>
+    <div class="main-grid">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div><div class="panel-title">% Ejecución por Capítulo</div><div class="panel-sub">Obligaciones / Crédito Actual</div></div>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap" style="height:340px"><canvas id="chartCaps"></canvas></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <div><div class="panel-title">Tabla por Capítulo Económico</div><div class="panel-sub">Clic en un capítulo para ver el detalle de aplicaciones</div></div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr>
+              <th>Capítulo</th>
+              <th class="num">Inicial</th>
+              <th class="num">Modif.</th>
+              <th class="num">Actual</th>
+              <th class="num">A</th>
+              <th class="num">D</th>
+              <th class="num">O (Ejecutado)</th>
+              <th>% Ejec.</th>
+              <th></th>
+            </tr></thead>
+            <tbody id="tbodyCaps"></tbody>
+          </table>
+        </div>
+        <div class="data-note" id="fuenteCaps"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NIVEL 1: APLICACIONES DE UN CAPÍTULO -->
+  <div id="view-cap" class="hidden">
+    <div class="cap-hdr" id="capHdr"></div>
+    <div class="panel">
+      <div class="panel-hdr">
+        <div><div class="panel-title">Aplicaciones Presupuestarias</div><div class="panel-sub">Detalle de líneas del capítulo</div></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead><tr>
+            <th>Código</th><th>Descripción</th>
+            <th class="num">Inicial</th><th class="num">Modif.</th><th class="num">Actual</th>
+            <th class="num">A</th><th class="num">D</th><th class="num">O (Ejecutado)</th><th>% Ejec.</th>
+          </tr></thead>
+          <tbody id="tbodyPartidas"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="footer" id="footerTxt"></div>
+
+<script>
+// ================================================================
+//  DATOS INICIALES
+// ================================================================
+const DATOS_PDF = {
+  config: { fecha:"—", periodo:"2026", fuente:"TGEM — Consejo Insular de Aguas de La Palma" },
+  total:  { i:0, m:0, ac:0, a:0, d:0, o:0 },
+  caps:   []
+};
+
+let CONFIG = JSON.parse(JSON.stringify(DATOS_PDF.config));
+let TOTAL  = JSON.parse(JSON.stringify(DATOS_PDF.total));
+let CAPS   = JSON.parse(JSON.stringify(DATOS_PDF.caps));
+
+const CAP_NM = {
+  "1":"Gastos de Personal",
+  "2":"Gastos Corrientes en Bienes y Servicios",
+  "3":"Gastos Financieros",
+  "4":"Transferencias Corrientes",
+  "5":"Fondo de Contingencia",
+  "6":"Inversiones Reales",
+  "7":"Transferencias de Capital",
+  "8":"Activos Financieros",
+  "9":"Pasivos Financieros"
+};
+
+// ================================================================
+//  UTILIDADES
+// ================================================================
+const EUR  = n => new Intl.NumberFormat("es-ES",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
+const EURK = n => {
+  if(Math.abs(n)>=1e6) return (n/1e6).toFixed(2).replace(".",",")+" M€";
+  if(Math.abs(n)>=1e3) return Math.round(n/1e3)+" K€";
+  return EUR(n)+" €";
+};
+const DASH = n => n===0?"—":EUR(n);
+const PCT  = (o,ac) => !ac?0:Math.round(o/ac*10000)/100;
+const COLOR= p => p>=60?"#2E7D32":p>=30?"#E65100":"#C62828";
+const BADGE= p => p>=60?"badge-high":p>=30?"badge-mid":"badge-low";
+const BAR  = p => `<div class="prog-bar"><div class="prog-fill" style="width:${Math.min(p,100)}%;background:${COLOR(p)}"></div></div>`;
+const BSP  = p => `<span class="badge ${BADGE(p)}">${p.toFixed(1)}%</span>`;
+
+function norm(s){ return String(s).toLowerCase().trim().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+function xlsN(v){
+  if(typeof v==="number") return v;
+  let s=String(v).trim().replace(/[€\s%]/g,"");
+  if(!s||s==="-"||s==="—") return 0;
+  if(s.includes(",")&&s.includes(".")) return parseFloat(s.replace(/\./g,"").replace(",","."))||0;
+  if(s.includes(",")) return parseFloat(s.replace(",","."))||0;
+  return parseFloat(s)||0;
+}
+
+// ================================================================
+//  NAVEGACIÓN
+// ================================================================
+let curCap = null;
+
+function nav(lvl){
+  document.getElementById("view-total").classList.toggle("hidden", lvl!==0);
+  document.getElementById("view-cap").classList.toggle("hidden", lvl!==1);
+  if(lvl===0) curCap=null;
+  updateBC();
+}
+
+function updateBC(){
+  let h=`<span class="bc-item ${!curCap?'active':''}" onclick="nav(0)">Total CIA</span>`;
+  if(curCap) h+=`<span class="bc-sep">›</span><span class="bc-item active">${curCap.cod} — ${curCap.nm}</span>`;
+  document.getElementById("breadcrumb").innerHTML=h;
+}
+
+// ================================================================
+//  KPI
+// ================================================================
+function renderKPI(id,cards){
+  document.getElementById(id).innerHTML=cards.map(c=>`
+    <div class="kpi-card ${c.cl}">
+      <div class="kpi-label">${c.label}</div>
+      <div class="kpi-value">${c.val}</div>
+      <div class="kpi-sub">${c.sub||""}</div>
+      ${c.pct!=null?`<div class="kpi-bar"><div class="kpi-fill" style="width:${Math.min(c.pct,100)}%;background:${COLOR(c.pct)}"></div></div>`:""}
+    </div>`).join("");
+}
+
+// ================================================================
+//  CHARTS
+// ================================================================
+const charts={};
+function mkChart(id,cfg){
+  if(charts[id]) charts[id].destroy();
+  charts[id]=new Chart(document.getElementById(id),cfg);
+}
+
+// ================================================================
+//  RENDER TOTAL
+// ================================================================
+function renderTotal(){
+  const t=TOTAL, ac=t.ac;
+  const pct=PCT(t.o,ac);
+
+  document.getElementById("headerMeta").innerHTML=
+    `Periodo: ${CONFIG.periodo} &nbsp;|&nbsp; Datos al <strong>${CONFIG.fecha}</strong>`;
+  document.getElementById("fuenteCaps").textContent=
+    `Fuente: ${CONFIG.fuente} — ${CONFIG.fecha}`;
+  document.getElementById("footerTxt").textContent=
+    `Consejo Insular de Aguas de La Palma · Ejecución Presupuestaria ${CONFIG.periodo} · Datos al ${CONFIG.fecha}`;
+
+  renderKPI("kpiTotal",[
+    {cl:"blue",   label:"Crédito Total (Actual)",       val:EURK(ac),       sub:`Inicial: ${EURK(t.i||0)} | Modif.: +${EURK(t.m||0)}`},
+    {cl:"green",  label:"Obligaciones Reconocidas (O)",  val:EURK(t.o),      sub:`Autorizado (A): ${t.a?EURK(t.a):"—"}`},
+    {cl:"orange", label:"Pendiente de Ejecutar",         val:EURK(ac-t.o),   sub:`Sin comprometer: ${t.a?EURK(ac-t.a):"—"}`},
+    {cl:"purple", label:"% Ejecución (O/Crédito)",       val:pct.toFixed(2)+"%", sub:`D/Crédito: ${t.d?PCT(t.d,ac).toFixed(1)+"%":"—"}`, pct:pct}
+  ]);
+
+  if(CAPS.length===0){
+    document.getElementById("tbodyCaps").innerHTML=
+      `<tr><td colspan="9" class="empty-msg">Sin datos — importa el Excel y PDF del Consejo Insular de Aguas</td></tr>`;
+    if(charts["chartCaps"]) charts["chartCaps"].destroy();
+    return;
+  }
+
+  // Tabla capítulos
+  document.getElementById("tbodyCaps").innerHTML=
+    CAPS.map((c,i)=>{
+      const p=PCT(c.o,c.ac);
+      return `<tr onclick="drillCap(${i})">
+        <td><strong>${c.cod}</strong><div style="font-size:11px;color:#666">${c.nm}</div></td>
+        <td class="num">${DASH(c.i)}</td>
+        <td class="num">${DASH(c.m)}</td>
+        <td class="num">${EUR(c.ac)}</td>
+        <td class="num">${DASH(c.a)}</td>
+        <td class="num">${DASH(c.d)}</td>
+        <td class="num"><strong>${EUR(c.o)}</strong></td>
+        <td style="min-width:120px"><div style="display:flex;align-items:center;gap:6px">${BAR(p)} ${BSP(p)}</div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr>`;
+    }).join("")+
+    `<tr class="total-row">
+      <td><strong>CIA TOTAL</strong></td>
+      <td class="num">${DASH(t.i)}</td>
+      <td class="num">${DASH(t.m)}</td>
+      <td class="num">${EUR(ac)}</td>
+      <td class="num">${t.a?EUR(t.a):"—"}</td>
+      <td class="num">${t.d?EUR(t.d):"—"}</td>
+      <td class="num">${EUR(t.o)}</td>
+      <td colspan="2"><strong>${pct.toFixed(2)}%</strong></td>
+    </tr>`;
+
+  // Gráfica
+  const pcts=CAPS.map(c=>PCT(c.o,c.ac));
+  mkChart("chartCaps",{
+    type:"bar",
+    data:{
+      labels:CAPS.map(c=>c.cod),
+      datasets:[
+        {label:"% Ejecutado (O)",    data:pcts,                              backgroundColor:pcts.map(p=>COLOR(p)),              borderRadius:5, barPercentage:0.65},
+        {label:"% Comprometido (D)", data:CAPS.map(c=>PCT(c.d||0,c.ac)),    backgroundColor:"rgba(44,95,158,0.2)",              borderRadius:5, barPercentage:0.65}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{size:11},boxWidth:12}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%`}}},
+      scales:{y:{max:100,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#F0F2F5"}},
+              x:{grid:{display:false},ticks:{font:{size:11}}}}
+    }
+  });
+}
+
+// ================================================================
+//  DRILL: CAPÍTULO → APLICACIONES
+// ================================================================
+function drillCap(idx){
+  curCap=CAPS[idx];
+  if(!curCap) return;
+  const c=curCap, pc=PCT(c.o,c.ac);
+  document.getElementById("capHdr").innerHTML=`
+    <div>
+      <div class="cap-name">${c.cod} — ${c.nm}</div>
+      <div class="cap-period">Datos al ${CONFIG.fecha}</div>
+    </div>
+    <div class="cap-pct"><div class="big-pct">${pc.toFixed(1)}%</div><div class="pct-label">% Ejecución O/Crédito</div></div>`;
+
+  const partidas=c.partidas||[];
+  document.getElementById("tbodyPartidas").innerHTML=partidas.length?
+    partidas.map(p=>{const pp=PCT(p.o,p.ac);return`<tr class="partida-row">
+      <td style="font-family:monospace;font-size:12px"><strong>${p.cod}</strong></td>
+      <td style="max-width:340px">${p.nm}</td>
+      <td class="num">${DASH(p.i)}</td>
+      <td class="num">${DASH(p.m)}</td>
+      <td class="num">${EUR(p.ac)}</td>
+      <td class="num">${DASH(p.a)}</td>
+      <td class="num">${DASH(p.d)}</td>
+      <td class="num"><strong>${EUR(p.o)}</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px">${BAR(pp)} ${BSP(pp)}</div></td>
+    </tr>`}).join(""):
+    `<tr><td colspan="9" class="empty-msg">Sin aplicaciones — importa el Excel de GEMA.</td></tr>`;
+  nav(1);
+}
+
+// ================================================================
+//  EDITOR / IMPORT MODAL
+// ================================================================
+function openEditor(){ document.getElementById("editorModal").classList.remove("hidden"); }
+function closeEditor(){ document.getElementById("editorModal").classList.add("hidden"); }
+
+function marcarArchivo(inputId,lblId,input){
+  const f=input.files[0];
+  const lbl=document.getElementById(lblId);
+  const nm=document.getElementById(inputId==="xlsInput"?"nmXls":"nmPdf");
+  if(f){ lbl.classList.add("has-file"); lbl.textContent="✓ "+f.name.slice(0,28); if(nm) nm.textContent=f.name; }
+  else { lbl.classList.remove("has-file"); lbl.textContent=inputId==="xlsInput"?"Seleccionar archivo Excel":"Seleccionar archivo PDF"; if(nm) nm.textContent=""; }
+}
+
+async function importarAmbos(){
+  const xlsFile=document.getElementById("xlsInput").files[0];
+  const pdfFile=document.getElementById("pdfInput").files[0];
+  if(!xlsFile&&!pdfFile){ alert("Selecciona al menos un archivo."); return; }
+  const btn=document.getElementById("btnAmbos");
+  btn.disabled=true; btn.textContent="⏳ Procesando...";
+  try{
+    let excelInfo=null, pdfInfo=null;
+    if(xlsFile) excelInfo=await procesarXLS(xlsFile);
+    if(pdfFile)  pdfInfo =await procesarPDF(pdfFile);
+    if(!excelInfo&&!pdfInfo){ alert("No se pudo procesar ningún archivo."); return; }
+    const fecha  =(pdfInfo?.fecha)  ||(excelInfo?.fecha)  ||CONFIG.fecha;
+    const periodo=(pdfInfo?.periodo)||(excelInfo?.periodo)||CONFIG.periodo;
+    // El Excel calcula el total como suma de capítulos → siempre tiene prioridad sobre el PDF
+    // El PDF sólo se usa como fuente de la fecha y como fallback si no hay Excel
+    const tot=(excelInfo?.total)||(pdfInfo?.total);
+    let msg="✓ Procesado (CIA):\n\n";
+    if(excelInfo) msg+=`  Excel: ${excelInfo.lineas} aplicaciones → ${excelInfo.caps} capítulos\n`;
+    if(pdfInfo)   msg+=`  PDF: fecha ${pdfInfo.fecha||"detectada"}\n`;
+    if(tot)       msg+=`\n  Crédito Total: ${EURK(tot.ac)}\n  Ejecutado (O): ${EURK(tot.o)} — ${PCT(tot.o,tot.ac).toFixed(2)}%`;
+    msg+="\n\n¿Aplicar al dashboard?";
+    if(!confirm(msg)){ btn.disabled=false; btn.textContent="📥 Importar"; return; }
+    if(excelInfo?.total) Object.assign(TOTAL, excelInfo.total);
+    else if(pdfInfo?.total) Object.assign(TOTAL, pdfInfo.total);
+    if(fecha)   CONFIG.fecha=fecha;
+    if(periodo) CONFIG.periodo=periodo;
+    guardarLocal();
+    closeEditor();
+    nav(0);
+    renderTotal();
+  }catch(err){
+    alert("Error:\n"+err.message);
+    console.error(err);
+  }finally{
+    btn.disabled=false; btn.textContent="📥 Importar";
+    document.getElementById("xlsInput").value="";
+    document.getElementById("pdfInput").value="";
+    ["lblXls","lblPdf"].forEach(id=>{
+      const l=document.getElementById(id);
+      l.classList.remove("has-file");
+      l.textContent=id==="lblXls"?"Seleccionar archivo Excel":"Seleccionar archivo PDF";
+    });
+    document.getElementById("nmXls").textContent="";
+    document.getElementById("nmPdf").textContent="";
+  }
+}
+
+// ================================================================
+//  PROCESAR EXCEL
+// ================================================================
+async function procesarXLS(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array"});
+        // Elegir hoja con más keywords financieras
+        const kw=["partida","aplicac","inicial","modif","actual","oblig","credito","ejecuc"];
+        let ws=null, wsName="", best=-1;
+        for(const name of wb.SheetNames){
+          const raw=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:""});
+          const flat=raw.slice(0,30).flat().map(c=>norm(c));
+          const sc=kw.filter(k=>flat.some(c=>c.includes(k))).length;
+          if(sc>best){best=sc;ws=wb.Sheets[name];wsName=name;}
+        }
+        const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+
+        // Fecha/periodo
+        let fechaXls="",periodoXls="";
+        for(let i=0;i<15;i++){
+          const txt=(rows[i]||[]).join(" ");
+          const mF=txt.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+          const mP=txt.match(/\b(20\d{2})\b/);
+          if(mF&&!fechaXls) fechaXls=`${String(mF[1]).padStart(2,"0")}/${String(mF[2]).padStart(2,"0")}/${mF[3]}`;
+          if(mP&&!periodoXls) periodoXls=mP[1];
+        }
+
+        // Buscar fila de cabecera — keywords amplios
+        let hdr=-1, col={cod:0,desc:1,i:2,m:3,ac:4,a:5,d:6,o:7};
+        const found=new Set(); // columnas detectadas por nombre
+        const HAS_COD = c=>c.includes("codigo")||c.includes("partida")||c.includes("aplicac")||c.includes("economia")||c.includes("econ");
+        const HAS_FIN = c=>c.includes("inicial")||c.includes("credito")||c.includes("modif")||c.includes("oblig")||c==="i"||c==="o";
+        for(let i=0;i<rows.length;i++){
+          const rn=rows[i].map(c=>norm(c));
+          if(rn.length<4) continue;
+          if(rn.some(HAS_COD)&&rn.some(HAS_FIN)){
+            hdr=i;
+            const mapped={};
+            rn.forEach((c,j)=>{
+              if(mapped.cod===undefined&&HAS_COD(c)){mapped.cod=j;found.add("cod");}
+              if(mapped.desc===undefined&&(c.includes("descrip")||c.includes("denomin")||c.includes("concepto")||c.includes("nombre"))){mapped.desc=j;found.add("desc");}
+              if(mapped.i===undefined&&(c==="inicial"||c==="i"||c.includes("inicial"))){mapped.i=j;found.add("i");}
+              if(mapped.m===undefined&&(c.includes("modif")&&!c.includes("inc"))){mapped.m=j;found.add("m");}
+              if(mapped.ac===undefined&&(c==="actual"||c==="credito disponible"||(c.includes("credito")&&(c.includes("actual")||c.includes("definitiv")))||c.includes("definitiv"))){mapped.ac=j;found.add("ac");}
+              if(mapped.a===undefined&&(c==="a"||c.includes("autor")||c.includes("comprometido")||c.includes("propuest"))){mapped.a=j;found.add("a");}
+              if(mapped.d===undefined&&(c==="d"||c.startsWith("dispon"))){mapped.d=j;found.add("d");}
+              if(mapped.o===undefined&&(c==="o"||c.startsWith("oblig")||c.includes("reconocid"))){mapped.o=j;found.add("o");}
+            });
+            Object.assign(col,mapped);
+            break;
+          }
+        }
+
+        // Fallback automático: para columnas no detectadas por nombre,
+        // escanear varias filas de datos y acumular cuáles tienen importes.
+        // Se asignan por suma descendente y luego por posición (i < m < ac < a < d < o).
+        const codePat=/^\d+\/\d+$/;
+        const needsFallback=["i","m","ac","a","d","o"].some(k=>!found.has(k));
+        if(needsFallback){
+          const colSums={};   // {colIdx: totalAcumulado}
+          const colCount={};  // {colIdx: filas con valor > 0}
+          let scanned=0;
+          for(let i=Math.max(0,hdr>=0?hdr+1:0);i<rows.length&&scanned<60;i++){
+            const row=rows[i];
+            if(!codePat.test(String(row[col.cod]||"").trim())) continue;
+            scanned++;
+            for(let j=col.desc+1;j<row.length;j++){
+              const v=xlsN(row[j]);
+              if(v>0){ colSums[j]=(colSums[j]||0)+v; colCount[j]=(colCount[j]||0)+1; }
+            }
+          }
+          if(scanned>0){
+            // columnas con datos, ordenadas de izquierda a derecha
+            const activeCols=Object.keys(colSums).map(Number).sort((a,b)=>a-b);
+            const keys=["i","m","ac","a","d","o"];
+            activeCols.forEach((colIdx,pos)=>{
+              if(pos<keys.length&&!found.has(keys[pos])) col[keys[pos]]=colIdx;
+            });
+          }
+        }
+
+        // Diagnóstico — visible en F12 › Consola
+        console.log("[CIALP Excel] Hoja:"+wsName+" | hdr:"+hdr+" | Columnas detectadas:",JSON.stringify(col));
+
+        // Leer filas y agrupar por capítulo
+        const capMap={};
+        let lineas=0;
+        const totCalc={i:0,m:0,ac:0,a:0,d:0,o:0};
+        const start=hdr>=0?hdr+1:0;
+        for(let i=start;i<rows.length;i++){
+          const row=rows[i];
+          const codRaw=String(row[col.cod]||"").trim();
+          if(!codePat.test(codRaw)) continue;
+          const slash=codRaw.indexOf("/");
+          const econ=codRaw.slice(slash+1);
+          const cap=econ[0];
+          if(!cap||isNaN(parseInt(cap))) continue;
+          if(!capMap[cap]) capMap[cap]={i:0,m:0,ac:0,a:0,d:0,o:0,partidas:[]};
+          const g=capMap[cap];
+          const v={cod:codRaw, nm:String(row[col.desc]||"").trim(),
+            i:xlsN(row[col.i]),m:xlsN(row[col.m]),ac:xlsN(row[col.ac]),
+            a:xlsN(row[col.a]),d:xlsN(row[col.d]),o:xlsN(row[col.o])};
+          if(v.ac===0&&(v.i>0||v.m>0)) v.ac=v.i+v.m;
+          g.i+=v.i;g.m+=v.m;g.ac+=v.ac;g.a+=v.a;g.d+=v.d;g.o+=v.o;
+          totCalc.i+=v.i;totCalc.m+=v.m;totCalc.ac+=v.ac;
+          totCalc.a+=v.a;totCalc.d+=v.d;totCalc.o+=v.o;
+          g.partidas.push(v);
+          lineas++;
+        }
+        if(lineas===0){reject(new Error("No se encontraron aplicaciones PPP/ECCCCC en \""+wsName+"\"")); return;}
+        // Construir CAPS
+        CAPS=Object.entries(capMap).sort(([a],[b])=>a.localeCompare(b))
+          .map(([digit,data])=>({
+            cod:"Cap. "+digit, nm:CAP_NM[digit]||"Capítulo "+digit,
+            i:data.i,m:data.m,ac:data.ac,a:data.a,d:data.d,o:data.o,
+            partidas:data.partidas.sort((a,b)=>b.ac-a.ac)
+          }));
+        // Total = suma de capítulos (evita doble conteo de sub-filas del Excel)
+        const totFinal=CAPS.reduce((acc,c)=>({
+          i:acc.i+c.i,m:acc.m+c.m,ac:acc.ac+c.ac,
+          a:acc.a+c.a,d:acc.d+c.d,o:acc.o+c.o
+        }),{i:0,m:0,ac:0,a:0,d:0,o:0});
+        resolve({lineas, caps:CAPS.length, fecha:fechaXls, periodo:periodoXls, total:totFinal});
+      }catch(err){reject(err);}
+    };
+    reader.onerror=()=>reject(new Error("No se pudo leer el Excel"));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+// ================================================================
+//  PROCESAR PDF
+// ================================================================
+async function procesarPDF(file){
+  try{
+    if(typeof pdfjsLib==="undefined") return null;
+    const buf=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
+    let fecha="",periodo="",total=null;
+    const MESES={enero:1,febrero:2,marzo:3,abril:4,mayo:5,junio:6,
+                 julio:7,agosto:8,septiembre:9,octubre:10,noviembre:11,diciembre:12};
+    const p1=await pdf.getPage(1);
+    const t1=(await p1.getTextContent()).items.map(x=>x.str).join(" ");
+    const mEs=t1.match(/(\d{1,2})\s+de\s+(\w+)\s+de[l]?\s+(\d{4})/i);
+    const mNum=t1.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    const mPer=t1.match(/\b(20\d{2})\b/);
+    if(mEs){ const mes=MESES[mEs[2].toLowerCase()]||1;
+      fecha=`${String(mEs[1]).padStart(2,"0")}/${String(mes).padStart(2,"0")}/${mEs[3]}`; periodo=mEs[3]; }
+    else if(mNum){ fecha=`${String(mNum[1]).padStart(2,"0")}/${String(mNum[2]).padStart(2,"0")}/${mNum[3]}`; periodo=mNum[3]; }
+    if(mPer&&!periodo) periodo=mPer[1];
+    const parseES=s=>parseFloat(String(s).replace(/\./g,"").replace(",","."))||0;
+    for(let p=pdf.numPages;p>=Math.max(1,pdf.numPages-4);p--){
+      const page=await pdf.getPage(p);
+      const txt=(await page.getTextContent()).items.map(x=>x.str).join(" ");
+      if(!/total/i.test(txt)) continue;
+      const nums=(txt.match(/[\d.]+,\d{2}/g)||[]).map(parseES).filter(n=>n>0);
+      for(let i=0;i<=nums.length-6;i++){
+        const [ni,nm,nac,na,nd,no]=nums.slice(i,i+6);
+        if(nac>0&&Math.abs(nac-(ni+nm))<nac*0.05&&no<=na&&na<=nac){
+          total={i:ni,m:nm,ac:nac,a:na,d:nd,o:no}; break;
+        }
+      }
+      if(total) break;
+    }
+    return {fecha,periodo,total};
+  }catch(err){ console.warn("PDF no procesado:",err.message); return null; }
+}
+
+// ================================================================
+//  EXPORT / IMPORT JSON
+// ================================================================
+function exportarDatos(){
+  const data={config:CONFIG,total:TOTAL,caps:CAPS};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=`cialp_${CONFIG.fecha.replace(/\//g,"-")}.json`; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function importarDatos(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.config)  Object.assign(CONFIG,data.config);
+      if(data.total)   Object.assign(TOTAL,data.total);
+      if(data.caps)    CAPS=data.caps;
+      guardarLocal();
+      closeEditor();
+      nav(0);
+      renderTotal();
+      alert("✓ Datos importados — "+CONFIG.fecha);
+    }catch(err){alert("Error al importar: "+err.message);}
+  };
+  reader.readAsText(file);
+  input.value="";
+}
+
+// ================================================================
+//  PERSISTENCIA localStorage
+// ================================================================
+const LOCAL_VERSION="cialp_v2_"+DATOS_PDF.config.periodo;
+function guardarLocal(){
+  try{ localStorage.setItem("dashCIALP",JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,caps:CAPS})); }catch(e){}
+}
+function cargarLocal(){
+  try{
+    const raw=localStorage.getItem("dashCIALP");
+    if(!raw) return;
+    const data=JSON.parse(raw);
+    if(data.v!==LOCAL_VERSION){ localStorage.removeItem("dashCIALP"); return; }
+    if(data.config) Object.assign(CONFIG,data.config);
+    if(data.total)  Object.assign(TOTAL,data.total);
+    if(data.caps)   CAPS=data.caps;
+  }catch(e){}
+}
+
+// Worker PDF.js
+if(typeof pdfjsLib!=="undefined")
+  pdfjsLib.GlobalWorkerOptions.workerSrc=
+    "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+
+// ================================================================
+//  INIT
+// ================================================================
+cargarLocal();
+renderTotal();
+</script>
+</body>
+</html>
