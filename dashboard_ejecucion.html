@@ -24,6 +24,11 @@
     .header-meta{text-align:right;font-size:11px;opacity:0.9;line-height:1.7}
     .btn-edit{background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:background 0.2s;white-space:nowrap}
     .btn-edit:hover{background:rgba(255,255,255,0.28)}
+    /* ENTITY TAB BAR */
+    .entity-bar{background:#152d52;padding:0 24px;display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,0.1)}
+    .entity-tab-btn{color:rgba(255,255,255,0.6);background:none;border:none;border-bottom:3px solid transparent;padding:7px 18px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+    .entity-tab-btn:hover{color:white}
+    .entity-tab-btn.active{color:white;border-bottom-color:#60A5FA}
     /* BREADCRUMB */
     .breadcrumb{background:white;border-bottom:2px solid #E8ECEF;padding:8px 24px;display:flex;align-items:center;gap:6px;font-size:13px}
     .bc-item{cursor:pointer;color:#2C5F9E;font-weight:500}
@@ -252,6 +257,12 @@
     <div class="header-meta" id="headerMeta">Periodo: 2026 &nbsp;|&nbsp; Datos al <strong>26/06/2026</strong></div>
     <button class="btn-edit" onclick="openEditor()">✏ Actualizar Datos</button>
   </div>
+</div>
+
+<!-- ===== ENTITY TAB BAR ===== -->
+<div class="entity-bar">
+  <button class="entity-tab-btn active" data-entity="cabildo" onclick="switchEntity('cabildo')">🏛 Cabildo Insular de La Palma</button>
+  <button class="entity-tab-btn" data-entity="cia" onclick="switchEntity('cia')">💧 Consejo Insular de Aguas</button>
 </div>
 
 <!-- ===== ADMIN PIN MODAL ===== -->
@@ -46087,6 +46098,38 @@ let AREAS  = JSON.parse(JSON.stringify(DATOS_PDF.areas));
 let CAPS_G = JSON.parse(JSON.stringify(DATOS_PDF.caps_globales));
 
 // ================================================================
+//  CONSEJO INSULAR DE AGUAS — datos paralelos
+// ================================================================
+const CIA_DATOS_PDF = {
+  config: { fecha:"—", periodo:"2026", fuente:"TGEM — Consejo Insular de Aguas de La Palma" },
+  total:  { i:0, m:0, ac:0, a:0, d:0, o:0 },
+  areas:  [],
+  caps_globales: []
+};
+let CIA_CONFIG = JSON.parse(JSON.stringify(CIA_DATOS_PDF.config));
+let CIA_TOTAL  = JSON.parse(JSON.stringify(CIA_DATOS_PDF.total));
+let CIA_AREAS  = JSON.parse(JSON.stringify(CIA_DATOS_PDF.areas));
+let CIA_CAPS_G = JSON.parse(JSON.stringify(CIA_DATOS_PDF.caps_globales));
+
+// Gestión de entidades — referencias separadas para Cabildo
+let CAB_CONFIG = CONFIG, CAB_TOTAL = TOTAL, CAB_AREAS = AREAS, CAB_CAPS_G = CAPS_G;
+let activeEntity = 'cabildo';
+
+function switchEntity(name){
+  if(activeEntity===name) return;
+  // Guardar estado actual
+  if(activeEntity==='cabildo'){ CAB_CONFIG=CONFIG; CAB_TOTAL=TOTAL; CAB_AREAS=AREAS; CAB_CAPS_G=CAPS_G; }
+  else                        { CIA_CONFIG=CONFIG; CIA_TOTAL=TOTAL; CIA_AREAS=AREAS; CIA_CAPS_G=CAPS_G; }
+  activeEntity=name;
+  // Cargar entidad destino
+  if(name==='cabildo'){ CONFIG=CAB_CONFIG; TOTAL=CAB_TOTAL; AREAS=CAB_AREAS; CAPS_G=CAB_CAPS_G; }
+  else                { CONFIG=CIA_CONFIG; TOTAL=CIA_TOTAL; AREAS=CIA_AREAS; CAPS_G=CIA_CAPS_G; }
+  document.querySelectorAll('.entity-tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.entity===name));
+  nav(0);
+  renderTotal();
+}
+
+// ================================================================
 //  TABLA DE MAPEO PROGRAMA → ÁREA ORGANIZATIVA
 //  Clave = código de programa (3 dígitos), valor = nombre de área en AREAS
 // ================================================================
@@ -46220,7 +46263,8 @@ function nav(lvl){
   updateBC();
 }
 function updateBC(){
-  let h=`<span class="bc-item ${!curArea?'active':''}" onclick="nav(0)">Total Cabildo</span>`;
+  const rootNm=activeEntity==='cabildo'?'Total Cabildo':'Consejo de Aguas';
+  let h=`<span class="bc-item ${!curArea?'active':''}" onclick="nav(0)">${rootNm}</span>`;
   if(curArea) h+=`<span class="bc-sep">›</span><span class="bc-item ${!curCap?'active':''}" onclick="nav(1)">${curArea.n}</span>`;
   if(curCap)  h+=`<span class="bc-sep">›</span><span class="bc-item active">${curCap.cod} — ${curCap.nm}</span>`;
   document.getElementById("breadcrumb").innerHTML=h;
@@ -46496,7 +46540,7 @@ function renderTotal(){
   document.getElementById("fuenteAreas").textContent=`Fuente: ${CONFIG.fuente} — ${CONFIG.fecha}`;
   document.getElementById("fuenteCaps").textContent=`Fuente: ${CONFIG.fuente} — ${CONFIG.fecha}`;
   document.getElementById("footerTxt").textContent=
-    `Excmo. Cabildo Insular de La Palma · Ejecución Presupuestaria ${CONFIG.periodo} · Datos al ${CONFIG.fecha}`;
+    `${activeEntity==='cabildo'?'Excmo. Cabildo Insular de La Palma':'Consejo Insular de Aguas de La Palma'} · Ejecución Presupuestaria ${CONFIG.periodo} · Datos al ${CONFIG.fecha}`;
 
   renderKPI("kpiTotal",[
     {cl:"blue",   label:"Crédito Total (Actual)",        val:EURK(ac),       sub:`Inicial: ${EURK(t.i||0)} | Modif.: +${EURK(t.m||0)}`},
@@ -47354,6 +47398,7 @@ const LOCAL_VERSION = "v41_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.f
 function guardarLocal(){
   try{
     localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
+    localStorage.setItem("dashEjecucionCIA", JSON.stringify({config:CIA_CONFIG,total:CIA_TOTAL,areas:CIA_AREAS,caps_globales:CIA_CAPS_G}));
   }catch(e){}
 }
 function cargarLocal(){
@@ -47366,6 +47411,16 @@ function cargarLocal(){
     if(data.total)   Object.assign(TOTAL,data.total);
     if(data.areas)   AREAS=data.areas;
     if(data.caps_globales) CAPS_G=data.caps_globales;
+    // CIA
+    const rawCIA=localStorage.getItem("dashEjecucionCIA");
+    if(rawCIA){
+      const dc=JSON.parse(rawCIA);
+      if(dc.config)  Object.assign(CIA_CONFIG,dc.config);
+      if(dc.total)   Object.assign(CIA_TOTAL,dc.total);
+      if(dc.areas)   CIA_AREAS=dc.areas;
+      if(dc.caps_globales) CIA_CAPS_G=dc.caps_globales;
+    }
+    CAB_CONFIG=CONFIG; CAB_TOTAL=TOTAL; CAB_AREAS=AREAS; CAB_CAPS_G=CAPS_G;
     return true;
   }catch(e){ return false; }
 }
