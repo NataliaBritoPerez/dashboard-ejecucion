@@ -38,7 +38,15 @@
     /* CONTENT */
     .content{padding:18px 24px;max-width:1600px;margin:0 auto}
     /* KPI */
-    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+    .comp-strip{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);padding:11px 18px;margin-bottom:18px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-left:4px solid #5C6BC0}
+    .comp-blk{display:flex;flex-direction:column;gap:2px;min-width:120px}
+    .comp-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:#888;white-space:nowrap}
+    .comp-val{font-size:14px;font-weight:700;color:#1a1a2e}
+    .comp-pct{font-size:12px;color:#5C6BC0;font-weight:600}
+    .comp-sep{width:1px;height:34px;background:#E8ECEF;flex-shrink:0}
+    .comp-delta-pos{font-size:15px;font-weight:800;color:#2E7D32}
+    .comp-delta-neg{font-size:15px;font-weight:800;color:#C62828}
     @media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
     .kpi-card{background:white;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.08);border-left:4px solid #ccc}
     .kpi-card.blue{border-left-color:#2C5F9E}
@@ -710,6 +718,7 @@
       <div class="kpi-sub">D/Crédito: 53.6%</div>
       <div class="kpi-bar"><div class="kpi-fill" style="width:26.37%;background:#C62828"></div></div>
     </div></div>
+    <div id="compAnterior"></div>
 
     <!-- TAB: ÁREAS -->
     <div id="tabContentAreas" class="">
@@ -20830,6 +20839,9 @@
 <script>
 // ================================================================
 //  DATOS BASE — 14/05/2026
+// Referencia interanual — cierre ejercicio anterior (mismo concepto, distinto año)
+const COMP_ANT = { fecha:"31/12/2025", periodo:"2025", ac:316916482.42, o:53401183.83 };
+
 // ================================================================
 /*@@DATOS_PDF_START@@*/
 const DATOS_PDF = {
@@ -46492,6 +46504,23 @@ function renderTotal(){
     {cl:"orange", label:"Pendiente de Ejecutar",         val:EURK(ac-t.o),   sub:`Sin comprometer: ${t.a?EURK(ac-t.a):"—"}`},
     {cl:"purple", label:"% Ejecución (O/Crédito)",       val:pct.toFixed(2)+"%", sub:`D/Crédito: ${t.d?PCT(t.d,ac).toFixed(1)+"%":"—"}`, pct:pct}
   ]);
+
+  // Tira de comparación interanual
+  const ca=COMP_ANT, pctAnt=PCT(ca.o,ca.ac), pctAct=PCT(t.o,ac);
+  const delta=pctAct-pctAnt, deltaO=t.o-ca.o;
+  const dCls=delta>=0?"comp-delta-pos":"comp-delta-neg";
+  document.getElementById("compAnterior").innerHTML=`
+    <div class="comp-strip">
+      <div class="comp-blk"><div class="comp-lbl">Comparación interanual</div><div style="font-size:11px;color:#5C6BC0;font-weight:600">vs. Cierre ${ca.fecha}</div></div>
+      <div class="comp-sep"></div>
+      <div class="comp-blk"><div class="comp-lbl">Crédito ${ca.periodo}</div><div class="comp-val">${EURK(ca.ac)}</div></div>
+      <div class="comp-sep"></div>
+      <div class="comp-blk"><div class="comp-lbl">Ejecutado (O) ${ca.periodo}</div><div class="comp-val">${EURK(ca.o)}</div><div class="comp-pct">${pctAnt.toFixed(2)}% O/Crédito</div></div>
+      <div class="comp-sep"></div>
+      <div class="comp-blk"><div class="comp-lbl">Ejecutado (O) ${CONFIG.periodo}</div><div class="comp-val">${EURK(t.o)}</div><div class="comp-pct">${pctAct.toFixed(2)}% O/Crédito</div></div>
+      <div class="comp-sep"></div>
+      <div class="comp-blk"><div class="comp-lbl">Variación % ejecución</div><div class="${dCls}">${delta>=0?"+":""}${delta.toFixed(2)} pp</div><div style="font-size:11px;color:#888">${deltaO>=0?"+":""}${EURK(deltaO)} en obligaciones</div></div>
+    </div>`;
 
   // Tabla áreas
   const sorted=[...AREAS].sort((a,b)=>PCT(b.o,b.ac)-PCT(a.o,a.ac));
