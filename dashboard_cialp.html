@@ -1714,14 +1714,10 @@ function drillCap(idx){
 // ================================================================
 const _cpk="MjYwNDE5MTA=";
 let _pageReady=false;
-(function(){
-  const btn=document.querySelector('button[onclick="openEditor()"]');
-  if(btn) btn.style.pointerEvents="none";
-  setTimeout(()=>{
-    _pageReady=true;
-    if(btn) btn.style.pointerEvents="";
-  },1500);
-})();
+// Ghost clicks son click sintéticos sin touchstart previo en la nueva página.
+// Solo marcamos ready cuando llega un touchstart real, o tras 3s en escritorio.
+document.addEventListener('touchstart',()=>{_pageReady=true;},{passive:true,capture:true,once:true});
+setTimeout(()=>{_pageReady=true;},3000);
 function openEditor(){
   if(!_pageReady) return;
   if(sessionStorage.getItem("__cialp")===_cpk){ _openEditorReal(); return; }
