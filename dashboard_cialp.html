@@ -2069,6 +2069,15 @@ if(typeof pdfjsLib!=="undefined")
 // ================================================================
 cargarLocal();
 renderTotal();
+
+// Si el navegador restaura la página desde bfcache (navegación atrás/adelante),
+// cerrar cualquier modal que hubiera quedado abierto
+window.addEventListener('pageshow', (e) => {
+  if(e.persisted){
+    document.getElementById('editorModal').classList.add('hidden');
+    document.getElementById('_cpin').classList.add('hidden');
+  }
+});
 </script>
 
 
