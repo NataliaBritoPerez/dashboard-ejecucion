@@ -200,6 +200,7 @@
       </div>
       <div class="footer-row">
         <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-primary" onclick="guardarHTMLCIALP()" style="background:#1B3A6B">⬇ Guardar HTML para GitHub</button>
           <button class="btn-secondary" onclick="exportarDatos()">⬇ Exportar JSON</button>
           <label class="btn-secondary" style="cursor:pointer">
             ⬆ Importar JSON
@@ -304,16 +305,19 @@
 // ================================================================
 //  DATOS INICIALES
 // ================================================================
+/*@@DATOS_CIALP_START@@*/
 const DATOS_PDF = {
-  config: { fecha:"—", periodo:"2026", fuente:"TGEM — Consejo Insular de Aguas de La Palma" },
-  total:  { i:0, m:0, ac:0, a:0, d:0, o:0 },
-  caps:   []
+  config:   { fecha:"—", periodo:"2026", fuente:"TGEM — Consejo Insular de Aguas de La Palma" },
+  total:    { i:0, m:0, ac:0, a:0, d:0, o:0 },
+  caps:     [],
+  comp_ant: { fecha:"—", periodo:"2025", ac:0, o:0 }
 };
+/*@@DATOS_CIALP_END@@*/
 
-let CONFIG = JSON.parse(JSON.stringify(DATOS_PDF.config));
-let TOTAL  = JSON.parse(JSON.stringify(DATOS_PDF.total));
-let CAPS   = JSON.parse(JSON.stringify(DATOS_PDF.caps));
-let COMP_ANT = { fecha:"—", periodo:"2025", ac:0, o:0 };
+let CONFIG   = JSON.parse(JSON.stringify(DATOS_PDF.config));
+let TOTAL    = JSON.parse(JSON.stringify(DATOS_PDF.total));
+let CAPS     = JSON.parse(JSON.stringify(DATOS_PDF.caps));
+let COMP_ANT = JSON.parse(JSON.stringify(DATOS_PDF.comp_ant));
 
 const CAP_NM = {
   "1":"Gastos de Personal",
@@ -828,9 +832,27 @@ function importarDatos(input){
 }
 
 // ================================================================
+//  GUARDAR HTML PARA GITHUB
+// ================================================================
+function guardarHTMLCIALP(){
+  const datos={ config:CONFIG, total:TOTAL, caps:CAPS, comp_ant:COMP_ANT };
+  const nuevaSeccion=
+    "/*@@DATOS_CIALP_START@@*/\nconst DATOS_PDF = "+
+    JSON.stringify(datos,null,2)+";\n/*@@DATOS_CIALP_END@@*/";
+  let html="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+  html=html.replace(/\/\*@@DATOS_CIALP_START@@\*\/[\s\S]*?\/\*@@DATOS_CIALP_END@@\*\//,nuevaSeccion);
+  const blob=new Blob([html],{type:"text/html;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="dashboard_cialp.html";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+// ================================================================
 //  PERSISTENCIA localStorage
 // ================================================================
-const LOCAL_VERSION="cialp_v2_"+DATOS_PDF.config.periodo;
+const LOCAL_VERSION="cialp_v3_"+DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{ localStorage.setItem("dashCIALP",JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,caps:CAPS,comp_ant:COMP_ANT})); }catch(e){}
 }
