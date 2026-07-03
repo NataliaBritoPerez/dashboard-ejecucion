@@ -20877,9 +20877,9 @@
 
 <script>
 // ================================================================
-//  DATOS BASE — 14/05/2026
-// Referencia interanual — cierre ejercicio anterior (mismo concepto, distinto año)
+/*@@COMP_ANT_START@@*/
 let COMP_ANT = { fecha:"31/12/2025", periodo:"2025", ac:316916482.42, o:53401183.83 };
+/*@@COMP_ANT_END@@*/
 
 // ================================================================
 /*@@DATOS_PDF_START@@*/
@@ -46894,14 +46894,22 @@ function guardarHTMLActualizado(){
     const area=AREAS.find(a=>a.id===id);
     if(area) area[f]=parseNum(inp.value);
   });
+  // Leer campos del comparativo por si se rellenaron pero no se pulsó "Guardar comparativo"
+  const fComp=document.getElementById("compFecha").value.trim();
+  const acComp=parseNum(document.getElementById("compAc").value);
+  const oComp=parseNum(document.getElementById("compO").value);
+  if(fComp&&acComp){ const p=fComp.length>=10?fComp.slice(6):COMP_ANT.periodo; COMP_ANT={fecha:fComp,periodo:p,ac:acComp,o:oComp}; }
   document.getElementById("editorModal").classList.add("hidden");
   const datos={config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G};
   const nuevaSeccion=
     "/*@@DATOS_PDF_START@@*/\nconst DATOS_PDF = "+
     JSON.stringify(datos,null,2)+";\n/*@@DATOS_PDF_END@@*/";
   let html="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
-  // Reemplazar datos
+  // Reemplazar datos de ejecución
   html=html.replace(/\/\*@@DATOS_PDF_START@@\*\/[\s\S]*?\/\*@@DATOS_PDF_END@@\*\//,nuevaSeccion);
+  // Reemplazar comparativo año anterior
+  html=html.replace(/\/\*@@COMP_ANT_START@@\*\/[\s\S]*?\/\*@@COMP_ANT_END@@\*\//,
+    "/*@@COMP_ANT_START@@*/\nlet COMP_ANT = "+JSON.stringify(COMP_ANT)+";\n/*@@COMP_ANT_END@@*/");
   // Quitar inline style del overlay PIN para que se muestre en el archivo generado
   html=html.replace(/(<div id="_po"[^>]*?)style="[^"]*"/,"$1");
   // Asegurar que el modal editor empieza cerrado

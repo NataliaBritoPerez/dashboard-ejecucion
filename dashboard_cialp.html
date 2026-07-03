@@ -2020,6 +2020,11 @@ function importarDatos(input){
 //  GUARDAR HTML PARA GITHUB
 // ================================================================
 function guardarHTMLCIALP(){
+  // Leer campos del comparativo por si se rellenaron pero no se pulsó "Guardar comparativo"
+  const fComp=document.getElementById("compFecha").value.trim();
+  const acComp=xlsN(document.getElementById("compAc").value);
+  const oComp=xlsN(document.getElementById("compO").value);
+  if(fComp&&acComp){ const p=fComp.length>=10?fComp.slice(6):COMP_ANT.periodo; COMP_ANT={fecha:fComp,periodo:p,ac:acComp,o:oComp}; }
   const datos={ config:CONFIG, total:TOTAL, caps:CAPS, comp_ant:COMP_ANT };
   const nuevaSeccion=
     "/*@@DATOS_CIALP_START@@*/\nconst DATOS_PDF = "+
