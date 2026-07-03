@@ -153,6 +153,13 @@
     .btn-semanal{background:#166534;color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
     .btn-semanal:hover{background:#15803d}
     .btn-semanal:disabled{background:#86efac;cursor:not-allowed}
+    .comp-import-box{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #93c5fd;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+    .comp-import-box .semanal-title{color:#1e40af}
+    .comp-import-box .semanal-file-btn{border-color:#93c5fd;color:#1e40af}
+    .comp-import-box .semanal-file-btn.has-file{border-color:#3b82f6;background:#eff6ff}
+    .comp-import-box .semanal-file-name{color:#1e40af}
+    .btn-comp{background:#1e40af;color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+    .btn-comp:hover{background:#1d4ed8}
     .footer-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
     /* EDIT TABLE */
     .edit-table{width:100%;border-collapse:collapse;font-size:12px}
@@ -652,6 +659,20 @@
             <span class="semanal-file-name" id="nmPdf"></span>
           </div>
           <button class="btn-semanal" id="btnAmbos" onclick="importarAmbos()">📥 Importar</button>
+        </div>
+      </div>
+      <!-- PDF COMPARATIVO AÑO ANTERIOR -->
+      <div class="comp-import-box">
+        <div class="semanal-title">📅 PDF comparativo — mismo período año anterior</div>
+        <div style="font-size:11px;color:#1e40af;margin-bottom:10px">Sube el TGEM del mismo período de 2025 para comparar la ejecución fecha a fecha.</div>
+        <div class="semanal-inputs">
+          <div class="semanal-field">
+            <label>📄 PDF TGEM año anterior</label>
+            <label class="semanal-file-btn" id="lblPdfComp" onclick="document.getElementById('pdfComp').click()">Seleccionar PDF año anterior</label>
+            <input type="file" id="pdfComp" accept=".pdf" style="display:none" onchange="marcarArchivo('pdfComp','lblPdfComp',this)">
+            <span class="semanal-file-name" id="nmPdfComp"></span>
+          </div>
+          <button class="btn-comp" id="btnComp" onclick="importarPDFComp()">📊 Importar comparativo</button>
         </div>
       </div>
       <!-- ACCIONES SECUNDARIAS -->
@@ -20840,7 +20861,7 @@
 // ================================================================
 //  DATOS BASE — 14/05/2026
 // Referencia interanual — cierre ejercicio anterior (mismo concepto, distinto año)
-const COMP_ANT = { fecha:"31/12/2025", periodo:"2025", ac:316916482.42, o:53401183.83 };
+let COMP_ANT = { fecha:"31/12/2025", periodo:"2025", ac:316916482.42, o:53401183.83 };
 
 // ================================================================
 /*@@DATOS_PDF_START@@*/
@@ -46511,7 +46532,7 @@ function renderTotal(){
   const dCls=delta>=0?"comp-delta-pos":"comp-delta-neg";
   document.getElementById("compAnterior").innerHTML=`
     <div class="comp-strip">
-      <div class="comp-blk"><div class="comp-lbl">Comparación interanual</div><div style="font-size:11px;color:#5C6BC0;font-weight:600">vs. Cierre ${ca.fecha}</div></div>
+      <div class="comp-blk"><div class="comp-lbl">Comparación interanual</div><div style="font-size:11px;color:#5C6BC0;font-weight:600">vs. mismo período ${ca.fecha}</div></div>
       <div class="comp-sep"></div>
       <div class="comp-blk"><div class="comp-lbl">Crédito ${ca.periodo}</div><div class="comp-val">${EURK(ca.ac)}</div></div>
       <div class="comp-sep"></div>
@@ -46902,15 +46923,46 @@ if(typeof pdfjsLib!=="undefined")
 function marcarArchivo(inputId, lblId, input){
   const f=input.files[0];
   const lbl=document.getElementById(lblId);
-  const nm=document.getElementById(inputId==="xlsInput"?"nmXls":"nmPdf");
+  const nmMap={"xlsInput":"nmXls","pdfInput":"nmPdf","pdfComp":"nmPdfComp"};
+  const nm=document.getElementById(nmMap[inputId]||"");
+  const dfltMap={"xlsInput":"Seleccionar archivo Excel","pdfInput":"Seleccionar archivo PDF","pdfComp":"Seleccionar PDF año anterior"};
   if(f){
     lbl.classList.add("has-file");
     lbl.textContent="✓ "+f.name.slice(0,28);
     if(nm) nm.textContent=f.name;
   } else {
     lbl.classList.remove("has-file");
-    lbl.textContent=inputId==="xlsInput"?"Seleccionar archivo Excel":"Seleccionar archivo PDF";
+    lbl.textContent=dfltMap[inputId]||"Seleccionar archivo";
     if(nm) nm.textContent="";
+  }
+}
+
+async function importarPDFComp(){
+  const file=document.getElementById("pdfComp").files[0];
+  if(!file){ alert("Selecciona el PDF del mismo período del año anterior."); return; }
+  const btn=document.getElementById("btnComp");
+  btn.disabled=true; btn.textContent="⏳ Procesando...";
+  try{
+    const info=await procesarPDF(file);
+    if(!info?.fecha){ alert("No se pudo leer la fecha del PDF. Comprueba que es un TGEM válido."); return; }
+    const ac=info?.total?.ac||0;
+    const o =info?.total?.o ||0;
+    const pct=ac>0?PCT(o,ac).toFixed(2):"0.00";
+    const msg=`PDF comparativo detectado:\n\n  Fecha: ${info.fecha}\n  Período: ${info.periodo||"—"}\n  Crédito Total (Actual): ${EURK(ac)}\n  Ejecutado (O): ${EURK(o)} — ${pct}%\n\n¿Usar como comparativa en la tira interanual?`;
+    if(!confirm(msg)) return;
+    COMP_ANT={ fecha:info.fecha, periodo:info.periodo||String(parseInt(CONFIG.periodo)-1), ac, o };
+    guardarLocal();
+    closeEditor();
+    renderTotal();
+  }catch(err){
+    alert("Error al procesar el PDF:\n"+err.message);
+  }finally{
+    btn.disabled=false; btn.textContent="📊 Importar comparativo";
+    document.getElementById("pdfComp").value="";
+    const lbl=document.getElementById("lblPdfComp");
+    lbl.classList.remove("has-file");
+    lbl.textContent="Seleccionar PDF año anterior";
+    document.getElementById("nmPdfComp").textContent="";
   }
 }
 
@@ -47353,7 +47405,7 @@ function confirmarReset(){
 const LOCAL_VERSION = "v42_" + DATOS_PDF.areas.length + "_" + DATOS_PDF.config.fecha;
 function guardarLocal(){
   try{
-    localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G}));
+    localStorage.setItem("dashEjecucion", JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,areas:AREAS,caps_globales:CAPS_G,comp_ant:COMP_ANT}));
   }catch(e){}
 }
 function cargarLocal(){
@@ -47366,6 +47418,7 @@ function cargarLocal(){
     if(data.total)   Object.assign(TOTAL,data.total);
     if(data.areas)   AREAS=data.areas;
     if(data.caps_globales) CAPS_G=data.caps_globales;
+    if(data.comp_ant) COMP_ANT=data.comp_ant;
     return true;
   }catch(e){ return false; }
 }
