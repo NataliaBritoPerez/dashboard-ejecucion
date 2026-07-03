@@ -1713,13 +1713,9 @@ function drillCap(idx){
 //  EDITOR / IMPORT MODAL
 // ================================================================
 const _cpk="MjYwNDE5MTA=";
-let _pageReady=false;
-// Ghost clicks son click sintéticos sin touchstart previo en la nueva página.
-// Solo marcamos ready cuando llega un touchstart real, o tras 3s en escritorio.
-document.addEventListener('touchstart',()=>{_pageReady=true;},{passive:true,capture:true,once:true});
-setTimeout(()=>{_pageReady=true;},3000);
+const _t0=performance.now();
 function openEditor(){
-  if(!_pageReady) return;
+  if(performance.now()-_t0<1200) return; // ignora clics en el primer segundo (ghost clicks)
   if(sessionStorage.getItem("__cialp")===_cpk){ _openEditorReal(); return; }
   document.getElementById("_cpi").value="";
   document.getElementById("_cpe").textContent="";
