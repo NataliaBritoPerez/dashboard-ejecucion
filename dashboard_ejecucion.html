@@ -661,18 +661,24 @@
           <button class="btn-semanal" id="btnAmbos" onclick="importarAmbos()">📥 Importar</button>
         </div>
       </div>
-      <!-- PDF COMPARATIVO AÑO ANTERIOR -->
+      <!-- COMPARATIVO AÑO ANTERIOR (Excel + PDF) -->
       <div class="comp-import-box">
-        <div class="semanal-title">📅 PDF comparativo — mismo período año anterior</div>
-        <div style="font-size:11px;color:#1e40af;margin-bottom:10px">Sube el TGEM del mismo período de 2025 para comparar la ejecución fecha a fecha.</div>
+        <div class="semanal-title">📅 Comparativo — mismo período año anterior</div>
+        <div style="font-size:11px;color:#1e40af;margin-bottom:10px">Sube el Excel GEMA y/o el PDF TGEM del mismo período de 2025 para comparar la ejecución fecha a fecha.</div>
         <div class="semanal-inputs">
+          <div class="semanal-field">
+            <label>📊 Excel GEMA año anterior</label>
+            <label class="semanal-file-btn" id="lblXlsComp" onclick="document.getElementById('xlsComp').click()">Seleccionar Excel año anterior</label>
+            <input type="file" id="xlsComp" accept=".xlsx,.xls" style="display:none" onchange="marcarArchivo('xlsComp','lblXlsComp',this)">
+            <span class="semanal-file-name" id="nmXlsComp"></span>
+          </div>
           <div class="semanal-field">
             <label>📄 PDF TGEM año anterior</label>
             <label class="semanal-file-btn" id="lblPdfComp" onclick="document.getElementById('pdfComp').click()">Seleccionar PDF año anterior</label>
             <input type="file" id="pdfComp" accept=".pdf" style="display:none" onchange="marcarArchivo('pdfComp','lblPdfComp',this)">
             <span class="semanal-file-name" id="nmPdfComp"></span>
           </div>
-          <button class="btn-comp" id="btnComp" onclick="importarPDFComp()">📊 Importar comparativo</button>
+          <button class="btn-comp" id="btnComp" onclick="importarComp()">📊 Importar comparativo</button>
         </div>
       </div>
       <!-- ACCIONES SECUNDARIAS -->
@@ -46923,9 +46929,10 @@ if(typeof pdfjsLib!=="undefined")
 function marcarArchivo(inputId, lblId, input){
   const f=input.files[0];
   const lbl=document.getElementById(lblId);
-  const nmMap={"xlsInput":"nmXls","pdfInput":"nmPdf","pdfComp":"nmPdfComp"};
+  const nmMap={"xlsInput":"nmXls","pdfInput":"nmPdf","xlsComp":"nmXlsComp","pdfComp":"nmPdfComp"};
   const nm=document.getElementById(nmMap[inputId]||"");
-  const dfltMap={"xlsInput":"Seleccionar archivo Excel","pdfInput":"Seleccionar archivo PDF","pdfComp":"Seleccionar PDF año anterior"};
+  const dfltMap={"xlsInput":"Seleccionar archivo Excel","pdfInput":"Seleccionar archivo PDF",
+                  "xlsComp":"Seleccionar Excel año anterior","pdfComp":"Seleccionar PDF año anterior"};
   if(f){
     lbl.classList.add("has-file");
     lbl.textContent="✓ "+f.name.slice(0,28);
@@ -46937,32 +46944,107 @@ function marcarArchivo(inputId, lblId, input){
   }
 }
 
-async function importarPDFComp(){
-  const file=document.getElementById("pdfComp").files[0];
-  if(!file){ alert("Selecciona el PDF del mismo período del año anterior."); return; }
+// Extrae solo el total (ac, o) de un Excel sin modificar los datos actuales del dashboard
+async function extraerTotalXLS(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array"});
+        const kw=["partida","inicial","modif","actual","oblig"];
+        let ws=null, best=-1;
+        for(const name of wb.SheetNames){
+          const raw=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:""});
+          const flat=raw.slice(0,25).flat().map(c=>norm(c));
+          const sc=kw.filter(k=>flat.some(c=>c.includes(k))).length;
+          if(sc>best){best=sc;ws=wb.Sheets[name];}
+        }
+        const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+        let fecha="",periodo="";
+        for(let i=0;i<15;i++){
+          const txt=(rows[i]||[]).join(" ");
+          const mF=txt.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+          const mP=txt.match(/\b(20\d{2})\b/);
+          if(mF&&!fecha) fecha=`${String(mF[1]).padStart(2,"0")}/${String(mF[2]).padStart(2,"0")}/${mF[3]}`;
+          if(mP&&!periodo) periodo=mP[1];
+        }
+        let hdr=-1, col={rem:0,cod:1,desc:2,i:4,m:5,ac:7,a:9,d:11,o:13};
+        for(let i=0;i<rows.length;i++){
+          const rn=rows[i].map(c=>norm(c));
+          if(rn.some(c=>c.includes("codigo")||c.includes("partida"))&&rn.some(c=>c==="inicial"||c.includes("inicial"))){
+            hdr=i;
+            const mapped={};
+            rn.forEach((c,j)=>{
+              if(mapped.rem===undefined&&(c==="rem"||c.includes("remanent"))) mapped.rem=j;
+              if(mapped.cod===undefined&&(c.includes("codigo")||c.includes("partida"))) mapped.cod=j;
+              if(mapped.i===undefined&&c==="inicial") mapped.i=j;
+              if(mapped.m===undefined&&c.includes("modif")&&!c.includes("inc")) mapped.m=j;
+              if(mapped.ac===undefined&&(c==="actual"||c==="credito disponible")) mapped.ac=j;
+              if(mapped.a===undefined&&c==="a") mapped.a=j;
+              if(mapped.d===undefined&&c==="d") mapped.d=j;
+              if(mapped.o===undefined&&c==="o") mapped.o=j;
+            });
+            Object.assign(col,mapped); break;
+          }
+        }
+        const tot={i:0,m:0,ac:0,a:0,d:0,o:0};
+        const seen=new Set();
+        for(let i=(hdr>=0?hdr+1:0);i<rows.length;i++){
+          const row=rows[i];
+          const codRaw=String(row[col.cod]||"").trim();
+          if(!/^\d{2,4}\/\d+$/.test(codRaw)||seen.has(codRaw)) continue;
+          seen.add(codRaw);
+          tot.i+=xlsN(row[col.i]); tot.m+=xlsN(row[col.m]); tot.ac+=xlsN(row[col.ac]);
+          tot.a+=xlsN(row[col.a]); tot.d+=xlsN(row[col.d]); tot.o+=xlsN(row[col.o]);
+        }
+        if(!tot.ac&&!tot.o){ reject(new Error("No se encontraron datos en el Excel")); return; }
+        resolve({fecha, periodo, total:tot});
+      }catch(err){reject(err);}
+    };
+    reader.onerror=()=>reject(new Error("No se pudo leer el Excel"));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function importarComp(){
+  const xlsFile=document.getElementById("xlsComp").files[0];
+  const pdfFile=document.getElementById("pdfComp").files[0];
+  if(!xlsFile&&!pdfFile){ alert("Selecciona el Excel y/o PDF del mismo período del año anterior."); return; }
   const btn=document.getElementById("btnComp");
   btn.disabled=true; btn.textContent="⏳ Procesando...";
   try{
-    const info=await procesarPDF(file);
-    if(!info?.fecha){ alert("No se pudo leer la fecha del PDF. Comprueba que es un TGEM válido."); return; }
-    const ac=info?.total?.ac||0;
-    const o =info?.total?.o ||0;
+    let xlsInfo=null, pdfInfo=null;
+    if(xlsFile) xlsInfo=await extraerTotalXLS(xlsFile);
+    if(pdfFile)  pdfInfo=await procesarPDF(pdfFile);
+    // Fecha: PDF tiene prioridad (portada del TGEM es más fiable)
+    const fecha  =(pdfInfo?.fecha)  ||(xlsInfo?.fecha)  ||"—";
+    const periodo=(pdfInfo?.periodo)||(xlsInfo?.periodo)||String(parseInt(CONFIG.periodo)-1);
+    // Total: Excel tiene prioridad sobre PDF (el PDF a veces lee subtotales de capítulo)
+    const tot=(xlsInfo?.total)||(pdfInfo?.total);
+    if(!tot){ alert("No se pudieron extraer importes. Comprueba los archivos."); return; }
+    const ac=tot.ac||0, o=tot.o||0;
     const pct=ac>0?PCT(o,ac).toFixed(2):"0.00";
-    const msg=`PDF comparativo detectado:\n\n  Fecha: ${info.fecha}\n  Período: ${info.periodo||"—"}\n  Crédito Total (Actual): ${EURK(ac)}\n  Ejecutado (O): ${EURK(o)} — ${pct}%\n\n¿Usar como comparativa en la tira interanual?`;
+    let msg=`Comparativo año anterior detectado:\n\n  Fecha: ${fecha}  |  Período: ${periodo}\n`;
+    if(xlsInfo) msg+=`  Fuente Excel: ${xlsInfo.total.ac>0?"✓ importes leídos":"sin datos"}\n`;
+    if(pdfInfo)  msg+=`  Fuente PDF: ${pdfInfo.fecha||"fecha detectada"}\n`;
+    msg+=`\n  Crédito Total (Actual): ${EURK(ac)}\n  Ejecutado (O): ${EURK(o)} — ${pct}%\n\n¿Usar como comparativa en la tira interanual?`;
     if(!confirm(msg)) return;
-    COMP_ANT={ fecha:info.fecha, periodo:info.periodo||String(parseInt(CONFIG.periodo)-1), ac, o };
+    COMP_ANT={fecha, periodo, ac, o};
     guardarLocal();
     closeEditor();
     renderTotal();
   }catch(err){
-    alert("Error al procesar el PDF:\n"+err.message);
+    alert("Error al procesar:\n"+err.message);
   }finally{
     btn.disabled=false; btn.textContent="📊 Importar comparativo";
-    document.getElementById("pdfComp").value="";
-    const lbl=document.getElementById("lblPdfComp");
-    lbl.classList.remove("has-file");
-    lbl.textContent="Seleccionar PDF año anterior";
-    document.getElementById("nmPdfComp").textContent="";
+    ["xlsComp","pdfComp"].forEach(id=>{
+      document.getElementById(id).value="";
+    });
+    [["lblXlsComp","Seleccionar Excel año anterior","nmXlsComp"],
+     ["lblPdfComp","Seleccionar PDF año anterior","nmPdfComp"]].forEach(([lid,txt,nid])=>{
+      const l=document.getElementById(lid); l.classList.remove("has-file"); l.textContent=txt;
+      document.getElementById(nid).textContent="";
+    });
   }
 }
 
