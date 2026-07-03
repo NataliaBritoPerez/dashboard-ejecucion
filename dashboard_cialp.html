@@ -1713,7 +1713,9 @@ function drillCap(idx){
 //  EDITOR / IMPORT MODAL
 // ================================================================
 const _cpk="MjYwNDE5MTA=";
+let _pageReady=false; setTimeout(()=>{_pageReady=true;},600);
 function openEditor(){
+  if(!_pageReady) return;
   if(sessionStorage.getItem("__cialp")===_cpk){ _openEditorReal(); return; }
   document.getElementById("_cpi").value="";
   document.getElementById("_cpe").textContent="";
