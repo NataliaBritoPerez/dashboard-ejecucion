@@ -1713,7 +1713,15 @@ function drillCap(idx){
 //  EDITOR / IMPORT MODAL
 // ================================================================
 const _cpk="MjYwNDE5MTA=";
-let _pageReady=false; setTimeout(()=>{_pageReady=true;},600);
+let _pageReady=false;
+(function(){
+  const btn=document.querySelector('button[onclick="openEditor()"]');
+  if(btn) btn.style.pointerEvents="none";
+  setTimeout(()=>{
+    _pageReady=true;
+    if(btn) btn.style.pointerEvents="";
+  },1500);
+})();
 function openEditor(){
   if(!_pageReady) return;
   if(sessionStorage.getItem("__cialp")===_cpk){ _openEditorReal(); return; }
