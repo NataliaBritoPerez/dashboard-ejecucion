@@ -106,6 +106,20 @@
     .footer{text-align:center;padding:14px;color:#aaa;font-size:11px;border-top:1px solid #E8ECEF;margin-top:8px}
     .chart-wrap{position:relative}
     .empty-msg{padding:24px;text-align:center;color:#999;font-size:12px;font-style:italic}
+    /* PIN MODAL */
+    #_cpin .pin-card{background:white;border-radius:16px;padding:36px 32px;text-align:center;width:300px;box-shadow:0 16px 40px rgba(0,0,0,.3)}
+    #_cpin .pin-logo{width:56px;height:56px;background:#1B3A6B;border-radius:12px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:white}
+    #_cpin .pin-title{font-size:15px;font-weight:700;color:#1B3A6B;margin-bottom:4px}
+    #_cpin .pin-sub{font-size:11px;color:#888;margin-bottom:22px}
+    #_cpin input{width:100%;padding:11px;border:2px solid #e0e0e0;border-radius:8px;font-size:20px;text-align:center;letter-spacing:8px;box-sizing:border-box;outline:none;transition:border .2s}
+    #_cpin input:focus{border-color:#1B3A6B}
+    #_cpin .pin-err{color:#C62828;font-size:11px;min-height:16px;margin-top:6px}
+    #_cpin .pin-btns{display:flex;gap:8px;margin-top:12px}
+    #_cpin .pin-btns button{flex:1;padding:11px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s}
+    #_cpin .btn-ok{background:#1B3A6B;color:white}
+    #_cpin .btn-ok:hover{background:#2C5F9E}
+    #_cpin .btn-cancel{background:#e0e0e0;color:#555}
+    #_cpin .btn-cancel:hover{background:#ccc}
     /* NAV */
     .app-nav{background:#0f2540;display:flex;gap:2px;padding:4px 16px 0;flex-wrap:wrap}
     .app-tab{color:rgba(255,255,255,.55);text-decoration:none;padding:8px 18px;
@@ -136,6 +150,22 @@
     <div class="header-meta" id="headerMeta"></div>
     <a href="index.html" class="btn-edit" style="text-decoration:none">⬅ Inicio</a>
     <button class="btn-edit" onclick="openEditor()">✏ Actualizar Datos</button>
+  </div>
+</div>
+
+<!-- PIN ACTUALIZAR DATOS -->
+<div id="_cpin" class="modal-backdrop hidden">
+  <div class="pin-card">
+    <div class="pin-logo">💧</div>
+    <div class="pin-title">Acceso restringido</div>
+    <div class="pin-sub">Introduce el PIN para actualizar datos del CIALP</div>
+    <input id="_cpi" type="password" maxlength="10" placeholder="••••••••" autocomplete="off"
+      onkeydown="if(event.key==='Enter')_cpinOk();if(event.key==='Escape')_cpinClose()">
+    <div class="pin-err" id="_cpe"></div>
+    <div class="pin-btns">
+      <button class="btn-ok" onclick="_cpinOk()">Acceder</button>
+      <button class="btn-cancel" onclick="_cpinClose()">Cancelar</button>
+    </div>
   </div>
 </div>
 
@@ -495,7 +525,28 @@ function drillCap(idx){
 // ================================================================
 //  EDITOR / IMPORT MODAL
 // ================================================================
+const _cpk="MjYwNDE5MTA=";
 function openEditor(){
+  if(sessionStorage.getItem("__cialp")===_cpk){ _openEditorReal(); return; }
+  document.getElementById("_cpi").value="";
+  document.getElementById("_cpe").textContent="";
+  document.getElementById("_cpin").classList.remove("hidden");
+  setTimeout(()=>document.getElementById("_cpi").focus(),80);
+}
+function _cpinOk(){
+  const v=document.getElementById("_cpi").value;
+  if(btoa(v)===_cpk){
+    sessionStorage.setItem("__cialp",_cpk);
+    document.getElementById("_cpin").classList.add("hidden");
+    _openEditorReal();
+  } else {
+    document.getElementById("_cpe").textContent="PIN incorrecto. Inténtalo de nuevo.";
+    document.getElementById("_cpi").value="";
+    setTimeout(()=>document.getElementById("_cpi").focus(),50);
+  }
+}
+function _cpinClose(){ document.getElementById("_cpin").classList.add("hidden"); }
+function _openEditorReal(){
   document.getElementById("compFecha").value=COMP_ANT.fecha!=="—"?COMP_ANT.fecha:"";
   document.getElementById("compAc").value=COMP_ANT.ac?EUR(COMP_ANT.ac):"";
   document.getElementById("compO").value=COMP_ANT.o?EUR(COMP_ANT.o):"";
