@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="es"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ejecución C.I. Aguas — Cabildo de La Palma</title>
@@ -147,7 +146,7 @@
     </div>
   </div>
   <div class="header-right">
-    <div class="header-meta" id="headerMeta"></div>
+    <div class="header-meta" id="headerMeta">Periodo: 2026 &nbsp;|&nbsp; Datos al <strong>03/07/2026</strong></div>
     <a href="index.html" class="btn-edit" style="text-decoration:none">⬅ Inicio</a>
     <button class="btn-edit" onclick="openEditor()">✏ Actualizar Datos</button>
   </div>
@@ -159,8 +158,7 @@
     <div class="pin-logo">💧</div>
     <div class="pin-title">Acceso restringido</div>
     <div class="pin-sub">Introduce el PIN para actualizar datos del CIALP</div>
-    <input id="_cpi" type="password" maxlength="10" placeholder="••••••••" autocomplete="off"
-      onkeydown="if(event.key==='Enter')_cpinOk();if(event.key==='Escape')_cpinClose()">
+    <input id="_cpi" type="password" maxlength="10" placeholder="••••••••" autocomplete="off" onkeydown="if(event.key==='Enter')_cpinOk();if(event.key==='Escape')_cpinClose()">
     <div class="pin-err" id="_cpe"></div>
     <div class="pin-btns">
       <button class="btn-ok" onclick="_cpinOk()">Acceder</button>
@@ -170,7 +168,7 @@
 </div>
 
 <!-- MODAL -->
-<div id="editorModal" class="modal-backdrop hidden">
+<div id="editorModal" class="modal-backdrop">
   <div class="modal-box">
     <div class="modal-header">
       <h2>Actualizar Datos — Consejo Insular de Aguas</h2>
@@ -242,15 +240,50 @@
 
   <!-- NIVEL 0: TOTAL + CAPÍTULOS -->
   <div id="view-total">
-    <div class="kpi-grid" id="kpiTotal"></div>
-    <div id="compAnterior"></div>
+    <div class="kpi-grid" id="kpiTotal">
+    <div class="kpi-card blue">
+      <div class="kpi-label">Crédito Total (Actual)</div>
+      <div class="kpi-value">23,70 M€</div>
+      <div class="kpi-sub">Inicial: 14,54 M€ | Modif.: +9,17 M€</div>
+      
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Obligaciones Reconocidas (O)</div>
+      <div class="kpi-value">3,59 M€</div>
+      <div class="kpi-sub">Autorizado (A): 9,82 M€</div>
+      
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">Pendiente de Ejecutar</div>
+      <div class="kpi-value">20,11 M€</div>
+      <div class="kpi-sub">Sin comprometer: 13,89 M€</div>
+      
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">% Ejecución (O/Crédito)</div>
+      <div class="kpi-value">15.15%</div>
+      <div class="kpi-sub">D/Crédito: 41.4%</div>
+      <div class="kpi-bar"><div class="kpi-fill" style="width:15.15%;background:#C62828"></div></div>
+    </div></div>
+    <div id="compAnterior">
+      <div class="comp-strip">
+        <div class="comp-blk"><div class="comp-lbl">Comparación interanual</div><div style="font-size:11px;color:#5C6BC0;font-weight:600">vs. mismo período 26/06/2026</div></div>
+        <div class="comp-sep"></div>
+        <div class="comp-blk"><div class="comp-lbl">Crédito 2026</div><div class="comp-val">21,86 M€</div></div>
+        <div class="comp-sep"></div>
+        <div class="comp-blk"><div class="comp-lbl">Ejecutado (O) 2026</div><div class="comp-val">4,00 M€</div><div class="comp-pct">18.30% O/Crédito</div></div>
+        <div class="comp-sep"></div>
+        <div class="comp-blk"><div class="comp-lbl">Ejecutado (O) 2026</div><div class="comp-val">3,59 M€</div><div class="comp-pct">15.15% O/Crédito</div></div>
+        <div class="comp-sep"></div>
+        <div class="comp-blk"><div class="comp-lbl">Variación % ejecución</div><div class="comp-delta-neg">-3.15 pp</div><div style="font-size:11px;color:#888">-409 K€ en obligaciones</div></div>
+      </div></div>
     <div class="main-grid">
       <div class="panel">
         <div class="panel-hdr">
           <div><div class="panel-title">% Ejecución por Capítulo</div><div class="panel-sub">Obligaciones / Crédito Actual</div></div>
         </div>
         <div class="panel-body">
-          <div class="chart-wrap" style="height:340px"><canvas id="chartCaps"></canvas></div>
+          <div class="chart-wrap" style="height:340px"><canvas id="chartCaps" width="435" height="425" style="display: block; box-sizing: border-box; height: 340px; width: 348px;"></canvas></div>
         </div>
       </div>
       <div class="panel">
@@ -270,10 +303,89 @@
               <th>% Ejec.</th>
               <th></th>
             </tr></thead>
-            <tbody id="tbodyCaps"></tbody>
+            <tbody id="tbodyCaps"><tr onclick="drillCap(0)">
+        <td><strong>Cap. 1</strong><div style="font-size:11px;color:#666">Gastos de Personal</div></td>
+        <td class="num">1.865.348,73</td>
+        <td class="num">327.768,49</td>
+        <td class="num">2.193.117,22</td>
+        <td class="num">1.853.515,36</td>
+        <td class="num">1.853.515,36</td>
+        <td class="num"><strong>669.837,69</strong></td>
+        <td style="min-width:120px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:30.54%;background:#E65100"></div></div> <span class="badge badge-mid">30.5%</span></div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr><tr onclick="drillCap(1)">
+        <td><strong>Cap. 2</strong><div style="font-size:11px;color:#666">Gastos Corrientes en Bienes y Servicios</div></td>
+        <td class="num">2.582.304,73</td>
+        <td class="num">141.003,25</td>
+        <td class="num">2.723.307,98</td>
+        <td class="num">1.334.190,44</td>
+        <td class="num">1.334.190,44</td>
+        <td class="num"><strong>610.930,46</strong></td>
+        <td style="min-width:120px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:22.43%;background:#C62828"></div></div> <span class="badge badge-low">22.4%</span></div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr><tr onclick="drillCap(2)">
+        <td><strong>Cap. 3</strong><div style="font-size:11px;color:#666">Gastos Financieros</div></td>
+        <td class="num">70.000,00</td>
+        <td class="num">—</td>
+        <td class="num">70.000,00</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+        <td class="num"><strong>0,00</strong></td>
+        <td style="min-width:120px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr><tr onclick="drillCap(3)">
+        <td><strong>Cap. 4</strong><div style="font-size:11px;color:#666">Transferencias Corrientes</div></td>
+        <td class="num">639.440,00</td>
+        <td class="num">14.944,00</td>
+        <td class="num">654.384,00</td>
+        <td class="num">89.996,14</td>
+        <td class="num">89.996,14</td>
+        <td class="num"><strong>89.996,14</strong></td>
+        <td style="min-width:120px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:13.75%;background:#C62828"></div></div> <span class="badge badge-low">13.8%</span></div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr><tr onclick="drillCap(4)">
+        <td><strong>Cap. 6</strong><div style="font-size:11px;color:#666">Inversiones Reales</div></td>
+        <td class="num">8.393.644,94</td>
+        <td class="num">7.432.291,73</td>
+        <td class="num">15.825.936,67</td>
+        <td class="num">6.537.420,80</td>
+        <td class="num">6.537.420,80</td>
+        <td class="num"><strong>2.219.141,92</strong></td>
+        <td style="min-width:120px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:14.02%;background:#C62828"></div></div> <span class="badge badge-low">14.0%</span></div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr><tr onclick="drillCap(5)">
+        <td><strong>Cap. 7</strong><div style="font-size:11px;color:#666">Transferencias de Capital</div></td>
+        <td class="num">985.022,74</td>
+        <td class="num">1.250.000,00</td>
+        <td class="num">2.235.022,74</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+        <td class="num"><strong>0,00</strong></td>
+        <td style="min-width:120px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr><tr onclick="drillCap(6)">
+        <td><strong>Cap. 8</strong><div style="font-size:11px;color:#666">Activos Financieros</div></td>
+        <td class="num">300,00</td>
+        <td class="num">—</td>
+        <td class="num">300,00</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+        <td class="num"><strong>0,00</strong></td>
+        <td style="min-width:120px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+        <td style="color:#2C5F9E;font-size:16px">›</td>
+      </tr><tr class="total-row">
+      <td><strong>CIA TOTAL</strong></td>
+      <td class="num">14.536.061,14</td>
+      <td class="num">9.166.007,47</td>
+      <td class="num">23.702.068,61</td>
+      <td class="num">9.815.122,74</td>
+      <td class="num">9.815.122,74</td>
+      <td class="num">3.589.906,21</td>
+      <td colspan="2"><strong>15.15%</strong></td>
+    </tr></tbody>
           </table>
         </div>
-        <div class="data-note" id="fuenteCaps"></div>
+        <div class="data-note" id="fuenteCaps">Fuente: TGEM — Consejo Insular de Aguas de La Palma — 03/07/2026</div>
       </div>
     </div>
   </div>
@@ -299,7 +411,7 @@
   </div>
 
 </div>
-<div class="footer" id="footerTxt"></div>
+<div class="footer" id="footerTxt">Consejo Insular de Aguas de La Palma · Ejecución Presupuestaria 2026 · Datos al 03/07/2026</div>
 
 <script>
 // ================================================================
@@ -307,10 +419,1081 @@
 // ================================================================
 /*@@DATOS_CIALP_START@@*/
 const DATOS_PDF = {
-  config:   { fecha:"—", periodo:"2026", fuente:"TGEM — Consejo Insular de Aguas de La Palma" },
-  total:    { i:0, m:0, ac:0, a:0, d:0, o:0 },
-  caps:     [],
-  comp_ant: { fecha:"—", periodo:"2025", ac:0, o:0 }
+  "config": {
+    "fecha": "03/07/2026",
+    "periodo": "2026",
+    "fuente": "TGEM — Consejo Insular de Aguas de La Palma"
+  },
+  "total": {
+    "i": 14536061.139999999,
+    "m": 9166007.47,
+    "ac": 23702068.61,
+    "a": 9815122.740000002,
+    "d": 9815122.740000002,
+    "o": 3589906.21
+  },
+  "caps": [
+    {
+      "cod": "Cap. 1",
+      "nm": "Gastos de Personal",
+      "i": 1865348.73,
+      "m": 327768.49,
+      "ac": 2193117.2199999997,
+      "a": 1853515.3600000003,
+      "d": 1853515.3600000003,
+      "o": 669837.6900000002,
+      "partidas": [
+        {
+          "cod": "452/13002",
+          "nm": "452/13002",
+          "i": 709677.15,
+          "m": 0,
+          "ac": 709677.15,
+          "a": 731017.67,
+          "d": 731017.67,
+          "o": 365145.47
+        },
+        {
+          "cod": "452/13000",
+          "nm": "452/13000",
+          "i": 471817.32,
+          "m": 27768.49,
+          "ac": 499585.81,
+          "a": 461860.38,
+          "d": 461860.38,
+          "o": 226380.12
+        },
+        {
+          "cod": "452/16000",
+          "nm": "452/16000",
+          "i": 427000.24,
+          "m": 0,
+          "ac": 427000.24,
+          "a": 435014.04,
+          "d": 435014.04,
+          "o": 483.15
+        },
+        {
+          "cod": "452/13101",
+          "nm": "452/13101",
+          "i": 0,
+          "m": 160000,
+          "ac": 160000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16001",
+          "nm": "452/16001",
+          "i": 0,
+          "m": 140000,
+          "ac": 140000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/10100",
+          "nm": "452/10100",
+          "i": 68150.71,
+          "m": 0,
+          "ac": 68150.71,
+          "a": 70856.6,
+          "d": 70856.6,
+          "o": 33902.68
+        },
+        {
+          "cod": "452/13100",
+          "nm": "452/13100",
+          "i": 59374.7,
+          "m": 0,
+          "ac": 59374.7,
+          "a": 143015.08,
+          "d": 143015.08,
+          "o": 32174.68
+        },
+        {
+          "cod": "452/15000",
+          "nm": "452/15000",
+          "i": 35000,
+          "m": 0,
+          "ac": 35000,
+          "a": 5717.06,
+          "d": 5717.06,
+          "o": 5717.06
+        },
+        {
+          "cod": "452/16203",
+          "nm": "452/16203",
+          "i": 30000,
+          "m": 0,
+          "ac": 30000,
+          "a": 460,
+          "d": 460,
+          "o": 460
+        },
+        {
+          "cod": "452/15101",
+          "nm": "452/15101",
+          "i": 20000,
+          "m": 0,
+          "ac": 20000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/12100",
+          "nm": "452/12100",
+          "i": 14828.61,
+          "m": 0,
+          "ac": 14828.61,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/13001",
+          "nm": "452/13001",
+          "i": 11000,
+          "m": 0,
+          "ac": 11000,
+          "a": 5574.53,
+          "d": 5574.53,
+          "o": 5574.53
+        },
+        {
+          "cod": "452/16200",
+          "nm": "452/16200",
+          "i": 10000,
+          "m": 0,
+          "ac": 10000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/15100",
+          "nm": "452/15100",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16008",
+          "nm": "452/16008",
+          "i": 2800,
+          "m": 0,
+          "ac": 2800,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16107",
+          "nm": "452/16107",
+          "i": 500,
+          "m": 0,
+          "ac": 500,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/12101",
+          "nm": "452/12101",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16204",
+          "nm": "452/16204",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16102",
+          "nm": "452/16102",
+          "i": 0,
+          "m": 0,
+          "ac": 0,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16104",
+          "nm": "452/16104",
+          "i": 0,
+          "m": 0,
+          "ac": 0,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 2",
+      "nm": "Gastos Corrientes en Bienes y Servicios",
+      "i": 2582304.73,
+      "m": 141003.25,
+      "ac": 2723307.98,
+      "a": 1334190.4400000002,
+      "d": 1334190.4400000002,
+      "o": 610930.46,
+      "partidas": [
+        {
+          "cod": "452/22799",
+          "nm": "452/22799",
+          "i": 960489.68,
+          "m": 0,
+          "ac": 960489.68,
+          "a": 789933.5,
+          "d": 789933.5,
+          "o": 170558.28
+        },
+        {
+          "cod": "452/22100",
+          "nm": "452/22100",
+          "i": 814172.24,
+          "m": 0,
+          "ac": 814172.24,
+          "a": 92759.98,
+          "d": 92759.98,
+          "o": 92759.98
+        },
+        {
+          "cod": "452/22706",
+          "nm": "452/22706",
+          "i": 300000,
+          "m": 0,
+          "ac": 300000,
+          "a": 112687.51,
+          "d": 112687.51,
+          "o": 56987.12
+        },
+        {
+          "cod": "452/20400",
+          "nm": "452/20400",
+          "i": 150827.76,
+          "m": 24569.5,
+          "ac": 175397.26,
+          "a": 53291.44,
+          "d": 53291.44,
+          "o": 53291.44
+        },
+        {
+          "cod": "452/21000",
+          "nm": "452/21000",
+          "i": 60000,
+          "m": 60000,
+          "ac": 120000,
+          "a": 51925.13,
+          "d": 51925.13,
+          "o": 51925.13
+        },
+        {
+          "cod": "452/22798",
+          "nm": "452/22798",
+          "i": 87015.05,
+          "m": 0,
+          "ac": 87015.05,
+          "a": 101517.5,
+          "d": 101517.5,
+          "o": 101517.5
+        },
+        {
+          "cod": "452/22103",
+          "nm": "452/22103",
+          "i": 50000,
+          "m": 0,
+          "ac": 50000,
+          "a": 51122.19,
+          "d": 51122.19,
+          "o": 2937.82
+        },
+        {
+          "cod": "452/22604",
+          "nm": "452/22604",
+          "i": 40000,
+          "m": 0,
+          "ac": 40000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23121",
+          "nm": "452/23121",
+          "i": 0,
+          "m": 36433.75,
+          "ac": 36433.75,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22200",
+          "nm": "452/22200",
+          "i": 26000,
+          "m": 0,
+          "ac": 26000,
+          "a": 17314.68,
+          "d": 17314.68,
+          "o": 17314.68
+        },
+        {
+          "cod": "452/22502",
+          "nm": "452/22502",
+          "i": 20000,
+          "m": 0,
+          "ac": 20000,
+          "a": 46277.17,
+          "d": 46277.17,
+          "o": 46277.17
+        },
+        {
+          "cod": "452/22602",
+          "nm": "452/22602",
+          "i": 20000,
+          "m": 0,
+          "ac": 20000,
+          "a": 3103,
+          "d": 3103,
+          "o": 3103
+        },
+        {
+          "cod": "452/23021",
+          "nm": "452/23021",
+          "i": 0,
+          "m": 20000,
+          "ac": 20000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22699",
+          "nm": "452/22699",
+          "i": 7500,
+          "m": 0,
+          "ac": 7500,
+          "a": 507.96,
+          "d": 507.96,
+          "o": 507.96
+        },
+        {
+          "cod": "452/22000",
+          "nm": "452/22000",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 245.85,
+          "d": 245.85,
+          "o": 245.85
+        },
+        {
+          "cod": "452/22002",
+          "nm": "452/22002",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22104",
+          "nm": "452/22104",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 2876.39,
+          "d": 2876.39,
+          "o": 2876.39
+        },
+        {
+          "cod": "452/21200",
+          "nm": "452/21200",
+          "i": 3000,
+          "m": 0,
+          "ac": 3000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/21300",
+          "nm": "452/21300",
+          "i": 3000,
+          "m": 0,
+          "ac": 3000,
+          "a": 4854.95,
+          "d": 4854.95,
+          "o": 4854.95
+        },
+        {
+          "cod": "452/22101",
+          "nm": "452/22101",
+          "i": 3000,
+          "m": 0,
+          "ac": 3000,
+          "a": 1510.7,
+          "d": 1510.7,
+          "o": 1510.7
+        },
+        {
+          "cod": "452/22700",
+          "nm": "452/22700",
+          "i": 2500,
+          "m": 0,
+          "ac": 2500,
+          "a": 984.4,
+          "d": 984.4,
+          "o": 984.4
+        },
+        {
+          "cod": "452/20300",
+          "nm": "452/20300",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 50.55,
+          "d": 50.55,
+          "o": 50.55
+        },
+        {
+          "cod": "452/22601",
+          "nm": "452/22601",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22603",
+          "nm": "452/22603",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22608",
+          "nm": "452/22608",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23300",
+          "nm": "452/23300",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 1248,
+          "d": 1248,
+          "o": 1248
+        },
+        {
+          "cod": "452/22607",
+          "nm": "452/22607",
+          "i": 1500,
+          "m": 0,
+          "ac": 1500,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/21400",
+          "nm": "452/21400",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/21600",
+          "nm": "452/21600",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 1216.49,
+          "d": 1216.49,
+          "o": 1216.49
+        },
+        {
+          "cod": "452/22001",
+          "nm": "452/22001",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22201",
+          "nm": "452/22201",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23020",
+          "nm": "452/23020",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 196,
+          "d": 196,
+          "o": 196
+        },
+        {
+          "cod": "452/23120",
+          "nm": "452/23120",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 270.86,
+          "d": 270.86,
+          "o": 270.86
+        },
+        {
+          "cod": "452/23000",
+          "nm": "452/23000",
+          "i": 500,
+          "m": 0,
+          "ac": 500,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23010",
+          "nm": "452/23010",
+          "i": 500,
+          "m": 0,
+          "ac": 500,
+          "a": 233.99,
+          "d": 233.99,
+          "o": 233.99
+        },
+        {
+          "cod": "452/23100",
+          "nm": "452/23100",
+          "i": 500,
+          "m": 0,
+          "ac": 500,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23110",
+          "nm": "452/23110",
+          "i": 500,
+          "m": 0,
+          "ac": 500,
+          "a": 62.2,
+          "d": 62.2,
+          "o": 62.2
+        },
+        {
+          "cod": "452/22400",
+          "nm": "452/22400",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22611",
+          "nm": "452/22611",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22701",
+          "nm": "452/22701",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 3",
+      "nm": "Gastos Financieros",
+      "i": 70000,
+      "m": 0,
+      "ac": 70000,
+      "a": 0,
+      "d": 0,
+      "o": 0,
+      "partidas": [
+        {
+          "cod": "452/35200",
+          "nm": "452/35200",
+          "i": 70000,
+          "m": 0,
+          "ac": 70000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 4",
+      "nm": "Transferencias Corrientes",
+      "i": 639440,
+      "m": 14944,
+      "ac": 654384,
+      "a": 89996.14,
+      "d": 89996.14,
+      "o": 89996.14,
+      "partidas": [
+        {
+          "cod": "452/47000",
+          "nm": "452/47000",
+          "i": 550000,
+          "m": 0,
+          "ac": 550000,
+          "a": 89996.14,
+          "d": 89996.14,
+          "o": 89996.14
+        },
+        {
+          "cod": "452/48902",
+          "nm": "452/48902",
+          "i": 80240,
+          "m": 0,
+          "ac": 80240,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/42101",
+          "nm": "452/42101",
+          "i": 6000,
+          "m": 14944,
+          "ac": 20944,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/48901",
+          "nm": "452/48901",
+          "i": 3000,
+          "m": 0,
+          "ac": 3000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/47002",
+          "nm": "452/47002",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/47003",
+          "nm": "452/47003",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 6",
+      "nm": "Inversiones Reales",
+      "i": 8393644.94,
+      "m": 7432291.73,
+      "ac": 15825936.67,
+      "a": 6537420.800000001,
+      "d": 6537420.800000001,
+      "o": 2219141.92,
+      "partidas": [
+        {
+          "cod": "452/60904",
+          "nm": "452/60904",
+          "i": 0,
+          "m": 3459274.21,
+          "ac": 3459274.21,
+          "a": 512270.33,
+          "d": 512270.33,
+          "o": 0
+        },
+        {
+          "cod": "452/60900",
+          "nm": "452/60900",
+          "i": 2861037.8,
+          "m": -207281.99,
+          "ac": 2653755.81,
+          "a": 720244.93,
+          "d": 720244.93,
+          "o": 720244.93
+        },
+        {
+          "cod": "452/60908",
+          "nm": "452/60908",
+          "i": 1874000,
+          "m": 0,
+          "ac": 1874000,
+          "a": 1874000,
+          "d": 1874000,
+          "o": 0
+        },
+        {
+          "cod": "452/60905",
+          "nm": "452/60905",
+          "i": 0,
+          "m": 1500000,
+          "ac": 1500000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/65001",
+          "nm": "452/65001",
+          "i": 0,
+          "m": 1287496.08,
+          "ac": 1287496.08,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/60910",
+          "nm": "452/60910",
+          "i": 0,
+          "m": 1250000,
+          "ac": 1250000,
+          "a": 1250000,
+          "d": 1250000,
+          "o": 556540.46
+        },
+        {
+          "cod": "452/65002",
+          "nm": "452/65002",
+          "i": 1206120.64,
+          "m": 0,
+          "ac": 1206120.64,
+          "a": 999874.01,
+          "d": 999874.01,
+          "o": 0
+        },
+        {
+          "cod": "452/63602",
+          "nm": "452/63602",
+          "i": 987830.95,
+          "m": 0,
+          "ac": 987830.95,
+          "a": 322279.41,
+          "d": 322279.41,
+          "o": 176605.43
+        },
+        {
+          "cod": "452/61900",
+          "nm": "452/61900",
+          "i": 450000,
+          "m": 0,
+          "ac": 450000,
+          "a": 366574.66,
+          "d": 366574.66,
+          "o": 366574.66
+        },
+        {
+          "cod": "452/60901",
+          "nm": "452/60901",
+          "i": 382655.55,
+          "m": 0,
+          "ac": 382655.55,
+          "a": 211815.96,
+          "d": 211815.96,
+          "o": 211815.96
+        },
+        {
+          "cod": "452/60906",
+          "nm": "452/60906",
+          "i": 300000,
+          "m": 0,
+          "ac": 300000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/63200",
+          "nm": "452/63200",
+          "i": 200000,
+          "m": 80000,
+          "ac": 280000,
+          "a": 214826.5,
+          "d": 214826.5,
+          "o": 134826.5
+        },
+        {
+          "cod": "452/60903",
+          "nm": "452/60903",
+          "i": 0,
+          "m": 62803.43,
+          "ac": 62803.43,
+          "a": 62803.43,
+          "d": 62803.43,
+          "o": 49802.41
+        },
+        {
+          "cod": "452/60000",
+          "nm": "452/60000",
+          "i": 30000,
+          "m": 0,
+          "ac": 30000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/60001",
+          "nm": "452/60001",
+          "i": 30000,
+          "m": 0,
+          "ac": 30000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/62600",
+          "nm": "452/62600",
+          "i": 30000,
+          "m": 0,
+          "ac": 30000,
+          "a": 814,
+          "d": 814,
+          "o": 814
+        },
+        {
+          "cod": "452/62601",
+          "nm": "452/62601",
+          "i": 10000,
+          "m": 0,
+          "ac": 10000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/63600",
+          "nm": "452/63600",
+          "i": 10000,
+          "m": 0,
+          "ac": 10000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/65000",
+          "nm": "452/65000",
+          "i": 10000,
+          "m": 0,
+          "ac": 10000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/62300",
+          "nm": "452/62300",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 725.46,
+          "d": 725.46,
+          "o": 725.46
+        },
+        {
+          "cod": "452/62500",
+          "nm": "452/62500",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 1192.11,
+          "d": 1192.11,
+          "o": 1192.11
+        },
+        {
+          "cod": "452/60909",
+          "nm": "452/60909",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/62602",
+          "nm": "452/62602",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/62200",
+          "nm": "452/62200",
+          "i": 0,
+          "m": 0,
+          "ac": 0,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 7",
+      "nm": "Transferencias de Capital",
+      "i": 985022.74,
+      "m": 1250000,
+      "ac": 2235022.74,
+      "a": 0,
+      "d": 0,
+      "o": 0,
+      "partidas": [
+        {
+          "cod": "452/77003",
+          "nm": "452/77003",
+          "i": 0,
+          "m": 1250000,
+          "ac": 1250000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/77001",
+          "nm": "452/77001",
+          "i": 600000,
+          "m": 0,
+          "ac": 600000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/77002",
+          "nm": "452/77002",
+          "i": 385022.74,
+          "m": 0,
+          "ac": 385022.74,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 8",
+      "nm": "Activos Financieros",
+      "i": 300,
+      "m": 0,
+      "ac": 300,
+      "a": 0,
+      "d": 0,
+      "o": 0,
+      "partidas": [
+        {
+          "cod": "452/83000",
+          "nm": "452/83000",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/83001",
+          "nm": "452/83001",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/83100",
+          "nm": "452/83100",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    }
+  ],
+  "comp_ant": {
+    "fecha": "26/06/2026",
+    "periodo": "2026",
+    "ac": 21857529.66,
+    "o": 3999001.61
+  }
 };
 /*@@DATOS_CIALP_END@@*/
 
@@ -880,5 +2063,6 @@ if(typeof pdfjsLib!=="undefined")
 cargarLocal();
 renderTotal();
 </script>
-</body>
-</html>
+
+
+</body></html>
