@@ -67,6 +67,17 @@
     .big-pct{font-size:36px;font-weight:900;line-height:1}
     .pct-label{font-size:11px;opacity:0.8}
     .data-note{font-size:11px;color:#999;text-align:right;padding:6px 12px 8px}
+    .comp-strip{display:flex;align-items:stretch;background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);margin-bottom:14px;overflow:hidden;flex-wrap:wrap}
+    .comp-blk{padding:12px 18px;flex:1;min-width:120px}
+    .comp-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:#888;margin-bottom:4px}
+    .comp-val{font-size:15px;font-weight:700;color:#1a1a2e}
+    .comp-pct{font-size:11px;color:#888}
+    .comp-sep{width:1px;background:#EEF0F3;flex-shrink:0}
+    .comp-delta-pos{font-size:15px;font-weight:700;color:#2E7D32}
+    .comp-delta-neg{font-size:15px;font-weight:700;color:#C62828}
+    .comp-import-box{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #93c5fd;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+    .btn-comp{background:#1e40af;color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+    .btn-comp:hover{background:#1d4ed8}
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
     .modal-box{background:white;border-radius:12px;width:100%;max-width:700px;box-shadow:0 8px 32px rgba(0,0,0,0.22)}
     .modal-header{padding:16px 20px;border-bottom:1px solid #E8ECEF;display:flex;align-items:center;justify-content:space-between}
@@ -154,6 +165,25 @@
         </div>
         <button class="btn-secondary" onclick="closeEditor()">Cerrar</button>
       </div>
+      <!-- COMPARATIVO AÑO ANTERIOR — MANUAL -->
+      <div class="comp-import-box" style="margin:12px 0 0 0">
+        <div style="font-size:12px;font-weight:700;color:#1e40af;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">📅 Comparativo — mismo período año anterior</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+          <div style="display:flex;flex-direction:column;gap:4px;flex:0 0 140px">
+            <label style="font-size:11px;font-weight:600;color:#1e40af">Fecha (dd/mm/aaaa)</label>
+            <input type="text" id="compFecha" placeholder="03/07/2025" style="border:1.5px solid #93c5fd;border-radius:6px;padding:7px 10px;font-size:12px;width:100%;outline:none">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:160px">
+            <label style="font-size:11px;font-weight:600;color:#1e40af">Crédito Total Actual (€)</label>
+            <input type="text" id="compAc" placeholder="23.702.068,61" style="border:1.5px solid #93c5fd;border-radius:6px;padding:7px 10px;font-size:12px;width:100%;outline:none">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:160px">
+            <label style="font-size:11px;font-weight:600;color:#1e40af">Obligaciones Reconocidas (€)</label>
+            <input type="text" id="compO" placeholder="0,00" style="border:1.5px solid #93c5fd;border-radius:6px;padding:7px 10px;font-size:12px;width:100%;outline:none">
+          </div>
+          <button class="btn-comp" onclick="guardarComp()">💾 Guardar comparativo</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -169,6 +199,7 @@
   <!-- NIVEL 0: TOTAL + CAPÍTULOS -->
   <div id="view-total">
     <div class="kpi-grid" id="kpiTotal"></div>
+    <div id="compAnterior"></div>
     <div class="main-grid">
       <div class="panel">
         <div class="panel-hdr">
@@ -239,6 +270,7 @@ const DATOS_PDF = {
 let CONFIG = JSON.parse(JSON.stringify(DATOS_PDF.config));
 let TOTAL  = JSON.parse(JSON.stringify(DATOS_PDF.total));
 let CAPS   = JSON.parse(JSON.stringify(DATOS_PDF.caps));
+let COMP_ANT = { fecha:"—", periodo:"2025", ac:0, o:0 };
 
 const CAP_NM = {
   "1":"Gastos de Personal",
@@ -331,6 +363,28 @@ function renderTotal(){
     `Fuente: ${CONFIG.fuente} — ${CONFIG.fecha}`;
   document.getElementById("footerTxt").textContent=
     `Consejo Insular de Aguas de La Palma · Ejecución Presupuestaria ${CONFIG.periodo} · Datos al ${CONFIG.fecha}`;
+
+  // Tira de comparación interanual (solo si hay datos del año anterior)
+  const ca=COMP_ANT;
+  if(ca.ac>0){
+    const pctAnt=PCT(ca.o,ca.ac), pctAct=PCT(t.o,ac);
+    const delta=pctAct-pctAnt, deltaO=t.o-ca.o;
+    const dCls=delta>=0?"comp-delta-pos":"comp-delta-neg";
+    document.getElementById("compAnterior").innerHTML=`
+      <div class="comp-strip">
+        <div class="comp-blk"><div class="comp-lbl">Comparación interanual</div><div style="font-size:11px;color:#5C6BC0;font-weight:600">vs. mismo período ${ca.fecha}</div></div>
+        <div class="comp-sep"></div>
+        <div class="comp-blk"><div class="comp-lbl">Crédito ${ca.periodo}</div><div class="comp-val">${EURK(ca.ac)}</div></div>
+        <div class="comp-sep"></div>
+        <div class="comp-blk"><div class="comp-lbl">Ejecutado (O) ${ca.periodo}</div><div class="comp-val">${EURK(ca.o)}</div><div class="comp-pct">${pctAnt.toFixed(2)}% O/Crédito</div></div>
+        <div class="comp-sep"></div>
+        <div class="comp-blk"><div class="comp-lbl">Ejecutado (O) ${CONFIG.periodo}</div><div class="comp-val">${EURK(t.o)}</div><div class="comp-pct">${pctAct.toFixed(2)}% O/Crédito</div></div>
+        <div class="comp-sep"></div>
+        <div class="comp-blk"><div class="comp-lbl">Variación % ejecución</div><div class="${dCls}">${delta>=0?"+":""}${delta.toFixed(2)} pp</div><div style="font-size:11px;color:#888">${deltaO>=0?"+":""}${EURK(deltaO)} en obligaciones</div></div>
+      </div>`;
+  } else {
+    document.getElementById("compAnterior").innerHTML="";
+  }
 
   renderKPI("kpiTotal",[
     {cl:"blue",   label:"Crédito Total (Actual)",       val:EURK(ac),       sub:`Inicial: ${EURK(t.i||0)} | Modif.: +${EURK(t.m||0)}`},
@@ -428,8 +482,28 @@ function drillCap(idx){
 // ================================================================
 //  EDITOR / IMPORT MODAL
 // ================================================================
-function openEditor(){ document.getElementById("editorModal").classList.remove("hidden"); }
+function openEditor(){
+  document.getElementById("compFecha").value=COMP_ANT.fecha!=="—"?COMP_ANT.fecha:"";
+  document.getElementById("compAc").value=COMP_ANT.ac?EUR(COMP_ANT.ac):"";
+  document.getElementById("compO").value=COMP_ANT.o?EUR(COMP_ANT.o):"";
+  document.getElementById("editorModal").classList.remove("hidden");
+}
 function closeEditor(){ document.getElementById("editorModal").classList.add("hidden"); }
+
+function guardarComp(){
+  const fecha=document.getElementById("compFecha").value.trim();
+  const ac   =xlsN(document.getElementById("compAc").value);
+  const o    =xlsN(document.getElementById("compO").value);
+  if(!fecha){ alert("Introduce la fecha del período comparable (dd/mm/aaaa)."); return; }
+  if(!ac)   { alert("Introduce el Crédito Total Actual."); return; }
+  const periodo=fecha.length>=10?fecha.slice(6):String(parseInt(CONFIG.periodo)-1);
+  const pct=ac>0?PCT(o,ac).toFixed(2):"0.00";
+  if(!confirm(`Guardar comparativo:\n\n  Fecha: ${fecha}\n  Crédito: ${EURK(ac)}\n  Obligaciones: ${EURK(o)} — ${pct}%\n\n¿Confirmar?`)) return;
+  COMP_ANT={fecha,periodo,ac,o};
+  guardarLocal();
+  closeEditor();
+  renderTotal();
+}
 
 function marcarArchivo(inputId,lblId,input){
   const f=input.files[0];
@@ -694,7 +768,7 @@ function importarDatos(input){
 // ================================================================
 const LOCAL_VERSION="cialp_v2_"+DATOS_PDF.config.periodo;
 function guardarLocal(){
-  try{ localStorage.setItem("dashCIALP",JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,caps:CAPS})); }catch(e){}
+  try{ localStorage.setItem("dashCIALP",JSON.stringify({v:LOCAL_VERSION,config:CONFIG,total:TOTAL,caps:CAPS,comp_ant:COMP_ANT})); }catch(e){}
 }
 function cargarLocal(){
   try{
@@ -702,9 +776,10 @@ function cargarLocal(){
     if(!raw) return;
     const data=JSON.parse(raw);
     if(data.v!==LOCAL_VERSION){ localStorage.removeItem("dashCIALP"); return; }
-    if(data.config) Object.assign(CONFIG,data.config);
-    if(data.total)  Object.assign(TOTAL,data.total);
-    if(data.caps)   CAPS=data.caps;
+    if(data.config)   Object.assign(CONFIG,data.config);
+    if(data.total)    Object.assign(TOTAL,data.total);
+    if(data.caps)     CAPS=data.caps;
+    if(data.comp_ant) COMP_ANT=data.comp_ant;
   }catch(e){}
 }
 
