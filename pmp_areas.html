@@ -527,7 +527,7 @@ tbody tr.clickable:hover td:nth-child(2)::after{content:" ›";color:var(--azul)
 </div><!-- /#detail-view -->
 
 <!-- MODAL -->
-<div class="overlay on" id="ov">
+<div class="overlay" id="ov">
 <div class="modal">
   <div class="mhd">
     <h2>Actualizar datos del PMP</h2>
@@ -21279,6 +21279,7 @@ function guardarHTML(){
     .then(r=>r.text())
     .then(html=>doDescarga(reemplazar(html)))
     .catch(()=>{
+      document.getElementById('ov').classList.remove('on');
       let html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
       doDescarga(reemplazar(html));
     });
