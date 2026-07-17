@@ -168,7 +168,7 @@
 </div>
 
 <!-- MODAL -->
-<div id="editorModal" class="modal-backdrop">
+<div id="editorModal" class="modal-backdrop hidden">
   <div class="modal-box">
     <div class="modal-header">
       <h2>Actualizar Datos — Consejo Insular de Aguas</h2>
@@ -2434,6 +2434,9 @@ function guardarHTMLCIALP(){
     JSON.stringify(datos,null,2)+";\n/*@@DATOS_CIALP_END@@*/";
   let html="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
   html=html.replace(/\/\*@@DATOS_CIALP_START@@\*\/[\s\S]*?\/\*@@DATOS_CIALP_END@@\*\//,nuevaSeccion);
+  // Asegurar que los modales arrancan cerrados aunque estuvieran abiertos al exportar
+  html=html.replace(/(<div id="editorModal"[^>]*?)class="modal-backdrop(?!\s*hidden)([^"]*)"/,'$1class="modal-backdrop hidden$2"');
+  html=html.replace(/(<div id="_cpin"[^>]*?)class="modal-backdrop(?!\s*hidden)([^"]*)"/,'$1class="modal-backdrop hidden$2"');
   const blob=new Blob([html],{type:"text/html;charset=utf-8"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
