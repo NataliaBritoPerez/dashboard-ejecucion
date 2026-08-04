@@ -1,0 +1,1071 @@
+{
+  "config": {
+    "fecha": "03/08/2026",
+    "periodo": "2026",
+    "fuente": "TGEM — Consejo Insular de Aguas de La Palma"
+  },
+  "total": {
+    "i": 14536061.139999999,
+    "m": 9166007.47,
+    "ac": 23702068.61,
+    "a": 12383620.35,
+    "d": 12383620.35,
+    "o": 6375718.8100000005
+  },
+  "caps": [
+    {
+      "cod": "Cap. 1",
+      "nm": "Gastos de Personal",
+      "i": 1865348.73,
+      "m": 417768.49,
+      "ac": 2283117.22,
+      "a": 1894134.0800000003,
+      "d": 1894134.0800000003,
+      "o": 786553.5700000001,
+      "partidas": [
+        {
+          "cod": "452/13002",
+          "nm": "OTRAS REMUNERACIONES PERSONAL LABORAL FIJO",
+          "i": 709677.15,
+          "m": 0,
+          "ac": 709677.15,
+          "a": 731017.67,
+          "d": 731017.67,
+          "o": 417058.41
+        },
+        {
+          "cod": "452/13000",
+          "nm": "RETRIBUCIONES BÁSICAS PERSONAL LABORAL FIJO",
+          "i": 471817.32,
+          "m": 117768.49,
+          "ac": 589585.81,
+          "a": 461860.38,
+          "d": 461860.38,
+          "o": 258841.62
+        },
+        {
+          "cod": "452/16000",
+          "nm": "SEGURIDAD SOCIAL",
+          "i": 427000.24,
+          "m": 0,
+          "ac": 427000.24,
+          "a": 435014.04,
+          "d": 435014.04,
+          "o": 483.15
+        },
+        {
+          "cod": "452/13101",
+          "nm": "RETRIBUCIONES PERSONAL PROYECTO GENESIS",
+          "i": 0,
+          "m": 160000,
+          "ac": 160000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16001",
+          "nm": "SEGURIDAD  SOCIAL PROYECTO GENESIS",
+          "i": 0,
+          "m": 140000,
+          "ac": 140000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/10100",
+          "nm": "RETRIBUCIONES BÁSICAS PERSONAL DIRECTIVO",
+          "i": 68150.71,
+          "m": 0,
+          "ac": 68150.71,
+          "a": 70856.6,
+          "d": 70856.6,
+          "o": 38745.92
+        },
+        {
+          "cod": "452/13100",
+          "nm": "RETRIBUCIONES PERSONAL LABORAL TEMPORAL",
+          "i": 59374.7,
+          "m": 0,
+          "ac": 59374.7,
+          "a": 177837.8,
+          "d": 177837.8,
+          "o": 53876.88
+        },
+        {
+          "cod": "452/15000",
+          "nm": "INCENTIVOS POR PRODUCTIVIDAD",
+          "i": 35000,
+          "m": 0,
+          "ac": 35000,
+          "a": 5717.06,
+          "d": 5717.06,
+          "o": 5717.06
+        },
+        {
+          "cod": "452/16203",
+          "nm": "ACCIÓN SOCIAL, PENSIONES Y OTRAS PRESTACIONES",
+          "i": 30000,
+          "m": 0,
+          "ac": 30000,
+          "a": 460,
+          "d": 460,
+          "o": 460
+        },
+        {
+          "cod": "452/15101",
+          "nm": "GRATIFICACIONES FESTIVOS",
+          "i": 20000,
+          "m": 0,
+          "ac": 20000,
+          "a": 5796,
+          "d": 5796,
+          "o": 5796
+        },
+        {
+          "cod": "452/12100",
+          "nm": "PREMIO JUBILACIÓN/CONSTANCIA",
+          "i": 14828.61,
+          "m": 0,
+          "ac": 14828.61,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/13001",
+          "nm": "HORAS EXTRAORDINARIAS",
+          "i": 11000,
+          "m": 0,
+          "ac": 11000,
+          "a": 5574.53,
+          "d": 5574.53,
+          "o": 5574.53
+        },
+        {
+          "cod": "452/16200",
+          "nm": "FORMACIÓN Y PERFECCIONAMIENTO DEL PERSONAL",
+          "i": 10000,
+          "m": 0,
+          "ac": 10000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/15100",
+          "nm": "GRATIFICACIONES DEL PERSONAL DEL CONSEJO",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16008",
+          "nm": "ASISTENCIA MÉDICO-FARMACÉUTICA",
+          "i": 2800,
+          "m": 0,
+          "ac": 2800,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16107",
+          "nm": "ASISTENCIA MÉDICO-FARMACÉUTICA A PENSIONISTAS",
+          "i": 500,
+          "m": 0,
+          "ac": 500,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/12101",
+          "nm": "INCENTIVOS POR JUBILACIÓN ANTICIPADA",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16204",
+          "nm": "SEGURO DE EMPLEADO",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16102",
+          "nm": "PREMIO JUBILACION/CONSTANCIA",
+          "i": 0,
+          "m": 0,
+          "ac": 0,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/16104",
+          "nm": "INDEMNIZACION PERSONAL LABORAL JUBILACIÓN ANTICIPADA",
+          "i": 0,
+          "m": 0,
+          "ac": 0,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 2",
+      "nm": "Gastos Corrientes en Bienes y Servicios",
+      "i": 2582304.73,
+      "m": 186003.25,
+      "ac": 2768307.98,
+      "a": 1387128.21,
+      "d": 1387128.21,
+      "o": 841490.4599999998,
+      "partidas": [
+        {
+          "cod": "452/22799",
+          "nm": "OTROS TRAB. REALIZADOS POR OTRAS EMP. Y/O PROFESIONALES",
+          "i": 960489.68,
+          "m": 0,
+          "ac": 960489.68,
+          "a": 807140.47,
+          "d": 807140.47,
+          "o": 365387.48
+        },
+        {
+          "cod": "452/22100",
+          "nm": "ENERGÍA ELÉCTRICA E. B. ADUARES Y OTRAS INSTALACIONES",
+          "i": 814172.24,
+          "m": 0,
+          "ac": 814172.24,
+          "a": 92759.98,
+          "d": 92759.98,
+          "o": 92759.98
+        },
+        {
+          "cod": "452/22706",
+          "nm": "ESTUDIOS Y TRABAJOS TECNICOS",
+          "i": 300000,
+          "m": 0,
+          "ac": 300000,
+          "a": 112687.51,
+          "d": 112687.51,
+          "o": 56987.12
+        },
+        {
+          "cod": "452/20400",
+          "nm": "SUMINISTRO MEDIANTE RENTING DE VEHÍCULOS CIAP",
+          "i": 150827.76,
+          "m": 24569.5,
+          "ac": 175397.26,
+          "a": 53291.44,
+          "d": 53291.44,
+          "o": 53291.44
+        },
+        {
+          "cod": "452/21000",
+          "nm": "ACTUACIONES EN CAUCES",
+          "i": 60000,
+          "m": 95000,
+          "ac": 155000,
+          "a": 77140.31,
+          "d": 77140.31,
+          "o": 77140.31
+        },
+        {
+          "cod": "452/22798",
+          "nm": "SERV DE IMPULSIÓN ANTENIMIENTO Y CORSERVACION",
+          "i": 87015.05,
+          "m": 0,
+          "ac": 87015.05,
+          "a": 101517.5,
+          "d": 101517.5,
+          "o": 101517.5
+        },
+        {
+          "cod": "452/22103",
+          "nm": "COMBUSTIBLE Y CARBURANTES",
+          "i": 50000,
+          "m": 0,
+          "ac": 50000,
+          "a": 51122.19,
+          "d": 51122.19,
+          "o": 2937.82
+        },
+        {
+          "cod": "452/22604",
+          "nm": "JURIDICOS Y CONTENCIOSOS",
+          "i": 40000,
+          "m": 0,
+          "ac": 40000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23121",
+          "nm": "LOCOMOCION PROYECTO GENESIS",
+          "i": 0,
+          "m": 36433.75,
+          "ac": 36433.75,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22200",
+          "nm": "SERVICIO DE TELECOMUNICACIONES",
+          "i": 26000,
+          "m": 0,
+          "ac": 26000,
+          "a": 17314.68,
+          "d": 17314.68,
+          "o": 17314.68
+        },
+        {
+          "cod": "452/22502",
+          "nm": "TRIBUTOS LOCALES",
+          "i": 20000,
+          "m": 0,
+          "ac": 20000,
+          "a": 46277.17,
+          "d": 46277.17,
+          "o": 46277.17
+        },
+        {
+          "cod": "452/22602",
+          "nm": "PUBLICIDAD Y PROPAGANDA",
+          "i": 20000,
+          "m": 0,
+          "ac": 20000,
+          "a": 3638,
+          "d": 3638,
+          "o": 3638
+        },
+        {
+          "cod": "452/23021",
+          "nm": "DIETAS PERSONAL PROYECTO GENESIS",
+          "i": 0,
+          "m": 20000,
+          "ac": 20000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/21300",
+          "nm": "REPARACIÓN Y MANTENIMIENTO MAQUINARIA, INSTALACIONES Y UTILLAJE",
+          "i": 3000,
+          "m": 8000,
+          "ac": 11000,
+          "a": 8163.5,
+          "d": 8163.5,
+          "o": 8163.5
+        },
+        {
+          "cod": "452/22699",
+          "nm": "OTROS GASTOS DIVERSOS",
+          "i": 7500,
+          "m": 0,
+          "ac": 7500,
+          "a": 5098.51,
+          "d": 5098.51,
+          "o": 5098.51
+        },
+        {
+          "cod": "452/22000",
+          "nm": "MATERIAL DE OFICINA NO INVENTARIABLE",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 443.74,
+          "d": 443.74,
+          "o": 443.74
+        },
+        {
+          "cod": "452/22002",
+          "nm": "MATERIAL INFORMÁTICO NO INVENTARIABLE",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22104",
+          "nm": "VESTUARIO",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 4630.04,
+          "d": 4630.04,
+          "o": 4630.04
+        },
+        {
+          "cod": "452/21200",
+          "nm": "MANTENIMIENTO Y REPARACIÓN EDIFICIOS",
+          "i": 3000,
+          "m": 0,
+          "ac": 3000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22101",
+          "nm": "AGUA",
+          "i": 3000,
+          "m": 0,
+          "ac": 3000,
+          "a": 1606.98,
+          "d": 1606.98,
+          "o": 1606.98
+        },
+        {
+          "cod": "452/22700",
+          "nm": "SERVICIO DE LIMPIEZA Y ASEO",
+          "i": 2500,
+          "m": 0,
+          "ac": 2500,
+          "a": 984.4,
+          "d": 984.4,
+          "o": 984.4
+        },
+        {
+          "cod": "452/20300",
+          "nm": "ARRENDAMIENTO DE MAQUINARIA, INSTALACIONES Y UTILLAJE",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 84.25,
+          "d": 84.25,
+          "o": 84.25
+        },
+        {
+          "cod": "452/22601",
+          "nm": "ATENCIONES PROTOCOLARIAS",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22603",
+          "nm": "PUBLICACIONES EN DIARIOS OFICIALES",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22608",
+          "nm": "PROMOCIÓN, PUBLICIDAD Y PROPAGANDA DEL PLAN HIDROL",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23300",
+          "nm": "OTRAS INDEMNIZACIONES(TRIBUNALES)",
+          "i": 2000,
+          "m": 0,
+          "ac": 2000,
+          "a": 1248,
+          "d": 1248,
+          "o": 1248
+        },
+        {
+          "cod": "452/22607",
+          "nm": "OPOSICIONES Y PRUEBAS SELECTIVAS",
+          "i": 1500,
+          "m": 0,
+          "ac": 1500,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23000",
+          "nm": "DIETAS DE LOS MIEMBROS DE LOS ÒRGANOS DE GOBIERNO",
+          "i": 500,
+          "m": 1000,
+          "ac": 1500,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23100",
+          "nm": "LOCOMOCIÓN DE LOS MIEMBROS DE LOS ÓRGANOS DE GOBIERNO",
+          "i": 500,
+          "m": 1000,
+          "ac": 1500,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/21400",
+          "nm": "REPARACION VEHICULOS",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/21600",
+          "nm": "REPARACIONES DE EQUIPOS INFORMÁTICOS",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 1216.49,
+          "d": 1216.49,
+          "o": 1216.49
+        },
+        {
+          "cod": "452/22001",
+          "nm": "PRENSA, REVISTAS, LIBROS Y OTRAS PUBLICACIONES",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22201",
+          "nm": "ENVÍOS POSTALES",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/23020",
+          "nm": "DIETAS DEL PERSONAL NO DIRECTIVO",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 196,
+          "d": 196,
+          "o": 196
+        },
+        {
+          "cod": "452/23120",
+          "nm": "LOCOMOCIÓN DEL PERSONAL NO DIRECTIVO",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 270.86,
+          "d": 270.86,
+          "o": 270.86
+        },
+        {
+          "cod": "452/23010",
+          "nm": "DIETAS DEL PERSONAL DIRECTIVO",
+          "i": 500,
+          "m": 0,
+          "ac": 500,
+          "a": 233.99,
+          "d": 233.99,
+          "o": 233.99
+        },
+        {
+          "cod": "452/23110",
+          "nm": "LOCOMOCIÓN DEL PERSONAL DIRECTIVO",
+          "i": 500,
+          "m": 0,
+          "ac": 500,
+          "a": 62.2,
+          "d": 62.2,
+          "o": 62.2
+        },
+        {
+          "cod": "452/22400",
+          "nm": "PRIMAS DE SEGUROS",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22611",
+          "nm": "INDEMNIZACION RESP PATRIMONIAL",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/22701",
+          "nm": "SEGURIDAD",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 3",
+      "nm": "Gastos Financieros",
+      "i": 70000,
+      "m": 0,
+      "ac": 70000,
+      "a": 0,
+      "d": 0,
+      "o": 0,
+      "partidas": [
+        {
+          "cod": "452/35200",
+          "nm": "INTERES DEMORA Y CAPITAL",
+          "i": 70000,
+          "m": 0,
+          "ac": 70000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 4",
+      "nm": "Transferencias Corrientes",
+      "i": 639440,
+      "m": 14944,
+      "ac": 654384,
+      "a": 154762.77,
+      "d": 154762.77,
+      "o": 154762.77,
+      "partidas": [
+        {
+          "cod": "452/47000",
+          "nm": "GASTOS CORRIENTES CONVENIOS SUSCRITOS CON POZOS",
+          "i": 550000,
+          "m": 0,
+          "ac": 550000,
+          "a": 131662.77,
+          "d": 131662.77,
+          "o": 131662.77
+        },
+        {
+          "cod": "452/48902",
+          "nm": "COLABORACIÓN EN I+D+i CON OTRAS ENTIDADES",
+          "i": 80240,
+          "m": 0,
+          "ac": 80240,
+          "a": 23100,
+          "d": 23100,
+          "o": 23100
+        },
+        {
+          "cod": "452/42101",
+          "nm": "CONVENIO CEDEX",
+          "i": 6000,
+          "m": 14944,
+          "ac": 20944,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/48901",
+          "nm": "APORTACIÓN SINDICAL",
+          "i": 3000,
+          "m": 0,
+          "ac": 3000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/47002",
+          "nm": "SUBV. INCREMENTO CONSUMO ENERGÉTICO",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/47003",
+          "nm": "SUBVENCIÓN  ENTIDADES PRIVADAS AYUDAS GESTION",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 6",
+      "nm": "Inversiones Reales",
+      "i": 8393644.94,
+      "m": 7297291.73,
+      "ac": 15690936.67,
+      "a": 7312572.55,
+      "d": 7312572.55,
+      "o": 2957889.27,
+      "partidas": [
+        {
+          "cod": "452/60904",
+          "nm": "AMPLIACION DEPOSITO REGULADOR DEL LANCE Y MOD. RED DE SALIDA",
+          "i": 0,
+          "m": 3459274.21,
+          "ac": 3459274.21,
+          "a": 512270.33,
+          "d": 512270.33,
+          "o": 0
+        },
+        {
+          "cod": "452/60900",
+          "nm": "INVERSIONES Y PROYECTOS DEL PLAN HIDROLÓGICO, OTRAS INVERSIONES",
+          "i": 2861037.8,
+          "m": -342281.99,
+          "ac": 2518755.81,
+          "a": 850261.5,
+          "d": 850261.5,
+          "o": 734129.93
+        },
+        {
+          "cod": "452/60908",
+          "nm": "OBRA DE EMERGENCIA REPERFORACIÓN DEL TÚNEL DE TRASVASE. BOCA OESTE",
+          "i": 1874000,
+          "m": 0,
+          "ac": 1874000,
+          "a": 1874000,
+          "d": 1874000,
+          "o": 0
+        },
+        {
+          "cod": "452/60905",
+          "nm": "SIFON BARRANCO LAS ANGUSTIAS CONEXION TRASVASE-VICARIO",
+          "i": 0,
+          "m": 1500000,
+          "ac": 1500000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/65001",
+          "nm": "AMPLIACION RED DE SANEAMIENTO EN BREÑA ALTA",
+          "i": 0,
+          "m": 1287496.08,
+          "ac": 1287496.08,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/60910",
+          "nm": "OBRA EMERGENCIA REPERFORACION TUNEL TRASVASE",
+          "i": 0,
+          "m": 1250000,
+          "ac": 1250000,
+          "a": 1250000,
+          "d": 1250000,
+          "o": 556540.46
+        },
+        {
+          "cod": "452/65002",
+          "nm": "PROL Y REPOSICIÓN REDES GENERALES DE AGUA POTABLE Y RIEGO CTRA LA LAGUNA-LAS NORIAS",
+          "i": 1206120.64,
+          "m": 0,
+          "ac": 1206120.64,
+          "a": 999874.01,
+          "d": 999874.01,
+          "o": 0
+        },
+        {
+          "cod": "452/63602",
+          "nm": "CONTROL TELEMETRIAL EN EL LP-I (FONDOS PROPIOS)",
+          "i": 987830.95,
+          "m": 0,
+          "ac": 987830.95,
+          "a": 929355.08,
+          "d": 929355.08,
+          "o": 893246.57
+        },
+        {
+          "cod": "452/61900",
+          "nm": "OBRAS DE CONSERVACIÓN DEL PATRIMONIO HIDRÁULICO DEL CONSEJO INSULAR DE AGUAS",
+          "i": 450000,
+          "m": 0,
+          "ac": 450000,
+          "a": 384075.94,
+          "d": 384075.94,
+          "o": 369175.94
+        },
+        {
+          "cod": "452/60901",
+          "nm": "CONVENIO BALSA EL PASO (SEIASA)",
+          "i": 382655.55,
+          "m": 0,
+          "ac": 382655.55,
+          "a": 211815.96,
+          "d": 211815.96,
+          "o": 211815.96
+        },
+        {
+          "cod": "452/60906",
+          "nm": "OBRAS DE MEJORA DE LA EFICIENCIA EN EL TRANSPORTE DEL CANAL LP-I",
+          "i": 300000,
+          "m": 0,
+          "ac": 300000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/63200",
+          "nm": "MANTENIMIENTO Y REPARACION CANALES PROPIEDAD CIA",
+          "i": 200000,
+          "m": 80000,
+          "ac": 280000,
+          "a": 230609.13,
+          "d": 230609.13,
+          "o": 135670.83
+        },
+        {
+          "cod": "452/60903",
+          "nm": "CONEXIÓN CANAL BAJO LA PROSPERIDAD CON BALSA VICARIO",
+          "i": 0,
+          "m": 62803.43,
+          "ac": 62803.43,
+          "a": 62803.43,
+          "d": 62803.43,
+          "o": 49802.41
+        },
+        {
+          "cod": "452/60000",
+          "nm": "ADQUISICIÓN DE TERRENOS",
+          "i": 30000,
+          "m": 0,
+          "ac": 30000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/60001",
+          "nm": "ADQUISICIÓN DE TERRENOS BALSA ADUARES",
+          "i": 30000,
+          "m": 0,
+          "ac": 30000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/62600",
+          "nm": "ADQUISICIÓN DE EQUIPOS Y PROGRAMAS INFORMÁTICOS PA",
+          "i": 30000,
+          "m": 0,
+          "ac": 30000,
+          "a": 814,
+          "d": 814,
+          "o": 814
+        },
+        {
+          "cod": "452/62601",
+          "nm": "ACTUACIONES VARIAS DE APLIC. ELECTRÓNICAS EN INFRAESTRUCTURAS CIAP",
+          "i": 10000,
+          "m": 0,
+          "ac": 10000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/63600",
+          "nm": "INSTALACIÓN DE TELEMETRÍAS Y DISPOSITIVOS DE CONTROL",
+          "i": 10000,
+          "m": 0,
+          "ac": 10000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/65000",
+          "nm": "ACTUACIONES POZO IZCAGUA",
+          "i": 10000,
+          "m": 0,
+          "ac": 10000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/62300",
+          "nm": "MAQUINARIA.INSTALACIONES TÉCNICAS Y UTILLAJE",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 4024.46,
+          "d": 4024.46,
+          "o": 4024.46
+        },
+        {
+          "cod": "452/62500",
+          "nm": "MOBILIARIO Y ENSERES",
+          "i": 5000,
+          "m": 0,
+          "ac": 5000,
+          "a": 1192.11,
+          "d": 1192.11,
+          "o": 1192.11
+        },
+        {
+          "cod": "452/60909",
+          "nm": "OBRAS DE EJECUCIÓN PARA LA INSTALACIÓN DE 2 MÓDULOS EDAM",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/62602",
+          "nm": "ESTACIONES METEREOLÓGICAS",
+          "i": 1000,
+          "m": 0,
+          "ac": 1000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/62200",
+          "nm": "EDIFICIOS Y OTRAS CONSTRUCCIONES",
+          "i": 0,
+          "m": 0,
+          "ac": 0,
+          "a": 1476.6,
+          "d": 1476.6,
+          "o": 1476.6
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 7",
+      "nm": "Transferencias de Capital",
+      "i": 985022.74,
+      "m": 1250000,
+      "ac": 2235022.74,
+      "a": 1635022.74,
+      "d": 1635022.74,
+      "o": 1635022.74,
+      "partidas": [
+        {
+          "cod": "452/77003",
+          "nm": "SUBVENCION COMUNIDAD RIEGO LA CRUZ BERMEJA RECUP RED RIEGO",
+          "i": 0,
+          "m": 1250000,
+          "ac": 1250000,
+          "a": 1250000,
+          "d": 1250000,
+          "o": 1250000
+        },
+        {
+          "cod": "452/77001",
+          "nm": "SUBVENCIONES A OBRAS HCAS. DE INICIAT. PRIVADA 2024",
+          "i": 600000,
+          "m": 0,
+          "ac": 600000,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/77002",
+          "nm": "CONVENIO COM. RIEGOS COM. S/C PALMABREÑAS-MAZO (SEIASA)",
+          "i": 385022.74,
+          "m": 0,
+          "ac": 385022.74,
+          "a": 385022.74,
+          "d": 385022.74,
+          "o": 385022.74
+        }
+      ]
+    },
+    {
+      "cod": "Cap. 8",
+      "nm": "Activos Financieros",
+      "i": 300,
+      "m": 0,
+      "ac": 300,
+      "a": 0,
+      "d": 0,
+      "o": 0,
+      "partidas": [
+        {
+          "cod": "452/83000",
+          "nm": "ANTICIPOS AL PERSONAL",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/83001",
+          "nm": "ANTICIPOS EXCEPCIONALES",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        },
+        {
+          "cod": "452/83100",
+          "nm": "PRESTAMOS DE HASTA 3.942,87",
+          "i": 100,
+          "m": 0,
+          "ac": 100,
+          "a": 0,
+          "d": 0,
+          "o": 0
+        }
+      ]
+    }
+  ]
+}

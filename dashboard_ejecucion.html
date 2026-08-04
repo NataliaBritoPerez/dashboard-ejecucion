@@ -710,10 +710,11 @@
 <div class="breadcrumb" id="breadcrumb"><span class="bc-item active" onclick="nav(0)">Total Cabildo</span></div>
 
 <div id="viewTabs" class="view-tabs">
-  <button class="tab-btn active" onclick="switchTab('areas')" id="tabAreas">📊 Por Área</button>
+  <button class="tab-btn" onclick="switchTab('areas')" id="tabAreas">📊 Por Área</button>
   <button class="tab-btn" onclick="switchTab('capitulos')" id="tabCaps">📋 Por Capítulo Económico</button>
   <button class="tab-btn" onclick="switchTab('areagasto')" id="tabAreaGasto">⚖️ Por Área de Gasto</button>
   <button class="tab-btn" onclick="switchTab('kpires')" id="tabKPIRes">📱 Resumen KPI</button>
+  <button class="tab-btn active" onclick="switchTab('sodepal')" id="tabSodepal">🏢 SODEPAL</button>
 </div>
 
 <!-- ===== MAIN CONTENT ===== -->
@@ -760,7 +761,7 @@
     </div></div>
 
     <!-- TAB: ÁREAS -->
-    <div id="tabContentAreas" class="">
+    <div id="tabContentAreas" class="hidden">
       <div class="main-grid">
         <div class="panel">
           <div class="panel-hdr">
@@ -21008,6 +21009,629 @@
       </div>
     </div>
   </div>
+
+    <!-- TAB: SODEPAL -->
+    <div id="tabContentSodepal" class="">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div>
+            <div class="panel-title">🏢 Aplicaciones SODEPAL</div>
+            <div class="panel-sub">Todas las partidas que contienen "SODEPAL" en su denominación, en todas las áreas del Cabildo</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px">
+              <label style="font-size:12px;font-weight:600;color:#444">Ordenar por:</label>
+              <select id="ordenSodepal" onchange="renderSodepal()" style="border:1px solid #ddd;border-radius:6px;padding:4px 8px;font-size:12px;background:white">
+                <option value="o_desc">Ejecutado (O) — mayor a menor</option>
+                <option value="pct_desc">% Ejecución — mayor a menor</option>
+                <option value="ac_desc">Crédito Actual — mayor a menor</option>
+                <option value="pct_asc">% Ejecución — menor a mayor</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table" id="tableSodepal">
+            <thead><tr>
+              <th>Área</th>
+              <th>Código</th>
+              <th>Descripción</th>
+              <th class="num">Inicial</th>
+              <th class="num">Modif.</th>
+              <th class="num">Actual</th>
+              <th class="num">A</th>
+              <th class="num">D</th>
+              <th class="num">O (Ejecutado)</th>
+              <th>% Ejec.</th>
+            </tr></thead>
+            <tbody id="tbodySodepal"><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Transformación Digital</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>491/22713</strong></td>
+      <td style="max-width:280px;font-size:12px">ENCARGO SODEPAL PARA ACCIONES FORMATIVAS PARA MEJORA COMPETENCIAS DIGITALES DE LA CIUDADANÍA (NGEN)</td>
+      <td class="num">0,00</td>
+      <td class="num" style="color:#1565C0">332.084,86</td>
+      <td class="num">332.084,86</td>
+      <td class="num">332.084,86</td>
+      <td class="num">332.084,86</td>
+      <td class="num"><strong>155.923,21</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:46.95%;background:#E65100"></div></div> <span class="badge badge-mid">47.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Turismo</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>432/44904</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROMOCIÓN TURISTICA Y CONECTIVIDAD</td>
+      <td class="num">250.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">250.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Turismo</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>432/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL FILM COMISSIÓN</td>
+      <td class="num">50.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Turismo</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>432/44902</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROMOCIÓN ASTROTURISMO</td>
+      <td class="num">50.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Turismo</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>432/44901</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROMOCIÓN TURÍSTICA SABOREA LA PALMA</td>
+      <td class="num">40.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">40.000,00</td>
+      <td class="num">40.000,00</td>
+      <td class="num">40.000,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Turismo</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>432/44903</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROMOCIÓN TURÍSTICA NUEVOS MERCADOS (PUERTA A PUERTA)</td>
+      <td class="num">5000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">5000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Educación</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>328/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROY. CONGRESO EDUCATIVO Y CULTURAL ISLA BONITA</td>
+      <td class="num">0,00</td>
+      <td class="num" style="color:#1565C0">51.000,00</td>
+      <td class="num">51.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Educación</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>326/44901</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO RENACE LA PALMA: SEMBRANDO RESILIENCIA Y CONOCIMIENTO</td>
+      <td class="num">48.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">48.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Cultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>334/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL STARMUS 2026</td>
+      <td class="num">0,00</td>
+      <td class="num" style="color:#1565C0">500.000,00</td>
+      <td class="num">500.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Cultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>334/44910</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN A SODEPAL PARA PROYECTOS CULTURALES</td>
+      <td class="num">170.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">170.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Cultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>333/44901</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL DESARROLLO MUSEÍSTICO CASA MASSIEU ARGUAL</td>
+      <td class="num">35.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">35.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Cultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>334/44904</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL.PROYECTO ISLA EN ESCENA</td>
+      <td class="num">30.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">30.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Cultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>334/44905</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL.FANTASIAS DEL CARNAVAL</td>
+      <td class="num">30.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">30.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Cultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>333/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL DINAMIZACIÓN MUSEO INSULAR DE LA PALMA</td>
+      <td class="num">20.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">20.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Cultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>333/44902</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN A SODEPAL PARA LA DINAMIZACIÓN DEL MAB</td>
+      <td class="num">20.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">20.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Cultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>334/44902</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL. DOCUMENTAL DE LA PALMA STARMUS 2026</td>
+      <td class="num">500.000,00</td>
+      <td class="num" style="color:#C62828">-500.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Juventud</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>339/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: PROYECTO RED DE CASAS DE LA JUVENTUD</td>
+      <td class="num">100,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">100,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: TRANSVULCANIA</td>
+      <td class="num">400.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">400.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44903</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: LA PALMA ECUESTRE</td>
+      <td class="num">80.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">80.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44909</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL NEON RUN</td>
+      <td class="num">70.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">70.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44914</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: TORNEO DE FUTBOL BONITA</td>
+      <td class="num">66.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">66.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44904</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: TRANSVULCANIA BIKE</td>
+      <td class="num">50.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44907</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: FERIA DEPORTIVA INSULAR "TRANSVULCANIA"</td>
+      <td class="num">50.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44902</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: FESTIVAL DE SENDERISMO</td>
+      <td class="num">40.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">40.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44905</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: CAMPAMENTOS DE VERANO</td>
+      <td class="num">40.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">40.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44912</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL TORNEO DE LAS ESTRELLAS DE AJEDREZ</td>
+      <td class="num">35.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">35.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44910</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: LA PALMA GRAVEL CAMP</td>
+      <td class="num">30.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">30.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44906</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: BENAHOARE LEAGUE</td>
+      <td class="num">100,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">100,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44911</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL IMPARABLES</td>
+      <td class="num">100,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">100,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Deportes</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>341/44913</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: TRANSVULCANIA INVERSA 2026</td>
+      <td class="num">100,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">100,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Agricultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>419/44902</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO PLANIFICACIÓN Y COMERCIALIZACIÓN</td>
+      <td class="num">100.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">100.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Agricultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>419/44903</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO SABOREA LA PALMA</td>
+      <td class="num">80.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">80.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Agricultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>419/44901</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO AGENCIA INSULAR DEL MAR</td>
+      <td class="num">70.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">70.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Agricultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>419/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO CENTRO AGRODIVERSIDAD</td>
+      <td class="num">55.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">55.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Agricultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>419/44904</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTAC. SODEPAL PROYECTO DE INTERNACIONALIZACIÓN DE PRODUCTOS GOURMET</td>
+      <td class="num">50.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Agricultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>419/44907</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO DE COMERCIALIZACIÓN DE VINOS D.O. LA PALMA</td>
+      <td class="num">45.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">45.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Agricultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>419/44906</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO PLAN FORRAJERO</td>
+      <td class="num">40.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">40.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Agricultura</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>419/44905</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTAC. SODEPAL PROYECTO DE ECOCOMEDORES</td>
+      <td class="num">30.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">30.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Energía</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>425/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL CENTRO GESTÓN ENERGÍA RENOVABLES</td>
+      <td class="num">66.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">66.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Energía</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>425/44901</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACION SODEPAL ASOC. ASOC. CIUDADANA POR LA ENERGÍA</td>
+      <td class="num">50.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Energía</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>425/44902</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL: PROYECTOS GEOTERMÍA</td>
+      <td class="num">50.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Energía</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>425/74903</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL ADQUISICIÓN PUNTOS DE RECARGA</td>
+      <td class="num">100,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">100,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Industria</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>422/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL CENTRO EMPRESARIAL E INDUSTRIAL LA PALMA</td>
+      <td class="num">45.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">45.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Promoción Económica</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>439/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL ORGANIZACIÓN Y EJECUCIÓN ISLA BONITA LOVE FESTIVAL</td>
+      <td class="num">600.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">600.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Promoción Económica</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>439/44903</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PLAN INSULAR DE MODA</td>
+      <td class="num">130.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">130.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Promoción Económica</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>439/44904</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PLAN INSULAR DE GESTIÓN COMERCIAL Y EMPRESARIAL</td>
+      <td class="num">80.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">80.000,00</td>
+      <td class="num">80.000,00</td>
+      <td class="num">80.000,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Promoción Económica</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>439/44912</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO III FERIA INSULAR DE GASTRONOMIA SABOREA LA PALMA</td>
+      <td class="num">50.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">50.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Promoción Económica</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>439/44901</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL CAMPAMENTO DE TALENTOS</td>
+      <td class="num">30.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">30.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Promoción Económica</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>439/44902</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO FOTONATURE</td>
+      <td class="num">30.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">30.000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Promoción Económica</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>439/44908</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL ENCUENTRO DEL ATLÁNTICO</td>
+      <td class="num">5000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">5000,00</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Artesanía</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>426/44900</strong></td>
+      <td style="max-width:280px;font-size:12px">APORTACIÓN SODEPAL PROYECTO LA PALMA ARTESANIA</td>
+      <td class="num">132.000,00</td>
+      <td class="num" style="color:#1565C0">0,00</td>
+      <td class="num">132.000,00</td>
+      <td class="num">132.000,00</td>
+      <td class="num">132.000,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Transformación Digital</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>491/22710</strong></td>
+      <td style="max-width:280px;font-size:12px">ENCARGO SODEPAL PARA LA CREACIÓN DE OFICINAS ACELERA PYME</td>
+      <td class="num">0,00</td>
+      <td class="num" style="color:#1565C0">6221,53</td>
+      <td class="num">6221,53</td>
+      <td class="num">0,00</td>
+      <td class="num">0,00</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="cap-row">
+      <td style="font-size:11px;color:#555">Transformación Digital</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>491/22710</strong></td>
+      <td style="max-width:280px;font-size:12px">ENCARGO SODEPAL PARA LA CREACIÓN DE OFICINAS ACELERA PYME</td>
+      <td class="num">0,00</td>
+      <td class="num" style="color:#1565C0">5879,31</td>
+      <td class="num">5879,31</td>
+      <td class="num">5879,31</td>
+      <td class="num">5879,31</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
 </div>
 <div class="footer" id="footerTxt">Excmo. Cabildo Insular de La Palma · Ejecución Presupuestaria 2026 · Datos al 03/08/2026</div>
@@ -46946,12 +47570,15 @@ function switchTab(tab){
   document.getElementById("tabContentCaps").classList.toggle("hidden",tab!=="capitulos");
   document.getElementById("tabContentAreaGasto").classList.toggle("hidden",tab!=="areagasto");
   document.getElementById("tabContentKPIRes").classList.toggle("hidden",tab!=="kpires");
+  document.getElementById("tabContentSodepal").classList.toggle("hidden",tab!=="sodepal");
   document.getElementById("tabAreas").classList.toggle("active",tab==="areas");
   document.getElementById("tabCaps").classList.toggle("active",tab==="capitulos");
   document.getElementById("tabAreaGasto").classList.toggle("active",tab==="areagasto");
   document.getElementById("tabKPIRes").classList.toggle("active",tab==="kpires");
+  document.getElementById("tabSodepal").classList.toggle("active",tab==="sodepal");
   if(tab==="areagasto") renderAreaGasto();
   if(tab==="kpires") renderKPIResumen();
+  if(tab==="sodepal") renderSodepal();
 }
 
 function renderKPIResumen(){
@@ -47161,6 +47788,41 @@ function renderTablaAreaGasto(){
       <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px">${BAR(pp)} ${BSP(pp)}</div></td>
     </tr>`;
   }).join("")||`<tr><td colspan="8" class="empty-caps">Sin aplicaciones para el área de gasto seleccionada.</td></tr>`;
+}
+
+// ================================================================
+//  SODEPAL
+// ================================================================
+function renderSodepal(){
+  const orden=(document.getElementById("ordenSodepal")||{}).value||"o_desc";
+  let partidas=getAllPartidas().filter(p=>p.nm.toUpperCase().includes("SODEPAL"));
+
+  if(!partidas.length){
+    document.getElementById("tbodySodepal").innerHTML=
+      `<tr><td colspan="10" class="empty-caps">No hay partidas con "SODEPAL" en los datos actuales. Importa el Excel de GEMA para ver el desglose.</td></tr>`;
+    return;
+  }
+
+  if(orden==="pct_desc")    partidas.sort((a,b)=>PCT(b.o,b.ac)-PCT(a.o,a.ac));
+  else if(orden==="ac_desc") partidas.sort((a,b)=>b.ac-a.ac);
+  else if(orden==="pct_asc") partidas.sort((a,b)=>PCT(a.o,a.ac)-PCT(b.o,b.ac));
+  else                       partidas.sort((a,b)=>b.o-a.o);
+
+  document.getElementById("tbodySodepal").innerHTML=partidas.map(p=>{
+    const pp=PCT(p.o,p.ac);
+    return`<tr class="cap-row">
+      <td style="font-size:11px;color:#555">${p._areaNm}</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap"><strong>${p.cod}</strong></td>
+      <td style="max-width:280px;font-size:12px">${p.nm}</td>
+      <td class="num">${EUR(p.i||0)}</td>
+      <td class="num" style="color:${(p.m||0)>=0?"#1565C0":"#C62828"}">${EUR(p.m||0)}</td>
+      <td class="num">${EUR(p.ac)}</td>
+      <td class="num">${EUR(p.a||0)}</td>
+      <td class="num">${EUR(p.d||0)}</td>
+      <td class="num"><strong>${EUR(p.o)}</strong></td>
+      <td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px">${BAR(pp)} ${BSP(pp)}</div></td>
+    </tr>`;
+  }).join("");
 }
 
 // ================================================================
