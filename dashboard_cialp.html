@@ -146,7 +146,7 @@
     </div>
   </div>
   <div class="header-right">
-    <div class="header-meta" id="headerMeta">Periodo: 2026 &nbsp;|&nbsp; Datos al <strong>03/08/2026</strong></div>
+    <div class="header-meta" id="headerMeta">Periodo: 2026 &nbsp;|&nbsp; Datos al <strong>10/08/2026</strong></div>
     <a href="index.html" class="btn-edit" style="text-decoration:none">⬅ Inicio</a>
     <button class="btn-edit" onclick="openEditor()">✏ Actualizar Datos</button>
   </div>
@@ -159,7 +159,7 @@
     <div class="pin-title">Acceso restringido</div>
     <div class="pin-sub">Introduce el PIN para actualizar datos del CIALP</div>
     <input id="_cpi" type="password" maxlength="10" placeholder="••••••••" autocomplete="off" onkeydown="if(event.key==='Enter')_cpinOk();if(event.key==='Escape')_cpinClose()">
-    <div class="pin-err" id="_cpe">PIN incorrecto. Inténtalo de nuevo.</div>
+    <div class="pin-err" id="_cpe"></div>
     <div class="pin-btns">
       <button class="btn-ok" onclick="_cpinOk()">Acceder</button>
       <button class="btn-cancel" onclick="_cpinClose()">Cancelar</button>
@@ -281,7 +281,7 @@
           <div><div class="panel-title">% Ejecución por Capítulo</div><div class="panel-sub">Obligaciones / Crédito Actual</div></div>
         </div>
         <div class="panel-body">
-          <div class="chart-wrap" style="height:340px"><canvas id="chartCaps" width="435" height="425" style="display: block; box-sizing: border-box; height: 340px; width: 348px;"></canvas></div>
+          <div class="chart-wrap" style="height:340px"><canvas id="chartCaps" width="348" height="340" style="display: block; box-sizing: border-box; height: 340px; width: 348px;"></canvas></div>
         </div>
       </div>
       <div class="panel">
@@ -383,7 +383,7 @@
     </tr></tbody>
           </table>
         </div>
-        <div class="data-note" id="fuenteCaps">Fuente: TGEM — Consejo Insular de Aguas de La Palma — 03/08/2026</div>
+        <div class="data-note" id="fuenteCaps">Fuente: TGEM — Consejo Insular de Aguas de La Palma — 10/08/2026</div>
       </div>
     </div>
   </div>
@@ -392,10 +392,10 @@
   <div id="view-cap" class="hidden">
     <div class="cap-hdr" id="capHdr">
     <div>
-      <div class="cap-name">Cap. 2 — Gastos Corrientes en Bienes y Servicios</div>
-      <div class="cap-period">Datos al 03/08/2026</div>
+      <div class="cap-name">Cap. 1 — Gastos de Personal</div>
+      <div class="cap-period">Datos al 10/08/2026</div>
     </div>
-    <div class="cap-pct"><div class="big-pct">30.4%</div><div class="pct-label">% Ejecución O/Crédito</div></div></div>
+    <div class="cap-pct"><div class="big-pct">34.5%</div><div class="pct-label">% Ejecución O/Crédito</div></div></div>
     <div class="panel">
       <div class="panel-hdr">
         <div><div class="panel-title">Aplicaciones Presupuestarias</div><div class="panel-sub">Detalle de líneas del capítulo</div></div>
@@ -408,168 +408,138 @@
             <th class="num">A</th><th class="num">D</th><th class="num">O (Ejecutado)</th><th>% Ejec.</th>
           </tr></thead>
           <tbody id="tbodyPartidas"><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22799</strong></td>
-      <td style="max-width:340px">OTROS TRAB. REALIZADOS POR OTRAS EMP. Y/O PROFESIONALES</td>
-      <td class="num">960.489,68</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/13002</strong></td>
+      <td style="max-width:340px">OTRAS REMUNERACIONES PERSONAL LABORAL FIJO</td>
+      <td class="num">709.677,15</td>
       <td class="num">—</td>
-      <td class="num">960.489,68</td>
-      <td class="num">807.140,47</td>
-      <td class="num">807.140,47</td>
-      <td class="num"><strong>365.387,48</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:38.04%;background:#E65100"></div></div> <span class="badge badge-mid">38.0%</span></div></td>
+      <td class="num">709.677,15</td>
+      <td class="num">731.017,67</td>
+      <td class="num">731.017,67</td>
+      <td class="num"><strong>417.058,41</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:58.77%;background:#E65100"></div></div> <span class="badge badge-mid">58.8%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22100</strong></td>
-      <td style="max-width:340px">ENERGÍA ELÉCTRICA E. B. ADUARES Y OTRAS INSTALACIONES</td>
-      <td class="num">814.172,24</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/13000</strong></td>
+      <td style="max-width:340px">RETRIBUCIONES BÁSICAS PERSONAL LABORAL FIJO</td>
+      <td class="num">471.817,32</td>
+      <td class="num">117.768,49</td>
+      <td class="num">589.585,81</td>
+      <td class="num">461.860,38</td>
+      <td class="num">461.860,38</td>
+      <td class="num"><strong>258.841,62</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:43.9%;background:#E65100"></div></div> <span class="badge badge-mid">43.9%</span></div></td>
+    </tr><tr class="partida-row">
+      <td style="font-family:monospace;font-size:12px"><strong>452/16000</strong></td>
+      <td style="max-width:340px">SEGURIDAD SOCIAL</td>
+      <td class="num">427.000,24</td>
       <td class="num">—</td>
-      <td class="num">814.172,24</td>
-      <td class="num">92.759,98</td>
-      <td class="num">92.759,98</td>
-      <td class="num"><strong>92.759,98</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:11.39%;background:#C62828"></div></div> <span class="badge badge-low">11.4%</span></div></td>
+      <td class="num">427.000,24</td>
+      <td class="num">435.014,04</td>
+      <td class="num">435.014,04</td>
+      <td class="num"><strong>483,15</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0.11%;background:#C62828"></div></div> <span class="badge badge-low">0.1%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22706</strong></td>
-      <td style="max-width:340px">ESTUDIOS Y TRABAJOS TECNICOS</td>
-      <td class="num">300.000,00</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/13101</strong></td>
+      <td style="max-width:340px">RETRIBUCIONES PERSONAL PROYECTO GENESIS</td>
       <td class="num">—</td>
-      <td class="num">300.000,00</td>
-      <td class="num">112.687,51</td>
-      <td class="num">112.687,51</td>
-      <td class="num"><strong>56.987,12</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:19%;background:#C62828"></div></div> <span class="badge badge-low">19.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/20400</strong></td>
-      <td style="max-width:340px">SUMINISTRO MEDIANTE RENTING DE VEHÍCULOS CIAP</td>
-      <td class="num">150.827,76</td>
-      <td class="num">24.569,50</td>
-      <td class="num">175.397,26</td>
-      <td class="num">53.291,44</td>
-      <td class="num">53.291,44</td>
-      <td class="num"><strong>53.291,44</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:30.38%;background:#E65100"></div></div> <span class="badge badge-mid">30.4%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/21000</strong></td>
-      <td style="max-width:340px">ACTUACIONES EN CAUCES</td>
-      <td class="num">60.000,00</td>
-      <td class="num">95.000,00</td>
-      <td class="num">155.000,00</td>
-      <td class="num">77.140,31</td>
-      <td class="num">77.140,31</td>
-      <td class="num"><strong>77.140,31</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:49.77%;background:#E65100"></div></div> <span class="badge badge-mid">49.8%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22798</strong></td>
-      <td style="max-width:340px">SERV DE IMPULSIÓN ANTENIMIENTO Y CORSERVACION</td>
-      <td class="num">87.015,05</td>
-      <td class="num">—</td>
-      <td class="num">87.015,05</td>
-      <td class="num">101.517,50</td>
-      <td class="num">101.517,50</td>
-      <td class="num"><strong>101.517,50</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:100%;background:#2E7D32"></div></div> <span class="badge badge-high">116.7%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22103</strong></td>
-      <td style="max-width:340px">COMBUSTIBLE Y CARBURANTES</td>
-      <td class="num">50.000,00</td>
-      <td class="num">—</td>
-      <td class="num">50.000,00</td>
-      <td class="num">51.122,19</td>
-      <td class="num">51.122,19</td>
-      <td class="num"><strong>2937,82</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:5.88%;background:#C62828"></div></div> <span class="badge badge-low">5.9%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22604</strong></td>
-      <td style="max-width:340px">JURIDICOS Y CONTENCIOSOS</td>
-      <td class="num">40.000,00</td>
-      <td class="num">—</td>
-      <td class="num">40.000,00</td>
+      <td class="num">160.000,00</td>
+      <td class="num">160.000,00</td>
       <td class="num">—</td>
       <td class="num">—</td>
       <td class="num"><strong>0,00</strong></td>
       <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/23121</strong></td>
-      <td style="max-width:340px">LOCOMOCION PROYECTO GENESIS</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/16001</strong></td>
+      <td style="max-width:340px">SEGURIDAD  SOCIAL PROYECTO GENESIS</td>
       <td class="num">—</td>
-      <td class="num">36.433,75</td>
-      <td class="num">36.433,75</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22200</strong></td>
-      <td style="max-width:340px">SERVICIO DE TELECOMUNICACIONES</td>
-      <td class="num">26.000,00</td>
-      <td class="num">—</td>
-      <td class="num">26.000,00</td>
-      <td class="num">17.314,68</td>
-      <td class="num">17.314,68</td>
-      <td class="num"><strong>17.314,68</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:66.59%;background:#2E7D32"></div></div> <span class="badge badge-high">66.6%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22502</strong></td>
-      <td style="max-width:340px">TRIBUTOS LOCALES</td>
-      <td class="num">20.000,00</td>
-      <td class="num">—</td>
-      <td class="num">20.000,00</td>
-      <td class="num">46.277,17</td>
-      <td class="num">46.277,17</td>
-      <td class="num"><strong>46.277,17</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:100%;background:#2E7D32"></div></div> <span class="badge badge-high">231.4%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22602</strong></td>
-      <td style="max-width:340px">PUBLICIDAD Y PROPAGANDA</td>
-      <td class="num">20.000,00</td>
-      <td class="num">—</td>
-      <td class="num">20.000,00</td>
-      <td class="num">3638,00</td>
-      <td class="num">3638,00</td>
-      <td class="num"><strong>3638,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:18.19%;background:#C62828"></div></div> <span class="badge badge-low">18.2%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/23021</strong></td>
-      <td style="max-width:340px">DIETAS PERSONAL PROYECTO GENESIS</td>
-      <td class="num">—</td>
-      <td class="num">20.000,00</td>
-      <td class="num">20.000,00</td>
+      <td class="num">140.000,00</td>
+      <td class="num">140.000,00</td>
       <td class="num">—</td>
       <td class="num">—</td>
       <td class="num"><strong>0,00</strong></td>
       <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/21300</strong></td>
-      <td style="max-width:340px">REPARACIÓN Y MANTENIMIENTO MAQUINARIA, INSTALACIONES Y UTILLAJE</td>
-      <td class="num">3000,00</td>
-      <td class="num">8000,00</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/10100</strong></td>
+      <td style="max-width:340px">RETRIBUCIONES BÁSICAS PERSONAL DIRECTIVO</td>
+      <td class="num">68.150,71</td>
+      <td class="num">—</td>
+      <td class="num">68.150,71</td>
+      <td class="num">70.856,60</td>
+      <td class="num">70.856,60</td>
+      <td class="num"><strong>38.745,92</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:56.85%;background:#E65100"></div></div> <span class="badge badge-mid">56.9%</span></div></td>
+    </tr><tr class="partida-row">
+      <td style="font-family:monospace;font-size:12px"><strong>452/13100</strong></td>
+      <td style="max-width:340px">RETRIBUCIONES PERSONAL LABORAL TEMPORAL</td>
+      <td class="num">59.374,70</td>
+      <td class="num">—</td>
+      <td class="num">59.374,70</td>
+      <td class="num">177.837,80</td>
+      <td class="num">177.837,80</td>
+      <td class="num"><strong>53.876,88</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:90.74%;background:#2E7D32"></div></div> <span class="badge badge-high">90.7%</span></div></td>
+    </tr><tr class="partida-row">
+      <td style="font-family:monospace;font-size:12px"><strong>452/15000</strong></td>
+      <td style="max-width:340px">INCENTIVOS POR PRODUCTIVIDAD</td>
+      <td class="num">35.000,00</td>
+      <td class="num">—</td>
+      <td class="num">35.000,00</td>
+      <td class="num">5717,06</td>
+      <td class="num">5717,06</td>
+      <td class="num"><strong>5717,06</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:16.33%;background:#C62828"></div></div> <span class="badge badge-low">16.3%</span></div></td>
+    </tr><tr class="partida-row">
+      <td style="font-family:monospace;font-size:12px"><strong>452/16203</strong></td>
+      <td style="max-width:340px">ACCIÓN SOCIAL, PENSIONES Y OTRAS PRESTACIONES</td>
+      <td class="num">30.000,00</td>
+      <td class="num">—</td>
+      <td class="num">30.000,00</td>
+      <td class="num">460,00</td>
+      <td class="num">460,00</td>
+      <td class="num"><strong>460,00</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:1.53%;background:#C62828"></div></div> <span class="badge badge-low">1.5%</span></div></td>
+    </tr><tr class="partida-row">
+      <td style="font-family:monospace;font-size:12px"><strong>452/15101</strong></td>
+      <td style="max-width:340px">GRATIFICACIONES FESTIVOS</td>
+      <td class="num">20.000,00</td>
+      <td class="num">—</td>
+      <td class="num">20.000,00</td>
+      <td class="num">5796,00</td>
+      <td class="num">5796,00</td>
+      <td class="num"><strong>5796,00</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:28.98%;background:#C62828"></div></div> <span class="badge badge-low">29.0%</span></div></td>
+    </tr><tr class="partida-row">
+      <td style="font-family:monospace;font-size:12px"><strong>452/12100</strong></td>
+      <td style="max-width:340px">PREMIO JUBILACIÓN/CONSTANCIA</td>
+      <td class="num">14.828,61</td>
+      <td class="num">—</td>
+      <td class="num">14.828,61</td>
+      <td class="num">—</td>
+      <td class="num">—</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="partida-row">
+      <td style="font-family:monospace;font-size:12px"><strong>452/13001</strong></td>
+      <td style="max-width:340px">HORAS EXTRAORDINARIAS</td>
       <td class="num">11.000,00</td>
-      <td class="num">8163,50</td>
-      <td class="num">8163,50</td>
-      <td class="num"><strong>8163,50</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:74.21%;background:#2E7D32"></div></div> <span class="badge badge-high">74.2%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22699</strong></td>
-      <td style="max-width:340px">OTROS GASTOS DIVERSOS</td>
-      <td class="num">7500,00</td>
       <td class="num">—</td>
-      <td class="num">7500,00</td>
-      <td class="num">5098,51</td>
-      <td class="num">5098,51</td>
-      <td class="num"><strong>5098,51</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:67.98%;background:#2E7D32"></div></div> <span class="badge badge-high">68.0%</span></div></td>
+      <td class="num">11.000,00</td>
+      <td class="num">5574,53</td>
+      <td class="num">5574,53</td>
+      <td class="num"><strong>5574,53</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:50.68%;background:#E65100"></div></div> <span class="badge badge-mid">50.7%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22000</strong></td>
-      <td style="max-width:340px">MATERIAL DE OFICINA NO INVENTARIABLE</td>
-      <td class="num">5000,00</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/16200</strong></td>
+      <td style="max-width:340px">FORMACIÓN Y PERFECCIONAMIENTO DEL PERSONAL</td>
+      <td class="num">10.000,00</td>
       <td class="num">—</td>
-      <td class="num">5000,00</td>
-      <td class="num">443,74</td>
-      <td class="num">443,74</td>
-      <td class="num"><strong>443,74</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:8.87%;background:#C62828"></div></div> <span class="badge badge-low">8.9%</span></div></td>
+      <td class="num">10.000,00</td>
+      <td class="num">—</td>
+      <td class="num">—</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22002</strong></td>
-      <td style="max-width:340px">MATERIAL INFORMÁTICO NO INVENTARIABLE</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/15100</strong></td>
+      <td style="max-width:340px">GRATIFICACIONES DEL PERSONAL DEL CONSEJO</td>
       <td class="num">5000,00</td>
       <td class="num">—</td>
       <td class="num">5000,00</td>
@@ -578,208 +548,28 @@
       <td class="num"><strong>0,00</strong></td>
       <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22104</strong></td>
-      <td style="max-width:340px">VESTUARIO</td>
-      <td class="num">5000,00</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/16008</strong></td>
+      <td style="max-width:340px">ASISTENCIA MÉDICO-FARMACÉUTICA</td>
+      <td class="num">2800,00</td>
       <td class="num">—</td>
-      <td class="num">5000,00</td>
-      <td class="num">4630,04</td>
-      <td class="num">4630,04</td>
-      <td class="num"><strong>4630,04</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:92.6%;background:#2E7D32"></div></div> <span class="badge badge-high">92.6%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/21200</strong></td>
-      <td style="max-width:340px">MANTENIMIENTO Y REPARACIÓN EDIFICIOS</td>
-      <td class="num">3000,00</td>
-      <td class="num">—</td>
-      <td class="num">3000,00</td>
+      <td class="num">2800,00</td>
       <td class="num">—</td>
       <td class="num">—</td>
       <td class="num"><strong>0,00</strong></td>
       <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22101</strong></td>
-      <td style="max-width:340px">AGUA</td>
-      <td class="num">3000,00</td>
-      <td class="num">—</td>
-      <td class="num">3000,00</td>
-      <td class="num">1606,98</td>
-      <td class="num">1606,98</td>
-      <td class="num"><strong>1606,98</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:53.57%;background:#E65100"></div></div> <span class="badge badge-mid">53.6%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22700</strong></td>
-      <td style="max-width:340px">SERVICIO DE LIMPIEZA Y ASEO</td>
-      <td class="num">2500,00</td>
-      <td class="num">—</td>
-      <td class="num">2500,00</td>
-      <td class="num">984,40</td>
-      <td class="num">984,40</td>
-      <td class="num"><strong>984,40</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:39.38%;background:#E65100"></div></div> <span class="badge badge-mid">39.4%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/20300</strong></td>
-      <td style="max-width:340px">ARRENDAMIENTO DE MAQUINARIA, INSTALACIONES Y UTILLAJE</td>
-      <td class="num">2000,00</td>
-      <td class="num">—</td>
-      <td class="num">2000,00</td>
-      <td class="num">84,25</td>
-      <td class="num">84,25</td>
-      <td class="num"><strong>84,25</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:4.21%;background:#C62828"></div></div> <span class="badge badge-low">4.2%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22601</strong></td>
-      <td style="max-width:340px">ATENCIONES PROTOCOLARIAS</td>
-      <td class="num">2000,00</td>
-      <td class="num">—</td>
-      <td class="num">2000,00</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22603</strong></td>
-      <td style="max-width:340px">PUBLICACIONES EN DIARIOS OFICIALES</td>
-      <td class="num">2000,00</td>
-      <td class="num">—</td>
-      <td class="num">2000,00</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22608</strong></td>
-      <td style="max-width:340px">PROMOCIÓN, PUBLICIDAD Y PROPAGANDA DEL PLAN HIDROL</td>
-      <td class="num">2000,00</td>
-      <td class="num">—</td>
-      <td class="num">2000,00</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/23300</strong></td>
-      <td style="max-width:340px">OTRAS INDEMNIZACIONES(TRIBUNALES)</td>
-      <td class="num">2000,00</td>
-      <td class="num">—</td>
-      <td class="num">2000,00</td>
-      <td class="num">1248,00</td>
-      <td class="num">1248,00</td>
-      <td class="num"><strong>1248,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:62.4%;background:#2E7D32"></div></div> <span class="badge badge-high">62.4%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22607</strong></td>
-      <td style="max-width:340px">OPOSICIONES Y PRUEBAS SELECTIVAS</td>
-      <td class="num">1500,00</td>
-      <td class="num">—</td>
-      <td class="num">1500,00</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/23000</strong></td>
-      <td style="max-width:340px">DIETAS DE LOS MIEMBROS DE LOS ÒRGANOS DE GOBIERNO</td>
-      <td class="num">500,00</td>
-      <td class="num">1000,00</td>
-      <td class="num">1500,00</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/23100</strong></td>
-      <td style="max-width:340px">LOCOMOCIÓN DE LOS MIEMBROS DE LOS ÓRGANOS DE GOBIERNO</td>
-      <td class="num">500,00</td>
-      <td class="num">1000,00</td>
-      <td class="num">1500,00</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/21400</strong></td>
-      <td style="max-width:340px">REPARACION VEHICULOS</td>
-      <td class="num">1000,00</td>
-      <td class="num">—</td>
-      <td class="num">1000,00</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/21600</strong></td>
-      <td style="max-width:340px">REPARACIONES DE EQUIPOS INFORMÁTICOS</td>
-      <td class="num">1000,00</td>
-      <td class="num">—</td>
-      <td class="num">1000,00</td>
-      <td class="num">1216,49</td>
-      <td class="num">1216,49</td>
-      <td class="num"><strong>1216,49</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:100%;background:#2E7D32"></div></div> <span class="badge badge-high">121.7%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22001</strong></td>
-      <td style="max-width:340px">PRENSA, REVISTAS, LIBROS Y OTRAS PUBLICACIONES</td>
-      <td class="num">1000,00</td>
-      <td class="num">—</td>
-      <td class="num">1000,00</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22201</strong></td>
-      <td style="max-width:340px">ENVÍOS POSTALES</td>
-      <td class="num">1000,00</td>
-      <td class="num">—</td>
-      <td class="num">1000,00</td>
-      <td class="num">—</td>
-      <td class="num">—</td>
-      <td class="num"><strong>0,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/23020</strong></td>
-      <td style="max-width:340px">DIETAS DEL PERSONAL NO DIRECTIVO</td>
-      <td class="num">1000,00</td>
-      <td class="num">—</td>
-      <td class="num">1000,00</td>
-      <td class="num">196,00</td>
-      <td class="num">196,00</td>
-      <td class="num"><strong>196,00</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:19.6%;background:#C62828"></div></div> <span class="badge badge-low">19.6%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/23120</strong></td>
-      <td style="max-width:340px">LOCOMOCIÓN DEL PERSONAL NO DIRECTIVO</td>
-      <td class="num">1000,00</td>
-      <td class="num">—</td>
-      <td class="num">1000,00</td>
-      <td class="num">270,86</td>
-      <td class="num">270,86</td>
-      <td class="num"><strong>270,86</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:27.09%;background:#C62828"></div></div> <span class="badge badge-low">27.1%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/23010</strong></td>
-      <td style="max-width:340px">DIETAS DEL PERSONAL DIRECTIVO</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/16107</strong></td>
+      <td style="max-width:340px">ASISTENCIA MÉDICO-FARMACÉUTICA A PENSIONISTAS</td>
       <td class="num">500,00</td>
       <td class="num">—</td>
       <td class="num">500,00</td>
-      <td class="num">233,99</td>
-      <td class="num">233,99</td>
-      <td class="num"><strong>233,99</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:46.8%;background:#E65100"></div></div> <span class="badge badge-mid">46.8%</span></div></td>
-    </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/23110</strong></td>
-      <td style="max-width:340px">LOCOMOCIÓN DEL PERSONAL DIRECTIVO</td>
-      <td class="num">500,00</td>
       <td class="num">—</td>
-      <td class="num">500,00</td>
-      <td class="num">62,20</td>
-      <td class="num">62,20</td>
-      <td class="num"><strong>62,20</strong></td>
-      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:12.44%;background:#C62828"></div></div> <span class="badge badge-low">12.4%</span></div></td>
+      <td class="num">—</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22400</strong></td>
-      <td style="max-width:340px">PRIMAS DE SEGUROS</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/12101</strong></td>
+      <td style="max-width:340px">INCENTIVOS POR JUBILACIÓN ANTICIPADA</td>
       <td class="num">100,00</td>
       <td class="num">—</td>
       <td class="num">100,00</td>
@@ -788,8 +578,8 @@
       <td class="num"><strong>0,00</strong></td>
       <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22611</strong></td>
-      <td style="max-width:340px">INDEMNIZACION RESP PATRIMONIAL</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/16204</strong></td>
+      <td style="max-width:340px">SEGURO DE EMPLEADO</td>
       <td class="num">100,00</td>
       <td class="num">—</td>
       <td class="num">100,00</td>
@@ -798,11 +588,21 @@
       <td class="num"><strong>0,00</strong></td>
       <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
     </tr><tr class="partida-row">
-      <td style="font-family:monospace;font-size:12px"><strong>452/22701</strong></td>
-      <td style="max-width:340px">SEGURIDAD</td>
-      <td class="num">100,00</td>
+      <td style="font-family:monospace;font-size:12px"><strong>452/16102</strong></td>
+      <td style="max-width:340px">PREMIO JUBILACION/CONSTANCIA</td>
       <td class="num">—</td>
-      <td class="num">100,00</td>
+      <td class="num">—</td>
+      <td class="num">0,00</td>
+      <td class="num">—</td>
+      <td class="num">—</td>
+      <td class="num"><strong>0,00</strong></td>
+      <td style="min-width:110px"><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar"><div class="prog-fill" style="width:0%;background:#C62828"></div></div> <span class="badge badge-low">0.0%</span></div></td>
+    </tr><tr class="partida-row">
+      <td style="font-family:monospace;font-size:12px"><strong>452/16104</strong></td>
+      <td style="max-width:340px">INDEMNIZACION PERSONAL LABORAL JUBILACIÓN ANTICIPADA</td>
+      <td class="num">—</td>
+      <td class="num">—</td>
+      <td class="num">0,00</td>
       <td class="num">—</td>
       <td class="num">—</td>
       <td class="num"><strong>0,00</strong></td>
@@ -814,7 +614,7 @@
   </div>
 
 </div>
-<div class="footer" id="footerTxt">Consejo Insular de Aguas de La Palma · Ejecución Presupuestaria 2026 · Datos al 03/08/2026</div>
+<div class="footer" id="footerTxt">Consejo Insular de Aguas de La Palma · Ejecución Presupuestaria 2026 · Datos al 10/08/2026</div>
 
 <script>
 // ================================================================
@@ -823,7 +623,7 @@
 /*@@DATOS_CIALP_START@@*/
 const DATOS_PDF = {
   "config": {
-    "fecha": "03/08/2026",
+    "fecha": "10/08/2026",
     "periodo": "2026",
     "fuente": "TGEM — Consejo Insular de Aguas de La Palma"
   },
