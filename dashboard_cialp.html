@@ -226,6 +226,70 @@
           <button class="btn-comp" onclick="guardarComp()">💾 Guardar comparativo</button>
         </div>
       </div>
+      <!-- PMP MENSUAL -->
+      <div class="comp-import-box" style="margin:12px 0 0 0">
+        <div style="font-size:12px;font-weight:700;color:#1e40af;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">📈 PMP mensual — introducción manual</div>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <label style="font-size:11px;font-weight:600;color:#1e40af">Mes (ej: Sep'26)</label>
+            <input type="text" id="pmpMesIn" placeholder="Sep'26" style="border:1.5px solid #93c5fd;border-radius:6px;padding:7px 10px;font-size:12px;width:100px;outline:none">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <label style="font-size:11px;font-weight:600;color:#1e40af">PMP (días)</label>
+            <input type="number" id="pmpValIn" step="0.01" placeholder="45.20" style="border:1.5px solid #93c5fd;border-radius:6px;padding:7px 10px;font-size:12px;width:100px;outline:none">
+          </div>
+          <button class="btn-comp" onclick="addPmpCIALP()">➕ Añadir</button>
+        </div>
+        <div id="pmpListCIALP" style="font-size:12px;max-height:160px;overflow-y:auto;color:#aaa"><table style="width:100%;border-collapse:collapse"><tbody><tr style="border-bottom:1px solid #eee">
+      <td style="padding:3px 8px;font-weight:600">Ene 26</td>
+      <td style="padding:3px 8px;color:#1B3A6B">79.74 días</td>
+      <td style="padding:3px 8px;text-align:right">
+        <button onclick="deletePmpCIALP(0)" style="background:none;border:none;color:#C62828;cursor:pointer;font-size:13px" title="Eliminar">✕</button>
+      </td>
+    </tr><tr style="border-bottom:1px solid #eee">
+      <td style="padding:3px 8px;font-weight:600">Feb</td>
+      <td style="padding:3px 8px;color:#1B3A6B">83.74 días</td>
+      <td style="padding:3px 8px;text-align:right">
+        <button onclick="deletePmpCIALP(1)" style="background:none;border:none;color:#C62828;cursor:pointer;font-size:13px" title="Eliminar">✕</button>
+      </td>
+    </tr><tr style="border-bottom:1px solid #eee">
+      <td style="padding:3px 8px;font-weight:600">Mar</td>
+      <td style="padding:3px 8px;color:#1B3A6B">91.60 días</td>
+      <td style="padding:3px 8px;text-align:right">
+        <button onclick="deletePmpCIALP(2)" style="background:none;border:none;color:#C62828;cursor:pointer;font-size:13px" title="Eliminar">✕</button>
+      </td>
+    </tr><tr style="border-bottom:1px solid #eee">
+      <td style="padding:3px 8px;font-weight:600">Abril</td>
+      <td style="padding:3px 8px;color:#1B3A6B">88.90 días</td>
+      <td style="padding:3px 8px;text-align:right">
+        <button onclick="deletePmpCIALP(3)" style="background:none;border:none;color:#C62828;cursor:pointer;font-size:13px" title="Eliminar">✕</button>
+      </td>
+    </tr><tr style="border-bottom:1px solid #eee">
+      <td style="padding:3px 8px;font-weight:600">Mayo</td>
+      <td style="padding:3px 8px;color:#1B3A6B">106.72 días</td>
+      <td style="padding:3px 8px;text-align:right">
+        <button onclick="deletePmpCIALP(4)" style="background:none;border:none;color:#C62828;cursor:pointer;font-size:13px" title="Eliminar">✕</button>
+      </td>
+    </tr><tr style="border-bottom:1px solid #eee">
+      <td style="padding:3px 8px;font-weight:600">Jun</td>
+      <td style="padding:3px 8px;color:#1B3A6B">109.82 días</td>
+      <td style="padding:3px 8px;text-align:right">
+        <button onclick="deletePmpCIALP(5)" style="background:none;border:none;color:#C62828;cursor:pointer;font-size:13px" title="Eliminar">✕</button>
+      </td>
+    </tr><tr style="border-bottom:1px solid #eee">
+      <td style="padding:3px 8px;font-weight:600">Jul</td>
+      <td style="padding:3px 8px;color:#1B3A6B">81.84 días</td>
+      <td style="padding:3px 8px;text-align:right">
+        <button onclick="deletePmpCIALP(6)" style="background:none;border:none;color:#C62828;cursor:pointer;font-size:13px" title="Eliminar">✕</button>
+      </td>
+    </tr><tr style="border-bottom:1px solid #eee">
+      <td style="padding:3px 8px;font-weight:600">Ago</td>
+      <td style="padding:3px 8px;color:#1B3A6B">131.08 días</td>
+      <td style="padding:3px 8px;text-align:right">
+        <button onclick="deletePmpCIALP(7)" style="background:none;border:none;color:#C62828;cursor:pointer;font-size:13px" title="Eliminar">✕</button>
+      </td>
+    </tr></tbody></table></div>
+      </div>
     </div>
   </div>
 </div>
@@ -275,13 +339,30 @@
         <div class="comp-sep"></div>
         <div class="comp-blk"><div class="comp-lbl">Variación % ejecución</div><div class="comp-delta-pos">+6.34 pp</div><div style="font-size:11px;color:#888">+1,91 M€ en obligaciones</div></div>
       </div></div>
+
+  <!-- PMP CIALP -->
+  <div class="panel" style="margin-bottom:14px">
+    <div class="panel-hdr">
+      <div>
+        <div class="panel-title">📈 Evolución PMP — C.I. Aguas</div>
+        <div class="panel-sub">Período Medio de Pago mensual (días) · añade datos desde "✏ Actualizar Datos"</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div id="pmpCIALPWrap" style="display: block;">
+        <div id="chartPMP"><svg viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;max-height:130px"><polyline points="8.0,78.6 82.6,75.5 157.1,69.4 231.7,71.5 306.3,57.7 380.9,55.3 455.4,77.0 530.0,38.7" fill="none" stroke="#2C5F9E" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" opacity=".5"></polyline><circle cx="8.0" cy="78.6" r="4" fill="#C62828" stroke="white" stroke-width="2"></circle><text x="8.0" y="68.6" font-size="10" font-weight="500" fill="#C62828" text-anchor="middle">79.7</text><text x="8.0" y="116" font-size="9.5" fill="#aaa" text-anchor="middle">Ene 26</text><circle cx="82.6" cy="75.5" r="4" fill="#C62828" stroke="white" stroke-width="2"></circle><text x="82.6" y="65.5" font-size="10" font-weight="500" fill="#C62828" text-anchor="middle">83.7</text><text x="82.6" y="116" font-size="9.5" fill="#aaa" text-anchor="middle">Feb</text><circle cx="157.1" cy="69.4" r="4" fill="#C62828" stroke="white" stroke-width="2"></circle><text x="157.1" y="59.4" font-size="10" font-weight="500" fill="#C62828" text-anchor="middle">91.6</text><text x="157.1" y="116" font-size="9.5" fill="#aaa" text-anchor="middle">Mar</text><circle cx="231.7" cy="71.5" r="4" fill="#C62828" stroke="white" stroke-width="2"></circle><text x="231.7" y="61.5" font-size="10" font-weight="500" fill="#C62828" text-anchor="middle">88.9</text><text x="231.7" y="116" font-size="9.5" fill="#aaa" text-anchor="middle">Abril</text><circle cx="306.3" cy="57.7" r="4" fill="#C62828" stroke="white" stroke-width="2"></circle><text x="306.3" y="47.7" font-size="10" font-weight="500" fill="#C62828" text-anchor="middle">106.7</text><text x="306.3" y="116" font-size="9.5" fill="#aaa" text-anchor="middle">Mayo</text><circle cx="380.9" cy="55.3" r="4" fill="#C62828" stroke="white" stroke-width="2"></circle><text x="380.9" y="45.3" font-size="10" font-weight="500" fill="#C62828" text-anchor="middle">109.8</text><text x="380.9" y="116" font-size="9.5" fill="#aaa" text-anchor="middle">Jun</text><circle cx="455.4" cy="77.0" r="4" fill="#C62828" stroke="white" stroke-width="2"></circle><text x="455.4" y="67.0" font-size="10" font-weight="500" fill="#C62828" text-anchor="middle">81.8</text><text x="455.4" y="116" font-size="9.5" fill="#aaa" text-anchor="middle">Jul</text><circle cx="530.0" cy="38.7" r="5.5" fill="#C62828" stroke="white" stroke-width="2"></circle><text x="530.0" y="28.7" font-size="11" font-weight="700" fill="#C62828" text-anchor="middle">131.1</text><text x="530.0" y="116" font-size="9.5" fill="#aaa" text-anchor="middle">Ago</text></svg></div>
+      </div>
+      <p id="pmpVacio" style="text-align: center; color: rgb(170, 170, 170); padding: 30px 0px; display: none;">Sin datos de PMP. Añade el histórico mensual desde "✏ Actualizar Datos".</p>
+    </div>
+  </div>
+
     <div class="main-grid">
       <div class="panel">
         <div class="panel-hdr">
           <div><div class="panel-title">% Ejecución por Capítulo</div><div class="panel-sub">Obligaciones / Crédito Actual</div></div>
         </div>
         <div class="panel-body">
-          <div class="chart-wrap" style="height:340px"><canvas id="chartCaps" width="435" height="425" style="display: block; box-sizing: border-box; height: 340px; width: 348px;"></canvas></div>
+          <div class="chart-wrap" style="height:340px"><canvas id="chartCaps" width="870" height="850" style="display: block; box-sizing: border-box; height: 340px; width: 348px;"></canvas></div>
         </div>
       </div>
       <div class="panel">
@@ -442,6 +523,7 @@
       </div>
     </div>
   </div>
+
 
 </div>
 <div class="footer" id="footerTxt">Consejo Insular de Aguas de La Palma · Ejecución Presupuestaria 2026 · Datos al 01/09/2026</div>
@@ -1530,6 +1612,10 @@ const DATOS_PDF = {
 };
 /*@@DATOS_CIALP_END@@*/
 
+/*@@PMP_CIALP_START@@*/
+let PMP_CIALP = [{"mes":"Ene 26","val":79.74},{"mes":"Feb","val":83.74},{"mes":"Mar","val":91.6},{"mes":"Abril","val":88.9},{"mes":"Mayo","val":106.72},{"mes":"Jun","val":109.82},{"mes":"Jul","val":81.84},{"mes":"Ago","val":131.08}];
+/*@@PMP_CIALP_END@@*/
+
 let CONFIG   = JSON.parse(JSON.stringify(DATOS_PDF.config));
 let TOTAL    = JSON.parse(JSON.stringify(DATOS_PDF.total));
 let CAPS     = JSON.parse(JSON.stringify(DATOS_PDF.caps));
@@ -1772,6 +1858,7 @@ function _openEditorReal(){
   document.getElementById("compFecha").value=COMP_ANT.fecha!=="—"?COMP_ANT.fecha:"";
   document.getElementById("compAc").value=COMP_ANT.ac?EUR(COMP_ANT.ac):"";
   document.getElementById("compO").value=COMP_ANT.o?EUR(COMP_ANT.o):"";
+  renderPmpList();
   document.getElementById("editorModal").classList.remove("hidden");
 }
 function closeEditor(){ document.getElementById("editorModal").classList.add("hidden"); }
@@ -2064,6 +2151,8 @@ function guardarHTMLCIALP(){
     JSON.stringify(datos,null,2)+";\n/*@@DATOS_CIALP_END@@*/";
   let html="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
   html=html.replace(/\/\*@@DATOS_CIALP_START@@\*\/[\s\S]*?\/\*@@DATOS_CIALP_END@@\*\//,nuevaSeccion);
+  html=html.replace(/\/\*@@PMP_CIALP_START@@\*\/[\s\S]*?\/\*@@PMP_CIALP_END@@\*\//,
+    "/*@@PMP_CIALP_START@@*/\nlet PMP_CIALP = "+JSON.stringify(PMP_CIALP)+";\n/*@@PMP_CIALP_END@@*/");
   // Asegurar que los modales arrancan cerrados aunque estuvieran abiertos al exportar
   html=html.replace(/(<div id="editorModal"[^>]*?)class="modal-backdrop(?!\s*hidden)([^"]*)"/,'$1class="modal-backdrop hidden$2"');
   html=html.replace(/(<div id="_cpin"[^>]*?)class="modal-backdrop(?!\s*hidden)([^"]*)"/,'$1class="modal-backdrop hidden$2"');
@@ -2101,10 +2190,79 @@ if(typeof pdfjsLib!=="undefined")
     "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
 
 // ================================================================
+//  PMP CIALP
+// ================================================================
+function renderChartPMP(){
+  const el=document.getElementById("chartPMP");
+  const vacio=!PMP_CIALP.length;
+  document.getElementById("pmpVacio").style.display=vacio?"block":"none";
+  document.getElementById("pmpCIALPWrap").style.display=vacio?"none":"block";
+  if(vacio){ el.innerHTML=''; return; }
+  const W=560,H=120,pL=8,pR=30,pT=24,pB=26;
+  const cW=W-pL-pR,cH=H-pT-pB;
+  const vals=PMP_CIALP.map(p=>p.val);
+  const vMin=Math.min(...vals),vMax=Math.max(...vals);
+  const yLo=Math.max(0,Math.floor((vMin-10)/10)*10);
+  const yHi=Math.ceil((vMax+10)/10)*10;
+  const yR=yHi-yLo||1;
+  const n=PMP_CIALP.length;
+  const xs=i=>pL+(n>1?i/(n-1):0.5)*cW;
+  const ys=v=>pT+cH-(v-yLo)/yR*cH;
+  const col=v=>v>60?'#C62828':v>30?'#E65100':'#2E7D32';
+  let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;max-height:130px">';
+  [60,30].forEach(ref=>{
+    if(ref>yLo&&ref<yHi){
+      const yr=ys(ref);
+      s+=`<line x1="${pL}" y1="${yr.toFixed(1)}" x2="${W-pR}" y2="${yr.toFixed(1)}" stroke="${col(ref-1)}" stroke-width="1" stroke-dasharray="4,3" opacity=".3"/>`;
+      s+=`<text x="${W-pR+4}" y="${(yr+3.5).toFixed(1)}" font-size="8" fill="${col(ref-1)}" opacity=".7">${ref}d</text>`;
+    }
+  });
+  const pts=PMP_CIALP.map((p,i)=>`${xs(i).toFixed(1)},${ys(p.val).toFixed(1)}`).join(' ');
+  s+=`<polyline points="${pts}" fill="none" stroke="#2C5F9E" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" opacity=".5"/>`;
+  PMP_CIALP.forEach((p,i)=>{
+    const x=xs(i).toFixed(1),y=ys(p.val).toFixed(1),c=col(p.val),last=(i===n-1);
+    s+=`<circle cx="${x}" cy="${y}" r="${last?5.5:4}" fill="${c}" stroke="white" stroke-width="2"/>`;
+    s+=`<text x="${x}" y="${(ys(p.val)-10).toFixed(1)}" font-size="${last?11:10}" font-weight="${last?700:500}" fill="${c}" text-anchor="middle">${p.val.toFixed(1)}</text>`;
+    s+=`<text x="${x}" y="${H-4}" font-size="9.5" fill="#aaa" text-anchor="middle">${p.mes}</text>`;
+  });
+  s+='</svg>';
+  el.innerHTML=s;
+}
+function addPmpCIALP(){
+  const mes=document.getElementById("pmpMesIn").value.trim();
+  const val=parseFloat(document.getElementById("pmpValIn").value);
+  if(!mes||isNaN(val)){ alert("Introduce el mes y el valor PMP."); return; }
+  const idx=PMP_CIALP.findIndex(p=>p.mes===mes);
+  if(idx>=0) PMP_CIALP[idx].val=val; else PMP_CIALP.push({mes,val});
+  document.getElementById("pmpMesIn").value="";
+  document.getElementById("pmpValIn").value="";
+  renderPmpList();
+  renderChartPMP();
+}
+function deletePmpCIALP(idx){
+  PMP_CIALP.splice(idx,1);
+  renderPmpList();
+  renderChartPMP();
+}
+function renderPmpList(){
+  const el=document.getElementById("pmpListCIALP");
+  if(!PMP_CIALP.length){ el.innerHTML="<span style='color:#aaa'>Sin datos.</span>"; return; }
+  el.innerHTML="<table style='width:100%;border-collapse:collapse'>"+
+    PMP_CIALP.map((p,i)=>`<tr style='border-bottom:1px solid #eee'>
+      <td style='padding:3px 8px;font-weight:600'>${p.mes}</td>
+      <td style='padding:3px 8px;color:#1B3A6B'>${p.val.toFixed(2)} días</td>
+      <td style='padding:3px 8px;text-align:right'>
+        <button onclick='deletePmpCIALP(${i})' style='background:none;border:none;color:#C62828;cursor:pointer;font-size:13px' title='Eliminar'>✕</button>
+      </td>
+    </tr>`).join("")+"</table>";
+}
+
+// ================================================================
 //  INIT
 // ================================================================
 cargarLocal();
 renderTotal();
+renderChartPMP();
 
 // Si el navegador restaura la página desde bfcache (navegación atrás/adelante),
 // cerrar cualquier modal que hubiera quedado abierto
