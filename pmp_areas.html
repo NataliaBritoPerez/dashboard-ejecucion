@@ -16825,7 +16825,7 @@ const DATOS_PMP = {
   ],
   "evolucion": [
     {
-      "mes": "Octubre 26",
+      "mes": "Octubre 2026",
       "pmp": 43.23
     },
     {
@@ -17359,7 +17359,7 @@ async function calcular(){
       imp_total: Math.round(tIT*100)/100,
       areas,
       evolucion: [...((DATOS_PMP&&DATOS_PMP.evolucion)||[]).filter(e=>e.mes!==mes),{mes,pmp:pmpFin}]
-        .sort((a,b)=>{const mo=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];const ka=String(a.mes).toLowerCase().split(/[\s\-\/]+/);const kb=String(b.mes).toLowerCase().split(/[\s\-\/]+/);const ya=parseInt(ka[1]||0),yb=parseInt(kb[1]||0);return ya!==yb?ya-yb:mo.indexOf(ka[0])-mo.indexOf(kb[0]);})
+        .sort((a,b)=>{const mo=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];const ka=String(a.mes).toLowerCase().split(/[\s\-\/]+/);const kb=String(b.mes).toLowerCase().split(/[\s\-\/]+/);const ny=y=>{const n=parseInt(y||0);return n>0&&n<100?2000+n:n;};const ya=ny(ka[1]),yb=ny(kb[1]);return ya!==yb?ya-yb:mo.indexOf(ka[0])-mo.indexOf(kb[0]);})
     };
 
     const nr=areas.filter(a=>a.pmp>60).length;
